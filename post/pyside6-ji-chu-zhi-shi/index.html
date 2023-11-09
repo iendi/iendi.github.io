@@ -1,0 +1,463 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Pyside6基础知识 | kend&#39;s blog</title>
+<link rel="shortcut icon" href="https://iendi.github.io/favicon.ico?v=1699496701468">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="https://iendi.github.io/styles/main.css">
+<link rel="alternate" type="application/atom+xml" title="Pyside6基础知识 | kend&#39;s blog - Atom Feed" href="https://iendi.github.io/atom.xml">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+
+
+
+    <meta name="description" content="窗口框/组件
+pyside6的窗口框为Widgets, 是可视化的用户界面组件。一般我们都是用Widges类创建一个主界面，然后在其基础上添加组件，创建代码如下：
+w = QWidget()
+ # 设置窗口标题
+w.setWindowTit..." />
+    <meta name="keywords" content="gui,python" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+    <script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.5.1/build/highlight.min.js"></script>
+  </head>
+  <body>
+    <div class="main">
+      <div class="main-content">
+        <div class="site-header">
+  <a href="https://iendi.github.io">
+  <img class="avatar" src="https://iendi.github.io/images/avatar.png?v=1699496701468" alt="">
+  </a>
+  <h1 class="site-title">
+    kend&#39;s blog
+  </h1>
+  <p class="site-description">
+    
+  </p>
+  <div class="menu-container">
+    
+      
+        <a href="/" class="menu">
+          首页
+        </a>
+      
+    
+      
+        <a href="/archives" class="menu">
+          归档
+        </a>
+      
+    
+      
+        <a href="/tags" class="menu">
+          标签
+        </a>
+      
+    
+      
+        <a href="/post/about" class="menu">
+          关于
+        </a>
+      
+    
+  </div>
+  <div class="social-container">
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+  </div>
+</div>
+
+        <div class="post-detail">
+          <article class="post">
+            <h2 class="post-title">
+              Pyside6基础知识
+            </h2>
+            <div class="post-info">
+              <span>
+                2023-06-07
+              </span>
+              <span>
+                8 min read
+              </span>
+              
+                <a href="https://iendi.github.io/tag/yYNQgsOaw/" class="post-tag">
+                  # gui
+                </a>
+              
+                <a href="https://iendi.github.io/tag/ZxYyvtWIIW/" class="post-tag">
+                  # python
+                </a>
+              
+            </div>
+            
+              <img class="post-feature-image" src="https://iendi.github.io/post-images/pyside6-ji-chu-zhi-shi.png" alt="">
+            
+            <div class="post-content-wrapper">
+              <div class="post-content" v-pre>
+                <h4 id="窗口框组件">窗口框/组件</h4>
+<p>pyside6的窗口框为Widgets, 是可视化的用户界面组件。一般我们都是用Widges类创建一个主界面，然后在其基础上添加组件，创建代码如下：</p>
+<pre><code class="language-python">w = QWidget()
+ # 设置窗口标题
+w.setWindowTitle(&quot;PySide6程序&quot;)
+# 展示窗口
+w.show()
+</code></pre>
+<p><strong>基本组件：</strong></p>
+<p>都位于位于 <code>PySide6.QtWidgets</code> 包内</p>
+<ul>
+<li>按钮： <code>QPushButton</code>，多用于点击后触发事件</li>
+<li>标签：<code>QLabel</code>，显示文字、图片、视频</li>
+<li>输入框： <code>QLineEdit</code>，输入文字</li>
+<li>下拉框：<code>QComboBox</code> ，下拉选择某个选项</li>
+</ul>
+<p>完整演示程序如下：</p>
+<pre><code class="language-python">import sys
+from PySide6.QtWidgets import QApplication, QWidget, QLabel, QPushButton, QLineEdit, QComboBox
+from qt_material import apply_stylesheet
+
+# 创建主窗口类
+class MainWindow(QWidget):
+    def __init__(self):
+        super().__init__()
+        # 设置窗口标题
+        self.setWindowTitle(&quot;PySide6程序&quot;)
+        # 窗口的大小
+        self.resize(500, 300)
+        # 添加组件,需要在构造时添加父组件，即self
+        # 文本
+        self.label = QLabel(&quot;账号&quot;, self)
+        self.label.setGeometry(50, 50, 50, 50)
+        # 文本框
+        self.edit = QLineEdit(self)
+        self.edit.setPlaceholderText(&quot;请输入账号&quot;)
+        self.edit.setGeometry(110, 50, 150, 50)
+        # 下拉框
+        self.combo_box = QComboBox(self)
+        self.combo_box.addItem(&quot;男&quot;)
+        self.combo_box.addItem(&quot;女&quot;)
+        self.combo_box.setGeometry(290, 50, 50, 50)
+        # 按钮
+        self.btn = QPushButton(&quot;注册&quot;, self)
+        self.btn.setGeometry(360, 50, 70, 50)
+        
+if __name__ == '__main__':
+    app = QApplication(sys.argv)
+    w = MainWindow()
+    # 展示窗口
+    w.show()
+    # 设置主题色为蓝色
+    apply_stylesheet(app, theme='light_blue_500.xml')
+    # 程序进行循环等待状态，用于持久显示
+    sys.exit(app.exec())
+</code></pre>
+<figure data-type="image" tabindex="1"><img src="https://iendi.github.io/post-images/1686193102555.png" alt="" loading="lazy"></figure>
+<h4 id="信号与槽">信号与槽</h4>
+<p>其实就是点击按钮后，发出<code>信号</code>，对应执行的函数称之为<code>槽</code>。上述程序，我们希望在点击注册后，控制台输出账号，代码如下：</p>
+<p><mark>注意</mark>：绑定槽函数时，不用加 &quot;()&quot;</p>
+<pre><code class="language-python"># 首先，在init中添加绑定函数
+# 注意：这里没有()
+self.btn.clicked.connect(self.click_my_btn)
+# 在主窗口类中，添加click_my_btn函数
+def click_my_btn(self):
+    print(self.edit.text())
+</code></pre>
+<figure data-type="image" tabindex="2"><img src="https://iendi.github.io/post-images/1686193143072.png" alt="" loading="lazy"></figure>
+<h4 id="布局">布局</h4>
+<p>上面程序中我们使用<code>setGeometry</code>函数设置组件的位置，但这种方法会导致我们在放大/缩小窗口时组件位置错乱，因此我们使用布局，使界面能自适应窗口大小。</p>
+<pre><code class="language-python">from PySide6.QtWidgets import QHBoxLayout, QVBoxLayout, QGridLayout
+</code></pre>
+<p>其中<code>QHBoxLayout</code>为水平布局， <code>QVBoxLayout</code>是垂直布局，<code>QGridLayout</code>为栅格布局，可互相叠加嵌套，下面来看一个例子：</p>
+<figure data-type="image" tabindex="3"><img src="https://iendi.github.io/post-images/1686193173400.png" alt="" loading="lazy"></figure>
+<p>frame是<code>QFrame</code>类的实例，可以理解成一个小窗口，方便对同一frame中的组件进行样式、布局的统一管理。</p>
+<p>上图中，frame 1-3 内为水平布局，frame 4为栅格布局，frame 1-4 组合一起为垂直布局，忽略具体的组件，代码实现如下：</p>
+<pre><code class="language-python"># 水平布局，传入参数为父组件，即在该组件中应用布局
+self.hLayout_1 = QtWidgets.QHBoxLayout(self.frame_1)
+self.hLayout_1.addWidget(菜单栏)  # 添加子组件，此处为伪代码
+self.hLayout_1.addWidget(历史数据)
+
+# 栅格布局，addWidget（子组件，起始行，起始列，占的行数，占的列数）
+self.gLayout_4 = QtWidgets.QGridLayout(self.frame_4)
+self.gLayout_4.addWidget(%, 0, 0, 1, 1)
+self.gLayout_4.addWidget(CE, 0, 1, 1, 1)
+self.gLayout_4.addWidget(C, 0, 2, 1, 1)
+
+# 垂直布局
+self.vLayout = QtWidgets.QVBoxLayout(self)
+self.vLayout.addWidget(self.frame_1)
+self.vLayout.addWidget(self.frame_2)
+self.vLayout.addWidget(self.frame_3)
+self.vLayout.addWidget(self.frame_4)
+</code></pre>
+<h4 id="无边框化">无边框化</h4>
+<p>这一步是为了程序更加美观，如果没有需求可以跳过。</p>
+<p>首先通过属性设置，将原有边框去除：</p>
+<pre><code class="language-python">from PySide6.QtCore import Qt
+self.setWindowFlag(Qt.FramelessWindowHint)
+self.setAttribute(Qt.WA_TranslucentBackground)  # 背景设置半透明
+</code></pre>
+<p>接着添加移动窗口功能：</p>
+<pre><code class="language-python"># 重写QWidge中方法
+# ---移动功能---
+def mousePressEvent(self, event):  # 鼠标左键按下时获取鼠标坐标
+    if event.button() == Qt.LeftButton:
+        self._move_drag = True
+        self.m_Position = event.globalPosition().toPoint() - self.pos()
+        event.accept()
+        self.setCursor(QtGui.QCursor(QtCore.Qt.OpenHandCursor))
+
+def mouseMoveEvent(self, QMouseEvent):  # 鼠标在按下左键的情况下移动时,根据坐标移动界面
+    if Qt.LeftButton and self._move_drag:
+        self.move(QMouseEvent.globalPosition().toPoint() - self.m_Position)
+        QMouseEvent.accept()
+
+def mouseReleaseEvent(self, QMouseEvent):  # 鼠标按键释放时,取消移动
+    self._move_drag = False
+    self.setCursor(QtGui.QCursor(QtCore.Qt.ArrowCursor))
+</code></pre>
+<p>最后，添加最大化、最小化和关闭按钮</p>
+<ul>
+<li>
+<p>定义标题栏类，包括三个按钮及其图标。直接用我写的即可，已设置好样式。</p>
+<pre><code class="language-python">from PySide6 import QtCore
+from PySide6.QtGui import QIcon
+from PySide6.QtWidgets import QFrame, QHBoxLayout, QPushButton
+
+class CustomTitleBar(QFrame):
+    def __init__(self, parent):
+        super().__init__(parent)
+        # 设置样式
+        self.setStyleSheet('''
+                            QFrame{
+                               background-color: rgb(171, 176, 181);
+                               border-top-left-radius:10px;
+                               border-top-right-radius:10px;
+                               border-bottom-left-radius:0px;
+                               border-bottom-right-radius:0px;
+                            }
+                            QPushButton{
+                                border: none;
+                                background-color: rgb(171, 176, 181);
+                            }
+                            QPushButton:pressed{
+                                padding-left:3px;
+                                padding-top:3px;
+                            }
+                            QPushButton:hover{
+                                padding-bottom:3px;
+                            }
+                           ''')
+        # 设置布局
+        layout = QHBoxLayout(self)
+        layout.setSpacing(0)
+        layout.setAlignment(QtCore.Qt.AlignRight)
+
+        # 最小化按钮
+        btn_minimize = QPushButton(self)
+        btn_minimize.setIcon(QIcon('resource/icons/minus.png'))
+        btn_minimize.clicked.connect(self.parent().showMinimized)
+        layout.addWidget(btn_minimize)
+
+        # 最大化/恢复按钮
+        self.btn_maximize_restore = QPushButton(self)
+        self.btn_maximize_restore.setIcon(QIcon('resource/icons/maxmize.png'))
+        layout.addWidget(self.btn_maximize_restore)
+
+        # 关闭按钮
+        btn_close = QPushButton(self)
+        btn_close.setIcon(QIcon('resource/icons/close.png'))
+        btn_close.clicked.connect(self.parent().close)
+        layout.addWidget(btn_close)
+</code></pre>
+</li>
+<li>
+<p>在主窗口类中引用<code>CustomTitleBar</code>，创建对象并绑定槽函数，用于窗口的放大、缩小。</p>
+<pre><code class="language-python"># 添加状态栏
+self.custom_title_bar = CustomTitleBar(self)
+self.custom_title_bar.btn_maximize_restore.clicked.connect(self.resize_win)
+
+# 槽函数
+def resize_win(self):
+    if self.isMaximized():
+        self.showNormal()
+        self.custom_title_bar.btn_maximize_restore.setIcon(
+            QtGui.QIcon('resource/icons/maxmize.png'))
+    else:
+        self.showMaximized()
+        self.custom_title_bar.btn_maximize_restore.setIcon(
+            QtGui.QIcon('resource/icons/minisize.png'))
+</code></pre>
+</li>
+<li>
+<p>其中，图标可以在<a href="https://www.iconfont.cn/">阿里矢量图标库</a>下载，直接搜索放大、缩小等，下载后的 png 图片存到对应文件夹即可。</p>
+</li>
+</ul>
+<p>改进后的程序界面如下：</p>
+<figure data-type="image" tabindex="4"><img src="https://iendi.github.io/post-images/1686193194084.png" alt="" loading="lazy"></figure>
+<h4 id="侧边栏">侧边栏</h4>
+<p>侧边栏用于显示不同板块，在点击后切换到指定的页面。主要包括左侧的侧边栏以及右侧的页面。</p>
+<p>侧边栏类可以直接用我写的，已设置好样式：</p>
+<pre><code class="language-python">class SideBar(QFrame):
+    def __init__(self, parent):
+        super().__init__(parent)
+        # 设置样式
+        self.setStyleSheet('''
+                            QFrame{
+                               background-color: rgb(221, 223, 226);
+                            }
+                            QListWidget {
+                                color: Black;
+                                background-color: rgb(221, 223, 226);
+                            }
+                            QListWidget::Item:hover {
+                            background: rgb(233, 234, 236);
+                            border-left: 3px solid rgb(76, 95, 107);
+                            }
+                            QListWidget::Item:selected {
+                                background: rgb(233, 234, 236);
+                                border-left: 3px solid rgb(76, 95, 107);
+                            }
+                            ''')
+        self.list_widget = QListWidget(self)
+        self.list_widget.setFixedWidth(150)
+        self.list_widget.setSpacing(5)
+        layout = QVBoxLayout(self)
+        layout.setSpacing(0)
+        layout.setContentsMargins(1, 1, 0, 0)
+        layout.addWidget(self.list_widget)
+        # 添加item
+        img_icon = QIcon('resource/icons/img_improve.png')
+        self.img_item = QListWidgetItem(img_icon, '视觉提升', self.list_widget)
+        self.img_item.setSizeHint(QtCore.QSize(10, 60))
+        self.img_item.setTextAlignment(QtCore.Qt.AlignCenter)
+        self.img_item.setSelected(True)
+
+        red_icon = QIcon('resource/icons/red.png')
+        self.red_item = QListWidgetItem(red_icon, '红外融合', self.list_widget)
+        self.red_item.setSizeHint(QtCore.QSize(10, 60))
+        self.red_item.setTextAlignment(QtCore.Qt.AlignCenter)
+</code></pre>
+<p>接着，添加右侧页面，我们使用<code>QStackedWidget</code>，并在其中添加多个不同的Widget对应不同的组件：</p>
+<pre><code class="language-python"># 添加右侧页面
+    self.stack_widget = QtWidgets.QStackedWidget(self.frame_1)
+    # 添加窗口部件
+    self.widget_1 = QWidget()
+    self.label_1 = QLabel(&quot;视觉提升页面&quot;)
+    layout_1 = QtWidgets.QVBoxLayout(self.widget_1)
+    layout_1.addWidget(self.label_1)
+
+    self.widget_2 = QWidget()
+    self.label_2 = QLabel(&quot;红外融合页面&quot;)
+    layout_2 = QtWidgets.QVBoxLayout(self.widget_2)
+    layout_2.addWidget(self.label_2)
+    # 添加各个widget到stack_widget中
+    self.stack_widget.addWidget(self.widget_1)
+    self.stack_widget.addWidget(self.widget_2)
+    self.stack_widget.setCurrentIndex(0)
+</code></pre>
+<p>通过<code>setCurrentIndex</code>方法设置页面，0为widget_1，1为widget_2。最后，添加槽函数，在点击左侧侧边栏按钮时切换页面。</p>
+<pre><code class="language-python"># 主界面类中，引用侧边栏，并绑定槽函数
+self.side_bar = SideBar(self.frame_1)
+self.side_bar.list_widget.itemClicked.connect(self.item_clicked)
+
+#槽函数
+def item_clicked(self):
+    item = self.side_bar.list_widget.selectedItems()[0]
+    if item.text() == '视觉提升':
+        self.stack_widget.setCurrentIndex(0)
+    elif item.text() == '红外融合':
+        self.stack_widget.setCurrentIndex(1)
+</code></pre>
+<p>效果如下：<br>
+<img src="https://iendi.github.io/post-images/1686193207374.png" alt="" loading="lazy"></p>
+
+              </div>
+              <div class="toc-container">
+                <ul class="markdownIt-TOC">
+<li>
+<ul>
+<li>
+<ul>
+<li>
+<ul>
+<li><a href="#%E7%AA%97%E5%8F%A3%E6%A1%86%E7%BB%84%E4%BB%B6">窗口框/组件</a></li>
+<li><a href="#%E4%BF%A1%E5%8F%B7%E4%B8%8E%E6%A7%BD">信号与槽</a></li>
+<li><a href="#%E5%B8%83%E5%B1%80">布局</a></li>
+<li><a href="#%E6%97%A0%E8%BE%B9%E6%A1%86%E5%8C%96">无边框化</a></li>
+<li><a href="#%E4%BE%A7%E8%BE%B9%E6%A0%8F">侧边栏</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+              </div>
+            </div>
+          </article>
+        </div>
+
+        
+
+        
+
+        <div class="site-footer">
+  
+  <a class="rss" href="https://iendi.github.io/atom.xml" target="_blank">
+    <i class="ri-rss-line"></i> RSS
+  </a>
+</div>
+
+      </div>
+    </div>
+
+    <script>
+      hljs.initHighlightingOnLoad()
+
+      let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+
+      // This should probably be throttled.
+      // Especially because it triggers during smooth scrolling.
+      // https://lodash.com/docs/4.17.10#throttle
+      // You could do like...
+      // window.addEventListener("scroll", () => {
+      //    _.throttle(doThatStuff, 100);
+      // });
+      // Only not doing it here to keep this Pen dependency-free.
+
+      window.addEventListener("scroll", event => {
+        let fromTop = window.scrollY;
+
+        mainNavLinks.forEach((link, index) => {
+          let section = document.getElementById(decodeURI(link.hash).substring(1));
+          let nextSection = null
+          if (mainNavLinks[index + 1]) {
+            nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+          }
+          if (section.offsetTop <= fromTop) {
+            if (nextSection) {
+              if (nextSection.offsetTop > fromTop) {
+                link.classList.add("current");
+              } else {
+                link.classList.remove("current");    
+              }
+            } else {
+              link.classList.add("current");
+            }
+          } else {
+            link.classList.remove("current");
+          }
+        });
+      });
+
+    </script>
+  </body>
+</html>

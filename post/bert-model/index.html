@@ -1,0 +1,220 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>BERT 预训练部分 | kend&#39;s blog</title>
+<link rel="shortcut icon" href="https://iendi.github.io/favicon.ico?v=1699496701468">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="https://iendi.github.io/styles/main.css">
+<link rel="alternate" type="application/atom+xml" title="BERT 预训练部分 | kend&#39;s blog - Atom Feed" href="https://iendi.github.io/atom.xml">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+
+
+
+    <meta name="description" content="BERT的全称为Bidirectional Encoder Representation from Transformers，主要针对Transformer的Encoder部分进行预训练，包括以下两个部分：
+
+Masked Language..." />
+    <meta name="keywords" content="bert,nn,nlp" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+    <script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.5.1/build/highlight.min.js"></script>
+  </head>
+  <body>
+    <div class="main">
+      <div class="main-content">
+        <div class="site-header">
+  <a href="https://iendi.github.io">
+  <img class="avatar" src="https://iendi.github.io/images/avatar.png?v=1699496701468" alt="">
+  </a>
+  <h1 class="site-title">
+    kend&#39;s blog
+  </h1>
+  <p class="site-description">
+    
+  </p>
+  <div class="menu-container">
+    
+      
+        <a href="/" class="menu">
+          首页
+        </a>
+      
+    
+      
+        <a href="/archives" class="menu">
+          归档
+        </a>
+      
+    
+      
+        <a href="/tags" class="menu">
+          标签
+        </a>
+      
+    
+      
+        <a href="/post/about" class="menu">
+          关于
+        </a>
+      
+    
+  </div>
+  <div class="social-container">
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+  </div>
+</div>
+
+        <div class="post-detail">
+          <article class="post">
+            <h2 class="post-title">
+              BERT 预训练部分
+            </h2>
+            <div class="post-info">
+              <span>
+                2023-07-05
+              </span>
+              <span>
+                3 min read
+              </span>
+              
+                <a href="https://iendi.github.io/tag/QVDmas1A3/" class="post-tag">
+                  # bert
+                </a>
+              
+                <a href="https://iendi.github.io/tag/mK_2xwS1AY/" class="post-tag">
+                  # nn
+                </a>
+              
+                <a href="https://iendi.github.io/tag/GHuZOLYXum/" class="post-tag">
+                  # nlp
+                </a>
+              
+            </div>
+            
+              <img class="post-feature-image" src="https://picx.zhimg.com/70/v2-7103726ec229754723d1125e4649d3be_1440w.image" alt="">
+            
+            <div class="post-content-wrapper">
+              <div class="post-content" v-pre>
+                <p>BERT的全称为Bidirectional Encoder Representation from Transformers，主要针对Transformer的<code>Encoder</code>部分进行预训练，包括以下两个部分：</p>
+<ul>
+<li>Masked Language Model：类似完形填空，预测被遮挡的单词</li>
+<li>Next Sentence Prediction：预测下一个句子</li>
+</ul>
+<p>首先对输入的句子进行token化，具体操作如下图所示</p>
+<figure data-type="image" tabindex="1"><img src="https://pic1.zhimg.com/80/v2-ee823df66560850baa34128af76a6334_1440w.webp" alt="token_img" loading="lazy"></figure>
+<h3 id="masked-language-model">Masked Language Model</h3>
+<p>BERT会以15%的概率随机地选中某个token位置，替换为[MASK]。假设输入为<em>the cat sat on the mat</em>，将cat进行mask。</p>
+<p>经过Encoder层后得到特征向量<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>u</mi><mi>M</mi></msub></mrow><annotation encoding="application/x-tex">u_M</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.58056em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathdefault">u</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.32833099999999993em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight" style="margin-right:0.10903em;">M</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>，根据attention的特性，<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>u</mi><mi>M</mi></msub></mrow><annotation encoding="application/x-tex">u_M</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.58056em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathdefault">u</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.32833099999999993em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight" style="margin-right:0.10903em;">M</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>包括<strong>上下文信息</strong>，知道整句话的意思，因此将其输入至SoftMax分类器，得到概率分布p</p>
+<p>最后，把预测的值和ground truth进行交叉熵计算loss，然后梯度下降更新模型参数</p>
+<p><mark>注</mark>：这里更新参数，包括Encoder层和Embedding层。因此，最后训练得到的Embedding层可以有效表示不同词向量之间的<strong>关联性</strong></p>
+<img src="https://raw.githubusercontent.com/iendi/img_host/main/post-images/image-20230705105046584.png" alt="image-20230705105046584" style="zoom:80%;" />
+<p>预训练的目标会令产生的语言表征对[MASK]<strong>敏感</strong>，但是却对其他token不敏感，因此BERT在替换时，采用以下策略</p>
+<ul>
+<li>80%是[MASK]。my dog is <strong>hairy</strong>——&gt;my dog is <strong>[MASK]</strong></li>
+<li>10%是随机的其他token。my dog is <strong>hairy</strong>——&gt;my dog is <strong>apple</strong></li>
+<li>10%的是原来的token。my dog is <strong>hairy</strong>——&gt;my dog is <strong>hairy</strong></li>
+</ul>
+<p>这种策略令BERT不再只对[MASK]敏感，而是对所有的token都敏感，以至能抽取出任何token的表征信息</p>
+<h3 id="next-sentence-prediction">Next Sentence Prediction</h3>
+<p>MLM任务倾向于抽取<strong>token层次</strong>的表征，因此不能直接获取<strong>句子层次</strong>的表征。因此BERT中加入NSP任务，预测两个句子是否连在一起</p>
+<p>将两个句子通过[SEP]连接起来，如果是上下句，target为true</p>
+<p>得到的特征向量<code>c</code>包括<strong>所有</strong>输入的信息，将其输入至二分类器中，与真实值对比，并进行参数更新</p>
+<img src="https://raw.githubusercontent.com/iendi/img_host/main/post-images/image-20230705112517358.png" alt="image-20230705112517358" style="zoom:80%;" />
+<p>在训练时，常将MLM和NSP结合起来，如下所示。也可以加多个MASK或句子，对应的加多个loss</p>
+<img src="https://raw.githubusercontent.com/iendi/img_host/main/post-images/image-20230705115459369.png" alt="image-20230705115459369" style="zoom:80%;" />
+<p>经过预训练后，BERT在每个位置上生成对应于输入标记的<strong>表示向量</strong>，可以理解为提取出了语义信息。这些<strong>表示向量</strong>可以被用于各种下游任务，如文本分类、命名实体识别等</p>
+
+              </div>
+              <div class="toc-container">
+                <ul class="markdownIt-TOC">
+<li>
+<ul>
+<li>
+<ul>
+<li><a href="#masked-language-model">Masked Language Model</a></li>
+<li><a href="#next-sentence-prediction">Next Sentence Prediction</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+              </div>
+            </div>
+          </article>
+        </div>
+
+        
+          <div class="next-post">
+            <div class="next">下一篇</div>
+            <a href="https://iendi.github.io/post/transformer-is-all-you-need/">
+              <h3 class="post-title">
+                Transformer 模型
+              </h3>
+            </a>
+          </div>
+        
+
+        
+
+        <div class="site-footer">
+  
+  <a class="rss" href="https://iendi.github.io/atom.xml" target="_blank">
+    <i class="ri-rss-line"></i> RSS
+  </a>
+</div>
+
+      </div>
+    </div>
+
+    <script>
+      hljs.initHighlightingOnLoad()
+
+      let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+
+      // This should probably be throttled.
+      // Especially because it triggers during smooth scrolling.
+      // https://lodash.com/docs/4.17.10#throttle
+      // You could do like...
+      // window.addEventListener("scroll", () => {
+      //    _.throttle(doThatStuff, 100);
+      // });
+      // Only not doing it here to keep this Pen dependency-free.
+
+      window.addEventListener("scroll", event => {
+        let fromTop = window.scrollY;
+
+        mainNavLinks.forEach((link, index) => {
+          let section = document.getElementById(decodeURI(link.hash).substring(1));
+          let nextSection = null
+          if (mainNavLinks[index + 1]) {
+            nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+          }
+          if (section.offsetTop <= fromTop) {
+            if (nextSection) {
+              if (nextSection.offsetTop > fromTop) {
+                link.classList.add("current");
+              } else {
+                link.classList.remove("current");    
+              }
+            } else {
+              link.classList.add("current");
+            }
+          } else {
+            link.classList.remove("current");
+          }
+        });
+      });
+
+    </script>
+  </body>
+</html>

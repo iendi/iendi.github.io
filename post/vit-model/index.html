@@ -1,0 +1,254 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>ViT 详解 | kend&#39;s blog</title>
+<link rel="shortcut icon" href="https://iendi.github.io/favicon.ico?v=1699496701468">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="https://iendi.github.io/styles/main.css">
+<link rel="alternate" type="application/atom+xml" title="ViT 详解 | kend&#39;s blog - Atom Feed" href="https://iendi.github.io/atom.xml">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+
+
+
+    <meta name="description" content="整体结构
+分为三个部分，Linear Projection of Flattened Patches(Embedding层)、Encoder和MLP Head分类头
+
+下图是不同版本ViT的参数设置。
+
+Layers：Transformer..." />
+    <meta name="keywords" content="cv,vit,nn" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+    <script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.5.1/build/highlight.min.js"></script>
+  </head>
+  <body>
+    <div class="main">
+      <div class="main-content">
+        <div class="site-header">
+  <a href="https://iendi.github.io">
+  <img class="avatar" src="https://iendi.github.io/images/avatar.png?v=1699496701468" alt="">
+  </a>
+  <h1 class="site-title">
+    kend&#39;s blog
+  </h1>
+  <p class="site-description">
+    
+  </p>
+  <div class="menu-container">
+    
+      
+        <a href="/" class="menu">
+          首页
+        </a>
+      
+    
+      
+        <a href="/archives" class="menu">
+          归档
+        </a>
+      
+    
+      
+        <a href="/tags" class="menu">
+          标签
+        </a>
+      
+    
+      
+        <a href="/post/about" class="menu">
+          关于
+        </a>
+      
+    
+  </div>
+  <div class="social-container">
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+  </div>
+</div>
+
+        <div class="post-detail">
+          <article class="post">
+            <h2 class="post-title">
+              ViT 详解
+            </h2>
+            <div class="post-info">
+              <span>
+                2023-07-05
+              </span>
+              <span>
+                2 min read
+              </span>
+              
+                <a href="https://iendi.github.io/tag/Z4z816TFz/" class="post-tag">
+                  # cv
+                </a>
+              
+                <a href="https://iendi.github.io/tag/cG7oiPy_13/" class="post-tag">
+                  # vit
+                </a>
+              
+                <a href="https://iendi.github.io/tag/mK_2xwS1AY/" class="post-tag">
+                  # nn
+                </a>
+              
+            </div>
+            
+              <img class="post-feature-image" src="https://raw.githubusercontent.com/iendi/img_host/main/post-images/image-20230705165506456.png" alt="">
+            
+            <div class="post-content-wrapper">
+              <div class="post-content" v-pre>
+                <h3 id="整体结构">整体结构</h3>
+<p>分为三个部分，Linear Projection of Flattened Patches(Embedding层)、Encoder和MLP Head分类头</p>
+<img src="https://raw.githubusercontent.com/iendi/img_host/main/post-images/20210626105321101.png" alt="vit" style="zoom:80%;" />
+<p>下图是不同版本ViT的参数设置。</p>
+<ul>
+<li><em>Layers</em>：Transformer Encoder中重复堆叠Encoder Block的次数</li>
+<li><em>Hidden Size</em>：通过Embedding层后每个token的dim</li>
+<li><em>MLP size</em>：Transformer Encoder中MLP Block第一个全连接的节点个数（是Hidden Size的四倍）</li>
+<li><em>Heads</em>：Transformer中Multi-Head Attention的heads数</li>
+</ul>
+<img src="https://raw.githubusercontent.com/iendi/img_host/main/post-images/image-20230705160728661.png" alt="image-20230705160728661" style="zoom:80%;" />
+<h3 id="embedding层">Embedding层</h3>
+<p>首先将图片分为不同的patch，这里有两个参数</p>
+<ul>
+<li><em>patch size</em>：一个patch的大小</li>
+<li><em>stride</em>：步长，如果和patch size一样，则不重叠（可以重叠）</li>
+</ul>
+<img src="https://raw.githubusercontent.com/iendi/img_host/main/post-images/image-20230705160551497.png" alt="image-20230705160551497" style="zoom:80%;" />
+<p>接着，将每个patch拉伸至一维，并通过线性层，得到Embedding层的输出</p>
+<img src="https://raw.githubusercontent.com/iendi/img_host/main/post-images/image-20230705165506456.png" alt="image-20230705165506456" style="zoom:80%;" />
+<p>实际代码中，上述过程直接通过卷积进行。假设使用ViT-B16,参数设置如下</p>
+<table>
+<thead>
+<tr>
+<th>kernel size</th>
+<th>kernel num</th>
+<th>stride</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>16×16</td>
+<td>768</td>
+<td>16</td>
+</tr>
+</tbody>
+</table>
+<ol>
+<li>原图尺寸[224,224,3]，<strong>卷积后</strong>➡[14,14,768]，<strong>将h和w进行展平</strong>➡[196,768]</li>
+<li>加入[CLS]标签的token➡[197,768]</li>
+<li>加入Position Embedding➡[197,768]</li>
+</ol>
+<p>至此，得到Embedding层的输出</p>
+<h3 id="encoder层">Encoder层</h3>
+<p>Encoder层结构如下，DropPath可以理解为随机丢弃一些残差连接。一个Transformer Encoder是由多个Encoder Block组成的</p>
+<img src="https://raw.githubusercontent.com/iendi/img_host/main/post-images/image-20230705173120640.png" alt="image-20230705173120640" style="zoom:80%;" />
+<h3 id="mlp-head">MLP Head</h3>
+<p>一般是直接<code>Linear</code>+Softmax。有些数据集比较大，会改成<code>Linear+tanh+Linear</code>+Softmax</p>
+<h3 id="hybrid模型">Hybrid模型</h3>
+<p>改不同的backbone，先用backbone进行特征提取，然后将其输入至ViT中</p>
+<img src="https://raw.githubusercontent.com/iendi/img_host/main/post-images/image-20230705175147964.png" alt="image-20230705175147964" style="zoom:80%;" />
+<blockquote>
+<p>参考资料:</p>
+<p><a href="https://www.bilibili.com/video/BV1Jh411Y7WQ/?spm_id_from=333.788&amp;vd_source=a9906a59047f96daed0a464dfa0c358e">11.1 Vision Transformer(vit)网络详解</a></p>
+<p><a href="https://github.com/wangshusen/DeepLearning.git">ViT用于图片分类</a></p>
+</blockquote>
+
+              </div>
+              <div class="toc-container">
+                <ul class="markdownIt-TOC">
+<li>
+<ul>
+<li>
+<ul>
+<li><a href="#%E6%95%B4%E4%BD%93%E7%BB%93%E6%9E%84">整体结构</a></li>
+<li><a href="#embedding%E5%B1%82">Embedding层</a></li>
+<li><a href="#encoder%E5%B1%82">Encoder层</a></li>
+<li><a href="#mlp-head">MLP Head</a></li>
+<li><a href="#hybrid%E6%A8%A1%E5%9E%8B">Hybrid模型</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+              </div>
+            </div>
+          </article>
+        </div>
+
+        
+          <div class="next-post">
+            <div class="next">下一篇</div>
+            <a href="https://iendi.github.io/post/bert-model/">
+              <h3 class="post-title">
+                BERT 预训练部分
+              </h3>
+            </a>
+          </div>
+        
+
+        
+
+        <div class="site-footer">
+  
+  <a class="rss" href="https://iendi.github.io/atom.xml" target="_blank">
+    <i class="ri-rss-line"></i> RSS
+  </a>
+</div>
+
+      </div>
+    </div>
+
+    <script>
+      hljs.initHighlightingOnLoad()
+
+      let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+
+      // This should probably be throttled.
+      // Especially because it triggers during smooth scrolling.
+      // https://lodash.com/docs/4.17.10#throttle
+      // You could do like...
+      // window.addEventListener("scroll", () => {
+      //    _.throttle(doThatStuff, 100);
+      // });
+      // Only not doing it here to keep this Pen dependency-free.
+
+      window.addEventListener("scroll", event => {
+        let fromTop = window.scrollY;
+
+        mainNavLinks.forEach((link, index) => {
+          let section = document.getElementById(decodeURI(link.hash).substring(1));
+          let nextSection = null
+          if (mainNavLinks[index + 1]) {
+            nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+          }
+          if (section.offsetTop <= fromTop) {
+            if (nextSection) {
+              if (nextSection.offsetTop > fromTop) {
+                link.classList.add("current");
+              } else {
+                link.classList.remove("current");    
+              }
+            } else {
+              link.classList.add("current");
+            }
+          } else {
+            link.classList.remove("current");
+          }
+        });
+      });
+
+    </script>
+  </body>
+</html>
