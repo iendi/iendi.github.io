@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
+  <channel>
+    <title>单调栈 on Kend&#39;s Blog</title>
+    <link>https://iendi.github.io/en/posts/lc/%E5%8D%95%E8%B0%83%E6%A0%88/</link>
+    <description>Recent content in 单调栈 on Kend&#39;s Blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en</language>
+    <lastBuildDate>Mon, 12 Jul 2021 22:20:58 +0800</lastBuildDate>
+    <atom:link href="https://iendi.github.io/en/posts/lc/%E5%8D%95%E8%B0%83%E6%A0%88/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>单调栈</title>
+      <link>https://iendi.github.io/en/posts/lc/%E5%8D%95%E8%B0%83%E6%A0%88/84/</link>
+      <pubDate>Mon, 12 Jul 2021 22:20:58 +0800</pubDate>
+      <guid>https://iendi.github.io/en/posts/lc/%E5%8D%95%E8%B0%83%E6%A0%88/84/</guid>
+      <description>解决 &amp;ldquo;next greater number&amp;rdquo; 问题 496. 下一个更大元素 I 给你两个 没有重复元素 的数组 nums1 和 nums2 ，其中nums1 是 nums2 的子集。 请你找出 nums1 中每个元素在 nums2 中的下一个比其大的值。 nums1</description>
+    </item>
+  </channel>
+</rss>

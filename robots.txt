@@ -1,0 +1,3 @@
+User-agent: *
+Disallow:
+Sitemap: https://iendi.github.io/sitemap.xml

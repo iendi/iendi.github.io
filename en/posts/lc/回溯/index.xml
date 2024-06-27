@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
+  <channel>
+    <title>回溯 on Kend&#39;s Blog</title>
+    <link>https://iendi.github.io/en/posts/lc/%E5%9B%9E%E6%BA%AF/</link>
+    <description>Recent content in 回溯 on Kend&#39;s Blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en</language>
+    <lastBuildDate>Mon, 29 Apr 2024 20:48:58 +0800</lastBuildDate>
+    <atom:link href="https://iendi.github.io/en/posts/lc/%E5%9B%9E%E6%BA%AF/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>回溯中的去重问题</title>
+      <link>https://iendi.github.io/en/posts/lc/%E5%9B%9E%E6%BA%AF/repeat/</link>
+      <pubDate>Mon, 29 Apr 2024 20:48:58 +0800</pubDate>
+      <guid>https://iendi.github.io/en/posts/lc/%E5%9B%9E%E6%BA%AF/repeat/</guid>
+      <description>子集2 给你一个整数数组 nums ，其中可能包含重复元素，请你返回该数组所有可能的 子集 首先，子集问题 就是在回溯时对每个节点进行保存操作 与一般子集问题相</description>
+    </item>
+  </channel>
+</rss>

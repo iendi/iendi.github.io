@@ -1,0 +1,739 @@
+<!DOCTYPE html>
+<html lang="en" dir="auto">
+
+<head><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="index, follow">
+<title>IOC | Kend&#39;s Blog</title>
+<meta name="keywords" content="Spring">
+<meta name="description" content="将对象的创建、初始化、销毁等操作交给 Spring 容器来管理 本文以Student 类为例，定义如下： public class Student { public String name; public Integer number; public boolean sex; //..constructor,getter and setter } 一. 创建一个简单的I">
+<meta name="author" content="Kend">
+<link rel="canonical" href="https://iendi.github.io/en/posts/tech/spring/ioc/">
+
+
+<link crossorigin="anonymous" href="/assets/css/stylesheet.2b3a9b630d724ad2b56cb3217ca569e88f4344d61fa91c496bfd01d1128c4950.css" integrity="" rel="preload stylesheet" as="style">
+<script defer crossorigin="anonymous" src="/assets/js/highlight.f413e19d0714851f6474e7ee9632408e58ac146fbdbe62747134bea2fa3415e0.js" integrity="sha256-9BPhnQcUhR9kdOfuljJAjlisFG&#43;9vmJ0cTS&#43;ovo0FeA="
+        onload="hljs.initHighlightingOnLoad();"></script>
+<link rel="icon" href="https://iendi.github.io/img/1.png">
+<link rel="icon" type="image/png" sizes="16x16" href="https://iendi.github.io/img/1.png">
+<link rel="icon" type="image/png" sizes="32x32" href="https://iendi.github.io/img/1.png">
+<link rel="apple-touch-icon" href="https://iendi.github.io/1.png">
+<link rel="mask-icon" href="https://iendi.github.io/1.png">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<link rel="alternate" hreflang="en" href="https://iendi.github.io/en/posts/tech/spring/ioc/">
+<noscript>
+    <style>
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+</noscript>
+<script>
+    MathJax = {
+      tex: {
+        inlineMath: [["$", "$"]],
+      },
+      displayMath: [
+        ["$$", "$$"]
+      ],
+      svg: {
+        fontCache: "global",
+      },
+    };
+  </script>
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script
+    id="MathJax-script"
+    async
+    src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"
+  ></script>
+
+
+  
+
+<meta property="og:title" content="IOC" />
+<meta property="og:description" content="将对象的创建、初始化、销毁等操作交给 Spring 容器来管理 本文以Student 类为例，定义如下： public class Student { public String name; public Integer number; public boolean sex; //..constructor,getter and setter } 一. 创建一个简单的I" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://iendi.github.io/en/posts/tech/spring/ioc/" /><meta property="article:section" content="posts" />
+<meta property="article:published_time" content="2021-07-07T22:20:58+08:00" />
+<meta property="article:modified_time" content="2021-07-07T22:20:58+08:00" />
+
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="IOC"/>
+<meta name="twitter:description" content="将对象的创建、初始化、销毁等操作交给 Spring 容器来管理 本文以Student 类为例，定义如下： public class Student { public String name; public Integer number; public boolean sex; //..constructor,getter and setter } 一. 创建一个简单的I"/>
+
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position":  1 ,
+      "name": "📚文章",
+      "item": "https://iendi.github.io/en/posts/"
+    }, 
+    {
+      "@type": "ListItem",
+      "position":  2 ,
+      "name": "🧑‍💻后端",
+      "item": "https://iendi.github.io/en/posts/tech/"
+    }, 
+    {
+      "@type": "ListItem",
+      "position":  3 ,
+      "name": "Spring",
+      "item": "https://iendi.github.io/en/posts/tech/spring/"
+    }, 
+    {
+      "@type": "ListItem",
+      "position":  4 ,
+      "name": "IOC",
+      "item": "https://iendi.github.io/en/posts/tech/spring/ioc/"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "IOC",
+  "name": "IOC",
+  "description": "将对象的创建、初始化、销毁等操作交给 Spring 容器来管理 本文以Student 类为例，定义如下： public class Student { public String name; public Integer number; public boolean sex; //..constructor,getter and setter } 一. 创建一个简单的I",
+  "keywords": [
+    "Spring"
+  ],
+  "articleBody": "将对象的创建、初始化、销毁等操作交给 Spring 容器来管理\n本文以Student 类为例，定义如下：\npublic class Student { public String name; public Integer number; public boolean sex; //..constructor,getter and setter } 一. 创建一个简单的IOC应用 引入maven依赖\norg.springframework spring-context 5.1.9.RELEASE 在 📂resources 下创建一个 spring 的配置文件ioc.xml 引入了Student，id为该 bean 唯一标识符，通常 id 与 name一样\n\u003c?xml version=\"1.0\" encoding=\"UTF-8\"?\u003e ",
+  "wordCount" : "1490",
+  "inLanguage": "en",
+  "datePublished": "2021-07-07T22:20:58+08:00",
+  "dateModified": "2021-07-07T22:20:58+08:00",
+  "author":{
+    "@type": "Person",
+    "name": "Kend"
+  },
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://iendi.github.io/en/posts/tech/spring/ioc/"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "Kend's Blog",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://iendi.github.io/img/1.png"
+    }
+  }
+}
+</script>
+</head>
+
+<body class="" id="top">
+<script>
+    if (localStorage.getItem("pref-theme") === "dark") {
+        document.body.classList.add('dark');
+    }
+
+</script>
+
+<header class="header">
+    <nav class="nav">
+        <div class="logo">
+            <a href="https://iendi.github.io/en/" accesskey="h" title="Kend&#39;s Blog (Alt + H)">
+                <img src="https://iendi.github.io/img/1.png" alt="" aria-label="logo"
+                    height="35">Kend&#39;s Blog</a>
+            <div class="logo-switches">
+                <button id="theme-toggle" accesskey="t" title="(Alt + T)">
+                    <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <ul id="menu">
+            <li>
+                <a href="https://iendi.github.io/en/search" title="🔍搜索 (Alt &#43; /)" accesskey=/>
+                    <span>🔍搜索</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://iendi.github.io/en/" title="🏠主页">
+                    <span>🏠主页</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://iendi.github.io/en/posts" title="📚文章">
+                    <span>📚文章</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://iendi.github.io/en/archives/" title="⏱时间轴">
+                    <span>⏱时间轴</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://iendi.github.io/en/tags" title="🔖标签">
+                    <span>🔖标签</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://iendi.github.io/en/about" title="🙋🏻‍♂️关于">
+                    <span>🙋🏻‍♂️关于</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</header>
+<main class="main">
+
+<article class="post-single">
+  <header class="post-header">
+    <div class="breadcrumbs"><a href="https://iendi.github.io/en/">主页</a>&nbsp;»&nbsp;<a href="https://iendi.github.io/en/posts/">📚文章</a>&nbsp;»&nbsp;<a href="https://iendi.github.io/en/posts/tech/">🧑‍💻后端</a>&nbsp;»&nbsp;<a href="https://iendi.github.io/en/posts/tech/spring/">Spring</a></div>
+    <h1 class="post-title entry-hint-parent">
+      IOC
+    </h1>
+    <div class="post-meta"><span title='2021-07-07 22:20:58 +0800 CST'>2021-07-07</span>&nbsp;·&nbsp;3 min&nbsp;·&nbsp;Kend
+
+
+
+
+&nbsp;|&nbsp;标签: &nbsp;
+    <ul class="post-tags-meta">
+        <a href="https://iendi.github.io/en/tags/spring/">Spring</a>
+    </ul>
+    </div>
+  </header> <aside id="toc-container" class="toc-container wide">
+    <div class="toc">
+        <details  open>
+            <summary accesskey="c" title="(Alt + C)">
+                <span class="details">文章目录</span>
+            </summary>
+
+            <div class="inner"><ul>
+                    <li>
+                        <a href="#%e4%b8%80-%e5%88%9b%e5%bb%ba%e4%b8%80%e4%b8%aa%e7%ae%80%e5%8d%95%e7%9a%84ioc%e5%ba%94%e7%94%a8" aria-label="一. 创建一个简单的IOC应用">一. 创建一个简单的IOC应用</a></li>
+                    <li>
+                        <a href="#%e4%ba%8c-bean-%e7%9a%84%e5%b1%9e%e6%80%a7%e6%b3%a8%e5%85%a5" aria-label="二. Bean 的属性注入">二. Bean 的属性注入</a><ul>
+                            
+                    <li>
+                        <a href="#1-%e9%80%9a%e8%bf%87%e6%9e%84%e9%80%a0%e6%96%b9%e6%b3%95" aria-label="1. 通过构造方法">1. 通过构造方法</a></li>
+                    <li>
+                        <a href="#2-%e9%80%9a%e8%bf%87-set-%e6%96%b9%e6%b3%95%e6%b3%a8%e5%85%a5" aria-label="2. 通过 set 方法注入">2. 通过 set 方法注入</a></li>
+                    <li>
+                        <a href="#3-%e5%85%b6%e4%bb%96%e5%a4%8d%e6%9d%82%e5%b1%9e%e6%80%a7%e6%b3%a8%e5%85%a5" aria-label="3. 其他复杂属性注入">3. 其他复杂属性注入</a></li></ul>
+                    </li>
+                    <li>
+                        <a href="#%e4%b8%89-bean-%e6%b3%a8%e5%86%8c" aria-label="三. Bean 注册">三. Bean 注册</a><ul>
+                            
+                    <li>
+                        <a href="#1java-%e9%85%8d%e7%bd%ae" aria-label="1.Java 配置">1.Java 配置</a></li>
+                    <li>
+                        <a href="#2-%e8%87%aa%e5%8a%a8%e5%8c%96%e9%85%8d%e7%bd%ae" aria-label="2. 自动化配置">2. 自动化配置</a><ul>
+                            
+                    <li>
+                        <a href="#%e6%b7%bb%e5%8a%a0%e8%87%aa%e5%8a%a8%e5%8c%96%e6%b3%a8%e8%a7%a3" aria-label="添加自动化注解">添加自动化注解</a></li>
+                    <li>
+                        <a href="#%e9%85%8d%e7%bd%ae%e8%87%aa%e5%8a%a8%e5%8c%96%e6%89%ab%e6%8f%8f" aria-label="配置自动化扫描">配置自动化扫描</a></li>
+                    <li>
+                        <a href="#%e5%af%b9%e8%b1%a1%e6%b3%a8%e5%85%a5" aria-label="对象注入">对象注入</a></li></ul>
+                    </li></ul>
+                    </li>
+                    <li>
+                        <a href="#%e5%9b%9b-bean%e7%9a%84%e7%94%9f%e5%91%bd%e5%91%a8%e6%9c%9f" aria-label="四. Bean的生命周期">四. Bean的生命周期</a>
+                    </li>
+                </ul>
+            </div>
+        </details>
+    </div>
+</aside>
+<script>
+    let activeElement;
+    let elements;
+    window.addEventListener('DOMContentLoaded', function (event) {
+        checkTocPosition();
+
+        elements = document.querySelectorAll('h1[id],h2[id],h3[id],h4[id],h5[id],h6[id]');
+         
+         activeElement = elements[0];
+         const id = encodeURI(activeElement.getAttribute('id')).toLowerCase();
+         document.querySelector(`.inner ul li a[href="#${id}"]`).classList.add('active');
+     }, false);
+
+    window.addEventListener('resize', function(event) {
+        checkTocPosition();
+    }, false);
+
+    window.addEventListener('scroll', () => {
+        
+        activeElement = Array.from(elements).find((element) => {
+            if ((getOffsetTop(element) - window.pageYOffset) > 0 && 
+                (getOffsetTop(element) - window.pageYOffset) < window.innerHeight/2) {
+                return element;
+            }
+        }) || activeElement
+
+        elements.forEach(element => {
+             const id = encodeURI(element.getAttribute('id')).toLowerCase();
+             if (element === activeElement){
+                 document.querySelector(`.inner ul li a[href="#${id}"]`).classList.add('active');
+             } else {
+                 document.querySelector(`.inner ul li a[href="#${id}"]`).classList.remove('active');
+             }
+         })
+     }, false);
+
+    const main = parseInt(getComputedStyle(document.body).getPropertyValue('--article-width'), 10);
+    const toc = parseInt(getComputedStyle(document.body).getPropertyValue('--toc-width'), 10);
+    const gap = parseInt(getComputedStyle(document.body).getPropertyValue('--gap'), 10);
+
+    function checkTocPosition() {
+        const width = document.body.scrollWidth;
+
+        if (width - main - (toc * 2) - (gap * 4) > 0) {
+            document.getElementById("toc-container").classList.add("wide");
+        } else {
+            document.getElementById("toc-container").classList.remove("wide");
+        }
+    }
+
+    function getOffsetTop(element) {
+        if (!element.getClientRects().length) {
+            return 0;
+        }
+        let rect = element.getBoundingClientRect();
+        let win = element.ownerDocument.defaultView;
+        return rect.top + win.pageYOffset;   
+    }
+</script>
+  <div class="post-content"><p>将对象的<code>创建</code>、<code>初始化</code>、<code>销毁</code>等操作交给 Spring <code>容器</code>来管理</p>
+<p>本文以<code>Student</code> 类为例，定义如下：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Student</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> String name;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> Integer number;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">boolean</span> sex;
+</span></span><span style="display:flex;"><span>	<span style="color:#75715e">//..constructor,getter and setter</span>
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><h2 id="一-创建一个简单的ioc应用">一. 创建一个简单的IOC应用<a hidden class="anchor" aria-hidden="true" href="#一-创建一个简单的ioc应用">#</a></h2>
+<ol>
+<li>
+<p>引入maven依赖</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-xml" data-lang="xml"><span style="display:flex;"><span><span style="color:#f92672">&lt;dependencies&gt;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&lt;dependency&gt;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">&lt;groupId&gt;</span>org.springframework<span style="color:#f92672">&lt;/groupId&gt;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">&lt;artifactId&gt;</span>spring-context<span style="color:#f92672">&lt;/artifactId&gt;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">&lt;version&gt;</span>5.1.9.RELEASE<span style="color:#f92672">&lt;/version&gt;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&lt;/dependency&gt;</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">&lt;/dependencies&gt;</span>
+</span></span></code></pre></div></li>
+<li>
+<p>在 <code>📂resources </code>下创建一个 spring 的配置文件<code>ioc.xml</code>
+引入了<code>Student</code>，<code>id</code>为该 bean 唯一标识符，通常 id 与 name一样</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-xml" data-lang="xml"><span style="display:flex;"><span><span style="color:#75715e">&lt;?xml version=&#34;1.0&#34; encoding=&#34;UTF-8&#34;?&gt;</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">&lt;beans</span> <span style="color:#a6e22e">xmlns=</span><span style="color:#e6db74">&#34;http://www.springframework.org/schema/beans&#34;</span>
+</span></span><span style="display:flex;"><span>       <span style="color:#a6e22e">xmlns:xsi=</span><span style="color:#e6db74">&#34;http://www.w3.org/2001/XMLSchema-instance&#34;</span>
+</span></span><span style="display:flex;"><span>       <span style="color:#a6e22e">xsi:schemaLocation=</span><span style="color:#e6db74">&#34;http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd&#34;</span><span style="color:#f92672">&gt;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">&lt;bean</span> <span style="color:#a6e22e">class=</span><span style="color:#e6db74">&#34;com.xu.ioc.Student&#34;</span> <span style="color:#a6e22e">id=</span><span style="color:#e6db74">&#34;student&#34;</span><span style="color:#f92672">/&gt;</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">&lt;/beans&gt;</span>
+</span></span></code></pre></div></li>
+<li>
+<p>调用容器中的 bean</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Person</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">main</span>(String<span style="color:#f92672">[]</span> args) {
+</span></span><span style="display:flex;"><span>        ClassPathXmlApplicationContext ctx <span style="color:#f92672">=</span><span style="color:#66d9ef">new</span> ClassPathXmlApplicationContext(<span style="color:#e6db74">&#34;ioc.xml&#34;</span>);
+</span></span><span style="display:flex;"><span>        Student student <span style="color:#f92672">=</span> (Student) ctx.<span style="color:#a6e22e">getBean</span>(<span style="color:#e6db74">&#34;student&#34;</span>);
+</span></span><span style="display:flex;"><span>        System.<span style="color:#a6e22e">out</span>.<span style="color:#a6e22e">println</span>(student);
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span><span style="color:#75715e">/*
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">输出：
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">Student无参构造执行
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">com.xu.ioc.Student@27efef64
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">*/</span>
+</span></span></code></pre></div><ul>
+<li>获取配置文件的方法：
+<ul>
+<li><code>ClassPathXmlApplicationContext</code> 从 classpath 下查找配置文件</li>
+<li><code>FileSystemXmlApplicationContext </code> 从操作系统路径下去寻找配置文件</li>
+</ul>
+</li>
+<li>获取 Bean 的方法：
+<ul>
+<li>通过<code>id</code>或<code>name</code>： <code>ctx.getBean(&quot;student&quot;)</code></li>
+<li>通过类名：<code>ctx.getBean(Student.class)</code> （不推荐，当一类有多个bean时会报错）</li>
+</ul>
+</li>
+</ul>
+</li>
+</ol>
+<h2 id="二-bean-的属性注入">二. Bean 的属性注入<a hidden class="anchor" aria-hidden="true" href="#二-bean-的属性注入">#</a></h2>
+<h3 id="1-通过构造方法">1. 通过构造方法<a hidden class="anchor" aria-hidden="true" href="#1-通过构造方法">#</a></h3>
+<p>需要<code>Student</code> 类中已定义好构造函数</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-xml" data-lang="xml"><span style="display:flex;"><span><span style="color:#f92672">&lt;bean</span> <span style="color:#a6e22e">class=</span><span style="color:#e6db74">&#34;com.xu.ioc.Student&#34;</span> <span style="color:#a6e22e">id=</span><span style="color:#e6db74">&#34;student&#34;</span><span style="color:#f92672">&gt;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&lt;constructor-arg</span> <span style="color:#a6e22e">index=</span><span style="color:#e6db74">&#34;0&#34;</span> <span style="color:#a6e22e">value=</span><span style="color:#e6db74">&#34;LiHua&#34;</span><span style="color:#f92672">/&gt;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&lt;constructor-arg</span> <span style="color:#a6e22e">index=</span><span style="color:#e6db74">&#34;1&#34;</span> <span style="color:#a6e22e">value=</span><span style="color:#e6db74">&#34;119&#34;</span><span style="color:#f92672">/&gt;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&lt;constructor-arg</span> <span style="color:#a6e22e">index=</span><span style="color:#e6db74">&#34;2&#34;</span> <span style="color:#a6e22e">value=</span><span style="color:#e6db74">&#34;true&#34;</span><span style="color:#f92672">/&gt;</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">&lt;/bean&gt;</span>
+</span></span></code></pre></div><p>或直接用 <code>name</code> 来指定</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-xml" data-lang="xml"><span style="display:flex;"><span><span style="color:#f92672">&lt;bean</span> <span style="color:#a6e22e">class=</span><span style="color:#e6db74">&#34;com.xu.ioc.Student&#34;</span> <span style="color:#a6e22e">id=</span><span style="color:#e6db74">&#34;student&#34;</span><span style="color:#f92672">&gt;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&lt;constructor-arg</span> <span style="color:#a6e22e">name=</span><span style="color:#e6db74">&#34;name&#34;</span> <span style="color:#a6e22e">value=</span><span style="color:#e6db74">&#34;LiHua&#34;</span><span style="color:#f92672">/&gt;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&lt;constructor-arg</span> <span style="color:#a6e22e">name=</span><span style="color:#e6db74">&#34;number&#34;</span> <span style="color:#a6e22e">value=</span><span style="color:#e6db74">&#34;119&#34;</span><span style="color:#f92672">/&gt;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&lt;constructor-arg</span> <span style="color:#a6e22e">name=</span><span style="color:#e6db74">&#34;sex&#34;</span> <span style="color:#a6e22e">value=</span><span style="color:#e6db74">&#34;true&#34;</span><span style="color:#f92672">/&gt;</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">&lt;/bean&gt;</span>
+</span></span></code></pre></div><h3 id="2-通过-set-方法注入">2. 通过 set 方法注入<a hidden class="anchor" aria-hidden="true" href="#2-通过-set-方法注入">#</a></h3>
+<p>==属性值==并不是类中定义的属性名，而是通过<code>set</code>方法分析得到的属性名</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-xml" data-lang="xml"><span style="display:flex;"><span><span style="color:#f92672">&lt;bean</span> <span style="color:#a6e22e">class=</span><span style="color:#e6db74">&#34;com.xu.ioc.Student&#34;</span> <span style="color:#a6e22e">id=</span><span style="color:#e6db74">&#34;student&#34;</span><span style="color:#f92672">&gt;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&lt;property</span> <span style="color:#a6e22e">name=</span><span style="color:#e6db74">&#34;name&#34;</span> <span style="color:#a6e22e">value=</span><span style="color:#e6db74">&#34;LiHua&#34;</span><span style="color:#f92672">/&gt;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&lt;property</span> <span style="color:#a6e22e">name=</span><span style="color:#e6db74">&#34;number&#34;</span> <span style="color:#a6e22e">value=</span><span style="color:#e6db74">&#34;119&#34;</span><span style="color:#f92672">/&gt;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&lt;property</span> <span style="color:#a6e22e">name=</span><span style="color:#e6db74">&#34;sex&#34;</span> <span style="color:#a6e22e">value=</span><span style="color:#e6db74">&#34;true&#34;</span><span style="color:#f92672">/&gt;</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">&lt;/bean&gt;</span>
+</span></span></code></pre></div><h3 id="3-其他复杂属性注入">3. 其他复杂属性注入<a hidden class="anchor" aria-hidden="true" href="#3-其他复杂属性注入">#</a></h3>
+<ul>
+<li>
+<p>对象注入：通过 <code>ref</code> 引用对象</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-xml" data-lang="xml"><span style="display:flex;"><span><span style="color:#f92672">&lt;bean</span> <span style="color:#a6e22e">class=</span><span style="color:#e6db74">&#34;com.xu.User&#34;</span> <span style="color:#a6e22e">id=</span><span style="color:#e6db74">&#34;user&#34;</span><span style="color:#f92672">&gt;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&lt;property</span> <span style="color:#a6e22e">name=</span><span style="color:#e6db74">&#34;cat&#34;</span> <span style="color:#a6e22e">ref=</span><span style="color:#e6db74">&#34;cat&#34;</span><span style="color:#f92672">/&gt;</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">&lt;/bean&gt;</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">&lt;bean</span> <span style="color:#a6e22e">class=</span><span style="color:#e6db74">&#34;com.xu.Cat&#34;</span> <span style="color:#a6e22e">id=</span><span style="color:#e6db74">&#34;cat&#34;</span><span style="color:#f92672">&gt;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&lt;property</span> <span style="color:#a6e22e">name=</span><span style="color:#e6db74">&#34;name&#34;</span> <span style="color:#a6e22e">value=</span><span style="color:#e6db74">&#34;小白&#34;</span><span style="color:#f92672">/&gt;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&lt;property</span> <span style="color:#a6e22e">name=</span><span style="color:#e6db74">&#34;color&#34;</span> <span style="color:#a6e22e">value=</span><span style="color:#e6db74">&#34;白色&#34;</span><span style="color:#f92672">/&gt;</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">&lt;/bean&gt;</span>
+</span></span></code></pre></div></li>
+<li>
+<p>数组注入：<code>array</code> 节点，也可以被<code>list</code>节点代替</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-xml" data-lang="xml"><span style="display:flex;"><span><span style="color:#f92672">&lt;bean</span> <span style="color:#a6e22e">class=</span><span style="color:#e6db74">&#34;com.xu.User&#34;</span> <span style="color:#a6e22e">id=</span><span style="color:#e6db74">&#34;user&#34;</span><span style="color:#f92672">&gt;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&lt;property</span> <span style="color:#a6e22e">name=</span><span style="color:#e6db74">&#34;cat&#34;</span> <span style="color:#a6e22e">ref=</span><span style="color:#e6db74">&#34;cat&#34;</span><span style="color:#f92672">/&gt;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&lt;property</span> <span style="color:#a6e22e">name=</span><span style="color:#e6db74">&#34;favorites&#34;</span><span style="color:#f92672">&gt;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">&lt;array&gt;</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#f92672">&lt;value&gt;</span>足球<span style="color:#f92672">&lt;/value&gt;</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#f92672">&lt;value&gt;</span>篮球<span style="color:#f92672">&lt;/value&gt;</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#f92672">&lt;value&gt;</span>乒乓球<span style="color:#f92672">&lt;/value&gt;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">&lt;/array&gt;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&lt;/property&gt;</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">&lt;/bean&gt;</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">&lt;bean</span> <span style="color:#a6e22e">class=</span><span style="color:#e6db74">&#34;com.xu.Cat&#34;</span> <span style="color:#a6e22e">id=</span><span style="color:#e6db74">&#34;cat&#34;</span><span style="color:#f92672">&gt;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&lt;property</span> <span style="color:#a6e22e">name=</span><span style="color:#e6db74">&#34;name&#34;</span> <span style="color:#a6e22e">value=</span><span style="color:#e6db74">&#34;小白&#34;</span><span style="color:#f92672">/&gt;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&lt;property</span> <span style="color:#a6e22e">name=</span><span style="color:#e6db74">&#34;color&#34;</span> <span style="color:#a6e22e">value=</span><span style="color:#e6db74">&#34;白色&#34;</span><span style="color:#f92672">/&gt;</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">&lt;/bean&gt;</span>
+</span></span></code></pre></div></li>
+<li>
+<p>Map 注入：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-xml" data-lang="xml"><span style="display:flex;"><span><span style="color:#f92672">&lt;property</span> <span style="color:#a6e22e">name=</span><span style="color:#e6db74">&#34;map&#34;</span><span style="color:#f92672">&gt;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&lt;map&gt;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">&lt;entry</span> <span style="color:#a6e22e">key=</span><span style="color:#e6db74">&#34;age&#34;</span> <span style="color:#a6e22e">value=</span><span style="color:#e6db74">&#34;99&#34;</span><span style="color:#f92672">/&gt;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">&lt;entry</span> <span style="color:#a6e22e">key=</span><span style="color:#e6db74">&#34;name&#34;</span> <span style="color:#a6e22e">value=</span><span style="color:#e6db74">&#34;xu&#34;</span><span style="color:#f92672">/&gt;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&lt;/map&gt;</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">&lt;/property&gt;</span>
+</span></span></code></pre></div></li>
+<li>
+<p>Properties 注入：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-xml" data-lang="xml"><span style="display:flex;"><span><span style="color:#f92672">&lt;property</span> <span style="color:#a6e22e">name=</span><span style="color:#e6db74">&#34;info&#34;</span><span style="color:#f92672">&gt;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&lt;props&gt;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">&lt;prop</span> <span style="color:#a6e22e">key=</span><span style="color:#e6db74">&#34;age&#34;</span><span style="color:#f92672">&gt;</span>99<span style="color:#f92672">&lt;/prop&gt;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">&lt;prop</span> <span style="color:#a6e22e">key=</span><span style="color:#e6db74">&#34;name&#34;</span><span style="color:#f92672">&gt;</span>xu<span style="color:#f92672">&lt;/prop&gt;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&lt;/props&gt;</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">&lt;/property&gt;</span>
+</span></span></code></pre></div></li>
+</ul>
+<h2 id="三-bean-注册">三. Bean 注册<a hidden class="anchor" aria-hidden="true" href="#三-bean-注册">#</a></h2>
+<h3 id="1java-配置">1.Java 配置<a hidden class="anchor" aria-hidden="true" href="#1java-配置">#</a></h3>
+<p>通过注解和配置类实现，首先定义配置类<code>JavaConfig</code></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#a6e22e">@Configuration</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">JavaConfig</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">@Bean</span>
+</span></span><span style="display:flex;"><span>    Student <span style="color:#a6e22e">sayHello</span>() {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">new</span> Student();
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p><code>@Configuration</code> 表示这个类不是一个普通类，而是一个配置类，它的作用相当于 <code>applicationContext.xml</code>，<code>@Bean </code>注解，将这个方法的 ==返回值== 注入 Spring 容器</p>
+<p>接着在主方法中添加配置类：通过<code>AnnotationConfigApplicationContext</code>引入配置类</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Person</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">main</span>(String<span style="color:#f92672">[]</span> args) {
+</span></span><span style="display:flex;"><span>        AnnotationConfigApplicationContext ctx <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> AnnotationConfigApplicationContext(JavaConfig.<span style="color:#a6e22e">class</span>);
+</span></span><span style="display:flex;"><span>        Student hello <span style="color:#f92672">=</span> ctx.<span style="color:#a6e22e">getBean</span>(SayHello.<span style="color:#a6e22e">class</span>);
+</span></span><span style="display:flex;"><span>        System.<span style="color:#a6e22e">out</span>.<span style="color:#a6e22e">println</span>(hello);
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><h3 id="2-自动化配置">2. 自动化配置<a hidden class="anchor" aria-hidden="true" href="#2-自动化配置">#</a></h3>
+<h4 id="添加自动化注解">添加自动化注解<a hidden class="anchor" aria-hidden="true" href="#添加自动化注解">#</a></h4>
+<ul>
+<li>在 Service 层上，添加注解时，使用 <code>@Service</code></li>
+<li>在 Dao 层，添加注解时，使用 <code>@Repository</code></li>
+<li>在 Controller 层，添加注解时，使用<code> @Controller</code></li>
+<li>在其他组件上添加注解时，使用 <code>@Component</code></li>
+</ul>
+<h4 id="配置自动化扫描">配置自动化扫描<a hidden class="anchor" aria-hidden="true" href="#配置自动化扫描">#</a></h4>
+<blockquote>
+<p>通过<code>@ComponentScan</code></p>
+</blockquote>
+<p>对配置类<code>JavaConfig</code>，添加<code>@ComponentScan</code>进行包扫描，然后在主方法中通过<code>AnnotationConfigApplicationContext</code>引入配置类</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#a6e22e">@Configuration</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">@ComponentScan</span>(basePackages <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;com.xu.javaconfig.service&#34;</span>)
+</span></span><span style="display:flex;"><span><span style="color:#75715e">//扫描com.xu.javaconfig包下的service类</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">JavaConfig</span> {
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><ul>
+<li>
+<p>扫描进容器的bean名称，默认为类名==首字母小写==，可以在注解中定义名称。</p>
+</li>
+<li>
+<p>可以自定义扫描规则，扫描指定类，如下是不扫描<code>Controller</code>注解进容器</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#a6e22e">@Configuration</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">@ComponentScan</span>(basePackages <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;com.xu.javaconfig&#34;</span>,useDefaultFilters <span style="color:#f92672">=</span> <span style="color:#66d9ef">true</span>,excludeFilters <span style="color:#f92672">=</span> {<span style="color:#a6e22e">@ComponentScan.Filter</span>(type <span style="color:#f92672">=</span> FilterType.<span style="color:#a6e22e">ANNOTATION</span>,classes <span style="color:#f92672">=</span> Controller.<span style="color:#a6e22e">class</span>)})
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">JavaConfig</span> {
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div></li>
+</ul>
+<blockquote>
+<p>通过 xml</p>
+</blockquote>
+<p>在 xml 文件中添加：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-xml" data-lang="xml"><span style="display:flex;"><span><span style="color:#f92672">&lt;context:component-scan</span> <span style="color:#a6e22e">base-package=</span><span style="color:#e6db74">&#34;com.xu.javaconfig&#34;</span><span style="color:#f92672">/&gt;</span>
+</span></span></code></pre></div><p>主方法中通过<code>ClassPathXmlApplicationContext</code>加载配置文件即可完成注册</p>
+<p>同样可以自定义扫描规则：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-xml" data-lang="xml"><span style="display:flex;"><span><span style="color:#f92672">&lt;context:component-scan</span> <span style="color:#a6e22e">base-package=</span><span style="color:#e6db74">&#34;com.xu.javaconfig&#34;</span> <span style="color:#a6e22e">use-default-filters=</span><span style="color:#e6db74">&#34;true&#34;</span><span style="color:#f92672">&gt;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&lt;context:exclude-filter</span> <span style="color:#a6e22e">type=</span><span style="color:#e6db74">&#34;annotation&#34;</span> <span style="color:#a6e22e">expression=</span><span style="color:#e6db74">&#34;org.springframework.stereotype.Controller&#34;</span><span style="color:#f92672">/&gt;</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">&lt;/context:component-scan&gt;</span>
+</span></span></code></pre></div><h4 id="对象注入">对象注入<a hidden class="anchor" aria-hidden="true" href="#对象注入">#</a></h4>
+<p>一般有三种对象注入方式：</p>
+<ul>
+<li><code>@Autowired</code>：根据类型查找，要求该类型<strong>只能</strong>有一个Bean
+<ul>
+<li>可与<code>@Qualifier</code>注解配合，达到通过Bean名称查找的效果</li>
+</ul>
+</li>
+<li><code>@Resources</code>：根据定义的Bean名查找</li>
+<li><code>@Injected</code>：与<code>@Autowired</code>类似，但需要导入<code>javax.inject.Inject</code>，不常用</li>
+</ul>
+<h2 id="四-bean的生命周期">四. Bean的生命周期<a hidden class="anchor" aria-hidden="true" href="#四-bean的生命周期">#</a></h2>
+
+
+  </div>
+
+  <footer class="post-footer">
+    <ul class="post-tags">
+      <li><a href="https://iendi.github.io/en/tags/spring/">Spring</a></li>
+    </ul>
+<nav class="paginav">
+  <a class="prev" href="https://iendi.github.io/en/posts/tech/spring/bean-%E7%9A%84%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F/">
+    <span class="title">« 上一页</span>
+    <br>
+    <span>Bean 的生命周期</span>
+  </a>
+</nav>
+
+  </footer>
+</article>
+    </main>
+    
+<footer class="footer">
+    <span>
+        Copyright
+        &copy;
+        -2024
+        <a href="https://iendi.github.io/en/" style="color:#939393;">Kend&#39;s Blog</a>
+        All Rights Reserved
+    </span>
+    <a href="https://beian.miit.gov.cn/" target="_blank" style="color:#939393;"></a>&nbsp;
+    <span>
+        <a target="_blank" href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=null"
+           style="display:inline-block;text-decoration:none;height:20px;color:#939393;">
+            <img src="" style="float:left;margin: 0px 5px 0px 0px;"/>
+            
+        </a>
+    </span>
+    <span id="busuanzi_container">
+        <span class="fa fa-user"></span> <span id="busuanzi_value_site_uv"></span>
+        <span class="fa fa-eye"></span> <span id="busuanzi_value_site_pv"></span>
+    </span>
+</footer>
+<a href="#top" aria-label="go to top" title="Go to Top (Alt + G)" class="top-link" id="top-link" accesskey="g">
+    <span class="topInner">
+        <svg class="topSvg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentColor">
+            <path d="M12 6H0l6-6z"/>
+        </svg>
+        <span id="read_progress"></span>
+    </span>
+</a>
+
+<script>
+    document.addEventListener('scroll', function (e) {
+        const readProgress = document.getElementById("read_progress");
+        const scrollHeight = document.documentElement.scrollHeight;
+        const clientHeight = document.documentElement.clientHeight;
+        const scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
+        readProgress.innerText = ((scrollTop / (scrollHeight - clientHeight)).toFixed(2) * 100).toFixed(0);
+    })
+</script>
+
+<script>
+    let menu = document.getElementById('menu')
+    if (menu) {
+        menu.scrollLeft = localStorage.getItem("menu-scroll-position");
+        menu.onscroll = function () {
+            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+        }
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+</script>
+<script>
+    let mybutton = document.getElementById("top-link");
+    window.onscroll = function () {
+        if (document.body.scrollTop > 200 || document.documentElement.scrollTop > 200) {
+            mybutton.style.visibility = "visible";
+            mybutton.style.opacity = "1";
+        } else {
+            mybutton.style.visibility = "hidden";
+            mybutton.style.opacity = "0";
+        }
+    };
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        (function() {
+            document.cookie = "change-themes" + "="+ escape ("false");
+        })()
+
+        if (document.body.className.includes("dark")) {
+            document.body.classList.remove('dark');
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            document.body.classList.add('dark');
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    });
+</script>
+
+<script>
+    document.body.addEventListener('copy', function (e) {
+        if (window.getSelection().toString() && window.getSelection().toString().length > 50) {
+            let clipboardData = e.clipboardData || window.clipboardData;
+            if (clipboardData) {
+                e.preventDefault();
+                let htmlData = window.getSelection().toString() +
+                    '\r\n\n————————————————\r\n' +
+                    '版权声明：本文为「'+"Kend's Blog"+'」的原创文章，遵循CC 4.0 BY-SA版权协议，转载请附上原文出处链接及本声明。' +
+                '\r\n原文链接：' + location.href;
+                let textData = window.getSelection().toString() +
+                    '\r\n\n————————————————\r\n' +
+                    '版权声明：本文为「'+"Kend's Blog"+'」的原创文章，遵循CC 4.0 BY-SA版权协议，转载请附上原文出处链接及本声明。' +
+                '\r\n原文链接：' + location.href;
+                clipboardData.setData('text/html', htmlData);
+                clipboardData.setData('text/plain', textData);
+            }
+        }
+    });
+</script>
+<script>
+    document.querySelectorAll('pre > code').forEach((codeblock) => {
+        const container = codeblock.parentNode.parentNode;
+        const copybutton = document.createElement('button');
+        copybutton.classList.add('copy-code');
+        copybutton.innerText = '📄复制';
+
+        function copyingDone() {
+            copybutton.innerText = '👌🏻已复制!';
+            setTimeout(() => {
+                copybutton.innerText = '📄复制';
+            }, 2000);
+        }
+
+        copybutton.addEventListener('click', (cb) => {
+            if ('clipboard' in navigator) {
+                let text = codeblock.textContent +
+                    '\r\n————————————————\r\n' +
+                    '版权声明：本文为「'+"Kend's Blog"+'」的原创文章，遵循CC 4.0 BY-SA版权协议，转载请附上原文出处链接及本声明。' +
+                '\r\n原文链接：' + location.href;
+                navigator.clipboard.writeText(text);
+                copyingDone();
+                return;
+            }
+
+            const range = document.createRange();
+            range.selectNodeContents(codeblock);
+            const selection = window.getSelection();
+            selection.removeAllRanges();
+            selection.addRange(range);
+            try {
+                document.execCommand('copy');
+                copyingDone();
+            } catch (e) {}
+            selection.removeRange(range);
+        });
+
+        let language = codeblock.className.replaceAll("language-", "")
+        let macTool = document.createElement("div")
+        let macTool1 = document.createElement("div")
+        let macTool2 = document.createElement("div")
+        let macTool3 = document.createElement("div")
+        let languageType = document.createElement("div")
+        languageType.innerText = language
+        macTool.setAttribute('class', 'mac-tool')
+        macTool1.setAttribute('class', 'mac bb1')
+        macTool2.setAttribute('class', 'mac bb2')
+        macTool3.setAttribute('class', 'mac bb3')
+        languageType.setAttribute('class', 'language-type')
+        macTool.appendChild(macTool1)
+        macTool.appendChild(macTool2)
+        macTool.appendChild(macTool3)
+        macTool.appendChild(languageType)
+
+        if (container.classList.contains("highlight")) {
+            container.appendChild(copybutton);
+            container.appendChild(macTool)
+        } else if (container.parentNode.firstChild == container) {
+            
+        } else if (codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.nodeName == "TABLE") {
+            
+            codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.appendChild(copybutton);
+            container.appendChild(macTool)
+        } else {
+            
+            codeblock.parentNode.appendChild(copybutton);
+            container.appendChild(macTool)
+        }
+    });
+</script>
+</body>
+
+</html>

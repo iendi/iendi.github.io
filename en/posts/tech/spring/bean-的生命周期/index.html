@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html lang="en" dir="auto">
+
+<head><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="index, follow">
+<title>Bean 的生命周期 | Kend&#39;s Blog</title>
+<meta name="keywords" content="Spring">
+<meta name="description" content="Bean的生命周期主要可分为4个部分： Bean的定义：通过配置查找Bean，并将Bean定义发布到IoC容器中，此时只有定义==没有实例==">
+<meta name="author" content="Kend">
+<link rel="canonical" href="https://iendi.github.io/en/posts/tech/spring/bean-%E7%9A%84%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F/">
+
+
+<link crossorigin="anonymous" href="/assets/css/stylesheet.2b3a9b630d724ad2b56cb3217ca569e88f4344d61fa91c496bfd01d1128c4950.css" integrity="" rel="preload stylesheet" as="style">
+<script defer crossorigin="anonymous" src="/assets/js/highlight.f413e19d0714851f6474e7ee9632408e58ac146fbdbe62747134bea2fa3415e0.js" integrity="sha256-9BPhnQcUhR9kdOfuljJAjlisFG&#43;9vmJ0cTS&#43;ovo0FeA="
+        onload="hljs.initHighlightingOnLoad();"></script>
+<link rel="icon" href="https://iendi.github.io/img/1.png">
+<link rel="icon" type="image/png" sizes="16x16" href="https://iendi.github.io/img/1.png">
+<link rel="icon" type="image/png" sizes="32x32" href="https://iendi.github.io/img/1.png">
+<link rel="apple-touch-icon" href="https://iendi.github.io/1.png">
+<link rel="mask-icon" href="https://iendi.github.io/1.png">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<link rel="alternate" hreflang="en" href="https://iendi.github.io/en/posts/tech/spring/bean-%E7%9A%84%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F/">
+<noscript>
+    <style>
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+</noscript>
+<script>
+    MathJax = {
+      tex: {
+        inlineMath: [["$", "$"]],
+      },
+      displayMath: [
+        ["$$", "$$"]
+      ],
+      svg: {
+        fontCache: "global",
+      },
+    };
+  </script>
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script
+    id="MathJax-script"
+    async
+    src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"
+  ></script>
+
+
+  
+
+<meta property="og:title" content="Bean 的生命周期" />
+<meta property="og:description" content="Bean的生命周期主要可分为4个部分： Bean的定义：通过配置查找Bean，并将Bean定义发布到IoC容器中，此时只有定义==没有实例==" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://iendi.github.io/en/posts/tech/spring/bean-%E7%9A%84%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F/" /><meta property="article:section" content="posts" />
+<meta property="article:published_time" content="2021-07-07T22:20:58+08:00" />
+<meta property="article:modified_time" content="2021-07-07T22:20:58+08:00" />
+
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Bean 的生命周期"/>
+<meta name="twitter:description" content="Bean的生命周期主要可分为4个部分： Bean的定义：通过配置查找Bean，并将Bean定义发布到IoC容器中，此时只有定义==没有实例=="/>
+
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position":  1 ,
+      "name": "📚文章",
+      "item": "https://iendi.github.io/en/posts/"
+    }, 
+    {
+      "@type": "ListItem",
+      "position":  2 ,
+      "name": "🧑‍💻后端",
+      "item": "https://iendi.github.io/en/posts/tech/"
+    }, 
+    {
+      "@type": "ListItem",
+      "position":  3 ,
+      "name": "Spring",
+      "item": "https://iendi.github.io/en/posts/tech/spring/"
+    }, 
+    {
+      "@type": "ListItem",
+      "position":  4 ,
+      "name": "Bean 的生命周期",
+      "item": "https://iendi.github.io/en/posts/tech/spring/bean-%E7%9A%84%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F/"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "Bean 的生命周期",
+  "name": "Bean 的生命周期",
+  "description": "Bean的生命周期主要可分为4个部分： Bean的定义：通过配置查找Bean，并将Bean定义发布到IoC容器中，此时只有定义==没有实例==",
+  "keywords": [
+    "Spring"
+  ],
+  "articleBody": "\rBean的生命周期主要可分为4个部分：\nBean的定义：通过配置查找Bean，并将Bean定义发布到IoC容器中，此时只有定义==没有实例== Bean的初始化：创建Bean的实例对象，依赖注入（如@AutoWired等资源） Bean的生存期：在ctx关闭前存在 Bean的销毁：在ctx关闭后执行销毁 为更直观地测试生命周期，改造Teacher类，加入生命周期接口和自定义类\n@Component public class Teacher implements BeanNameAware, BeanFactoryAware, ApplicationContextAware, InitializingBean, DisposableBean { @Autowired Student student; @Override public void setBeanFactory(BeanFactory beanFactory) throws BeansException { System.out.println(\"【\"+this.getClass().getSimpleName()+\"】调用setBeanFactory\"); } @Override public void setBeanName(String s) { System.out.println(\"【\"+this.getClass().getSimpleName()+\"】调用setBeanName\"); } @Override public void destroy() throws Exception { System.out.println(\"【\"+this.getClass().getSimpleName()+\"】调用destory\"); } @Override public void afterPropertiesSet() throws Exception { System.out.println(\"【\"+this.getClass().getSimpleName()+\"】调用afterPropertiesSet\"); } @Override public void setApplicationContext(ApplicationContext applicationContext) throws BeansException { System.out.println(\"【\"+this.getClass().getSimpleName()+\"】调用setApplicationContext\"); } /** * 自定义初始化和销毁操作 */ @PostConstruct public void init(){ System.out.println(\"【\"+this.getClass().getSimpleName()+\"】执行自定义初始化操作\"); } @PreDestroy public void des(){ System.out.println(\"【\"+this.getClass().getSimpleName()+\"】执行自定义销毁操作\"); } } 其中Student类为了观测依赖注入的时间，然后创建BeanPostProcessor实现类，重写其方法：\n@Component public class BeanPostProcessorExample implements BeanPostProcessor { @Override public Object postProcessBeforeInitialization (Object bean, String beanName) throws BeansException { System.out.println(\"▶BeanPostProcessor \"+\"调用BeforeInitial 【\"+bean.getClass().getSimpleName()+\"】\"); return bean; } @Override public Object postProcessAfterInitialization(Object bean, String beanName) throws BeansException { System.out.println(\"▶BeanPostProcessor \"+\"调用AfterInitial 【\"+bean.getClass().getSimpleName()+\"】\"); return bean; } } 主方法：\npublic class DemoApplication { public static void main(String[] args) { AnnotationConfigApplicationContext ctx=new AnnotationConfigApplicationContext(AppConfig.class); Teacher tea = ctx.getBean(Teacher.class); ctx.close(); } } 最终测试结果：\n▶BeanPostProcessor 调用BeforeInitial 【AppConfig$$EnhancerBySpringCGLIB$$6fc4ea89】 ▶BeanPostProcessor 调用AfterInitial 【AppConfig$$EnhancerBySpringCGLIB$$6fc4ea89】 18:33:15.777 Creating shared instance of singleton bean 'student' ▶BeanPostProcessor 调用BeforeInitial 【Student】 ▶BeanPostProcessor 调用AfterInitial 【Student】 18:33:15.778 Creating shared instance of singleton bean 'teacher' 【Teacher】调用setBeanName 【Teacher】调用setBeanFactory 【Teacher】调用setApplicationContext ▶BeanPostProcessor 调用BeforeInitial 【Teacher】 【Teacher】执行自定义初始化操作 【Teacher】调用afterPropertiesSet ▶BeanPostProcessor 调用AfterInitial 【Teacher】 18:33:15.818 ctx - Closing 【Teacher】执行自定义销毁操作 【Teacher】调用destory 注意：\n由于BeanPostProcessor对所有的Bean都生效，因此Appconfig和Student的也会显示出来 ",
+  "wordCount" : "1816",
+  "inLanguage": "en",
+  "datePublished": "2021-07-07T22:20:58+08:00",
+  "dateModified": "2021-07-07T22:20:58+08:00",
+  "author":{
+    "@type": "Person",
+    "name": "Kend"
+  },
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://iendi.github.io/en/posts/tech/spring/bean-%E7%9A%84%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F/"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "Kend's Blog",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://iendi.github.io/img/1.png"
+    }
+  }
+}
+</script>
+</head>
+
+<body class="" id="top">
+<script>
+    if (localStorage.getItem("pref-theme") === "dark") {
+        document.body.classList.add('dark');
+    }
+
+</script>
+
+<header class="header">
+    <nav class="nav">
+        <div class="logo">
+            <a href="https://iendi.github.io/en/" accesskey="h" title="Kend&#39;s Blog (Alt + H)">
+                <img src="https://iendi.github.io/img/1.png" alt="" aria-label="logo"
+                    height="35">Kend&#39;s Blog</a>
+            <div class="logo-switches">
+                <button id="theme-toggle" accesskey="t" title="(Alt + T)">
+                    <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <ul id="menu">
+            <li>
+                <a href="https://iendi.github.io/en/search" title="🔍搜索 (Alt &#43; /)" accesskey=/>
+                    <span>🔍搜索</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://iendi.github.io/en/" title="🏠主页">
+                    <span>🏠主页</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://iendi.github.io/en/posts" title="📚文章">
+                    <span>📚文章</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://iendi.github.io/en/archives/" title="⏱时间轴">
+                    <span>⏱时间轴</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://iendi.github.io/en/tags" title="🔖标签">
+                    <span>🔖标签</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://iendi.github.io/en/about" title="🙋🏻‍♂️关于">
+                    <span>🙋🏻‍♂️关于</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</header>
+<main class="main">
+
+<article class="post-single">
+  <header class="post-header">
+    <div class="breadcrumbs"><a href="https://iendi.github.io/en/">主页</a>&nbsp;»&nbsp;<a href="https://iendi.github.io/en/posts/">📚文章</a>&nbsp;»&nbsp;<a href="https://iendi.github.io/en/posts/tech/">🧑‍💻后端</a>&nbsp;»&nbsp;<a href="https://iendi.github.io/en/posts/tech/spring/">Spring</a></div>
+    <h1 class="post-title entry-hint-parent">
+      Bean 的生命周期
+    </h1>
+    <div class="post-meta"><span title='2021-07-07 22:20:58 +0800 CST'>2021-07-07</span>&nbsp;·&nbsp;4 min&nbsp;·&nbsp;Kend
+
+
+
+
+&nbsp;|&nbsp;标签: &nbsp;
+    <ul class="post-tags-meta">
+        <a href="https://iendi.github.io/en/tags/spring/">Spring</a>
+    </ul>
+    </div>
+  </header> 
+  <div class="post-content"><p><img loading="lazy" src="image-20210707183724162.png" alt="image-20210707183724162"  />
+</p>
+<p>Bean的生命周期主要可分为4个部分：</p>
+<ul>
+<li>Bean的定义：通过配置查找Bean，并将Bean定义发布到IoC容器中，此时只有定义==没有实例==</li>
+<li>Bean的初始化：创建Bean的实例对象，依赖注入（如<code>@AutoWired</code>等资源）</li>
+<li>Bean的生存期：在<code>ctx</code>关闭前存在</li>
+<li>Bean的销毁：在<code>ctx</code>关闭后执行销毁</li>
+</ul>
+<p>为更直观地测试生命周期，改造<code>Teacher</code>类，加入生命周期接口和自定义类</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#a6e22e">@Component</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Teacher</span> <span style="color:#66d9ef">implements</span> BeanNameAware, BeanFactoryAware, ApplicationContextAware, InitializingBean, DisposableBean {
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">@Autowired</span>
+</span></span><span style="display:flex;"><span>    Student student;
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">@Override</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">setBeanFactory</span>(BeanFactory beanFactory) <span style="color:#66d9ef">throws</span> BeansException {
+</span></span><span style="display:flex;"><span>        System.<span style="color:#a6e22e">out</span>.<span style="color:#a6e22e">println</span>(<span style="color:#e6db74">&#34;【&#34;</span><span style="color:#f92672">+</span><span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">getClass</span>().<span style="color:#a6e22e">getSimpleName</span>()<span style="color:#f92672">+</span><span style="color:#e6db74">&#34;】调用setBeanFactory&#34;</span>);
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">@Override</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">setBeanName</span>(String s) {
+</span></span><span style="display:flex;"><span>        System.<span style="color:#a6e22e">out</span>.<span style="color:#a6e22e">println</span>(<span style="color:#e6db74">&#34;【&#34;</span><span style="color:#f92672">+</span><span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">getClass</span>().<span style="color:#a6e22e">getSimpleName</span>()<span style="color:#f92672">+</span><span style="color:#e6db74">&#34;】调用setBeanName&#34;</span>);
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">@Override</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">destroy</span>() <span style="color:#66d9ef">throws</span> Exception {
+</span></span><span style="display:flex;"><span>        System.<span style="color:#a6e22e">out</span>.<span style="color:#a6e22e">println</span>(<span style="color:#e6db74">&#34;【&#34;</span><span style="color:#f92672">+</span><span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">getClass</span>().<span style="color:#a6e22e">getSimpleName</span>()<span style="color:#f92672">+</span><span style="color:#e6db74">&#34;】调用destory&#34;</span>);
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">@Override</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">afterPropertiesSet</span>() <span style="color:#66d9ef">throws</span> Exception {
+</span></span><span style="display:flex;"><span>        System.<span style="color:#a6e22e">out</span>.<span style="color:#a6e22e">println</span>(<span style="color:#e6db74">&#34;【&#34;</span><span style="color:#f92672">+</span><span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">getClass</span>().<span style="color:#a6e22e">getSimpleName</span>()<span style="color:#f92672">+</span><span style="color:#e6db74">&#34;】调用afterPropertiesSet&#34;</span>);
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">@Override</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">setApplicationContext</span>(ApplicationContext applicationContext) <span style="color:#66d9ef">throws</span> BeansException {
+</span></span><span style="display:flex;"><span>        System.<span style="color:#a6e22e">out</span>.<span style="color:#a6e22e">println</span>(<span style="color:#e6db74">&#34;【&#34;</span><span style="color:#f92672">+</span><span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">getClass</span>().<span style="color:#a6e22e">getSimpleName</span>()<span style="color:#f92672">+</span><span style="color:#e6db74">&#34;】调用setApplicationContext&#34;</span>);
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">/**
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">     * 自定义初始化和销毁操作
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">     */</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">@PostConstruct</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">init</span>(){
+</span></span><span style="display:flex;"><span>        System.<span style="color:#a6e22e">out</span>.<span style="color:#a6e22e">println</span>(<span style="color:#e6db74">&#34;【&#34;</span><span style="color:#f92672">+</span><span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">getClass</span>().<span style="color:#a6e22e">getSimpleName</span>()<span style="color:#f92672">+</span><span style="color:#e6db74">&#34;】执行自定义初始化操作&#34;</span>);
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">@PreDestroy</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">des</span>(){
+</span></span><span style="display:flex;"><span>        System.<span style="color:#a6e22e">out</span>.<span style="color:#a6e22e">println</span>(<span style="color:#e6db74">&#34;【&#34;</span><span style="color:#f92672">+</span><span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">getClass</span>().<span style="color:#a6e22e">getSimpleName</span>()<span style="color:#f92672">+</span><span style="color:#e6db74">&#34;】执行自定义销毁操作&#34;</span>);
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>其中<code>Student</code>类为了观测依赖注入的时间，然后创建<code>BeanPostProcessor</code>实现类，重写其方法：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#a6e22e">@Component</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">BeanPostProcessorExample</span> <span style="color:#66d9ef">implements</span> BeanPostProcessor {
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">@Override</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> Object <span style="color:#a6e22e">postProcessBeforeInitialization</span> (Object bean, String beanName) <span style="color:#66d9ef">throws</span> BeansException {
+</span></span><span style="display:flex;"><span>        System.<span style="color:#a6e22e">out</span>.<span style="color:#a6e22e">println</span>(<span style="color:#e6db74">&#34;▶BeanPostProcessor &#34;</span><span style="color:#f92672">+</span><span style="color:#e6db74">&#34;调用BeforeInitial 【&#34;</span><span style="color:#f92672">+</span>bean.<span style="color:#a6e22e">getClass</span>().<span style="color:#a6e22e">getSimpleName</span>()<span style="color:#f92672">+</span><span style="color:#e6db74">&#34;】&#34;</span>);
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> bean;
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">@Override</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> Object <span style="color:#a6e22e">postProcessAfterInitialization</span>(Object bean, String beanName) <span style="color:#66d9ef">throws</span> BeansException {
+</span></span><span style="display:flex;"><span>        System.<span style="color:#a6e22e">out</span>.<span style="color:#a6e22e">println</span>(<span style="color:#e6db74">&#34;▶BeanPostProcessor &#34;</span><span style="color:#f92672">+</span><span style="color:#e6db74">&#34;调用AfterInitial 【&#34;</span><span style="color:#f92672">+</span>bean.<span style="color:#a6e22e">getClass</span>().<span style="color:#a6e22e">getSimpleName</span>()<span style="color:#f92672">+</span><span style="color:#e6db74">&#34;】&#34;</span>);
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> bean;
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>主方法：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">DemoApplication</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">main</span>(String<span style="color:#f92672">[]</span> args)
+</span></span><span style="display:flex;"><span>    {
+</span></span><span style="display:flex;"><span>        AnnotationConfigApplicationContext ctx<span style="color:#f92672">=</span><span style="color:#66d9ef">new</span> AnnotationConfigApplicationContext(AppConfig.<span style="color:#a6e22e">class</span>);
+</span></span><span style="display:flex;"><span>        Teacher tea <span style="color:#f92672">=</span> ctx.<span style="color:#a6e22e">getBean</span>(Teacher.<span style="color:#a6e22e">class</span>);
+</span></span><span style="display:flex;"><span>        ctx.<span style="color:#a6e22e">close</span>();
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>最终测试结果：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>▶BeanPostProcessor 调用BeforeInitial 【AppConfig$$EnhancerBySpringCGLIB$$6fc4ea89】
+</span></span><span style="display:flex;"><span>▶BeanPostProcessor 调用AfterInitial 【AppConfig$$EnhancerBySpringCGLIB$$6fc4ea89】
+</span></span><span style="display:flex;"><span>18:33:15.777 Creating shared instance of singleton bean &#39;student&#39;
+</span></span><span style="display:flex;"><span>▶BeanPostProcessor 调用BeforeInitial 【Student】
+</span></span><span style="display:flex;"><span>▶BeanPostProcessor 调用AfterInitial 【Student】
+</span></span><span style="display:flex;"><span>18:33:15.778 Creating shared instance of singleton bean &#39;teacher&#39;
+</span></span><span style="display:flex;"><span>【Teacher】调用setBeanName
+</span></span><span style="display:flex;"><span>【Teacher】调用setBeanFactory
+</span></span><span style="display:flex;"><span>【Teacher】调用setApplicationContext
+</span></span><span style="display:flex;"><span>▶BeanPostProcessor 调用BeforeInitial 【Teacher】
+</span></span><span style="display:flex;"><span>【Teacher】执行自定义初始化操作
+</span></span><span style="display:flex;"><span>【Teacher】调用afterPropertiesSet
+</span></span><span style="display:flex;"><span>▶BeanPostProcessor 调用AfterInitial 【Teacher】
+</span></span><span style="display:flex;"><span>18:33:15.818 ctx - Closing 
+</span></span><span style="display:flex;"><span>【Teacher】执行自定义销毁操作
+</span></span><span style="display:flex;"><span>【Teacher】调用destory
+</span></span></code></pre></div><p><strong>注意：</strong></p>
+<ul>
+<li>由于<code>BeanPostProcessor</code>对所有的Bean都生效，因此<code>Appconfig</code>和<code>Student</code>的也会显示出来</li>
+</ul>
+
+
+  </div>
+
+  <footer class="post-footer">
+    <ul class="post-tags">
+      <li><a href="https://iendi.github.io/en/tags/spring/">Spring</a></li>
+    </ul>
+<nav class="paginav">
+  <a class="prev" href="https://iendi.github.io/en/posts/tech/spring/%E4%BB%A3%E7%90%86%E6%A8%A1%E5%BC%8F/">
+    <span class="title">« 上一页</span>
+    <br>
+    <span>代理模式</span>
+  </a>
+  <a class="next" href="https://iendi.github.io/en/posts/tech/spring/ioc/">
+    <span class="title">下一页 »</span>
+    <br>
+    <span>IOC</span>
+  </a>
+</nav>
+
+  </footer>
+</article>
+    </main>
+    
+<footer class="footer">
+    <span>
+        Copyright
+        &copy;
+        -2024
+        <a href="https://iendi.github.io/en/" style="color:#939393;">Kend&#39;s Blog</a>
+        All Rights Reserved
+    </span>
+    <a href="https://beian.miit.gov.cn/" target="_blank" style="color:#939393;"></a>&nbsp;
+    <span>
+        <a target="_blank" href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=null"
+           style="display:inline-block;text-decoration:none;height:20px;color:#939393;">
+            <img src="" style="float:left;margin: 0px 5px 0px 0px;"/>
+            
+        </a>
+    </span>
+    <span id="busuanzi_container">
+        <span class="fa fa-user"></span> <span id="busuanzi_value_site_uv"></span>
+        <span class="fa fa-eye"></span> <span id="busuanzi_value_site_pv"></span>
+    </span>
+</footer>
+<a href="#top" aria-label="go to top" title="Go to Top (Alt + G)" class="top-link" id="top-link" accesskey="g">
+    <span class="topInner">
+        <svg class="topSvg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentColor">
+            <path d="M12 6H0l6-6z"/>
+        </svg>
+        <span id="read_progress"></span>
+    </span>
+</a>
+
+<script>
+    document.addEventListener('scroll', function (e) {
+        const readProgress = document.getElementById("read_progress");
+        const scrollHeight = document.documentElement.scrollHeight;
+        const clientHeight = document.documentElement.clientHeight;
+        const scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
+        readProgress.innerText = ((scrollTop / (scrollHeight - clientHeight)).toFixed(2) * 100).toFixed(0);
+    })
+</script>
+
+<script>
+    let menu = document.getElementById('menu')
+    if (menu) {
+        menu.scrollLeft = localStorage.getItem("menu-scroll-position");
+        menu.onscroll = function () {
+            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+        }
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+</script>
+<script>
+    let mybutton = document.getElementById("top-link");
+    window.onscroll = function () {
+        if (document.body.scrollTop > 200 || document.documentElement.scrollTop > 200) {
+            mybutton.style.visibility = "visible";
+            mybutton.style.opacity = "1";
+        } else {
+            mybutton.style.visibility = "hidden";
+            mybutton.style.opacity = "0";
+        }
+    };
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        (function() {
+            document.cookie = "change-themes" + "="+ escape ("false");
+        })()
+
+        if (document.body.className.includes("dark")) {
+            document.body.classList.remove('dark');
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            document.body.classList.add('dark');
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    });
+</script>
+
+<script>
+    document.body.addEventListener('copy', function (e) {
+        if (window.getSelection().toString() && window.getSelection().toString().length > 50) {
+            let clipboardData = e.clipboardData || window.clipboardData;
+            if (clipboardData) {
+                e.preventDefault();
+                let htmlData = window.getSelection().toString() +
+                    '\r\n\n————————————————\r\n' +
+                    '版权声明：本文为「'+"Kend's Blog"+'」的原创文章，遵循CC 4.0 BY-SA版权协议，转载请附上原文出处链接及本声明。' +
+                '\r\n原文链接：' + location.href;
+                let textData = window.getSelection().toString() +
+                    '\r\n\n————————————————\r\n' +
+                    '版权声明：本文为「'+"Kend's Blog"+'」的原创文章，遵循CC 4.0 BY-SA版权协议，转载请附上原文出处链接及本声明。' +
+                '\r\n原文链接：' + location.href;
+                clipboardData.setData('text/html', htmlData);
+                clipboardData.setData('text/plain', textData);
+            }
+        }
+    });
+</script>
+<script>
+    document.querySelectorAll('pre > code').forEach((codeblock) => {
+        const container = codeblock.parentNode.parentNode;
+        const copybutton = document.createElement('button');
+        copybutton.classList.add('copy-code');
+        copybutton.innerText = '📄复制';
+
+        function copyingDone() {
+            copybutton.innerText = '👌🏻已复制!';
+            setTimeout(() => {
+                copybutton.innerText = '📄复制';
+            }, 2000);
+        }
+
+        copybutton.addEventListener('click', (cb) => {
+            if ('clipboard' in navigator) {
+                let text = codeblock.textContent +
+                    '\r\n————————————————\r\n' +
+                    '版权声明：本文为「'+"Kend's Blog"+'」的原创文章，遵循CC 4.0 BY-SA版权协议，转载请附上原文出处链接及本声明。' +
+                '\r\n原文链接：' + location.href;
+                navigator.clipboard.writeText(text);
+                copyingDone();
+                return;
+            }
+
+            const range = document.createRange();
+            range.selectNodeContents(codeblock);
+            const selection = window.getSelection();
+            selection.removeAllRanges();
+            selection.addRange(range);
+            try {
+                document.execCommand('copy');
+                copyingDone();
+            } catch (e) {}
+            selection.removeRange(range);
+        });
+
+        let language = codeblock.className.replaceAll("language-", "")
+        let macTool = document.createElement("div")
+        let macTool1 = document.createElement("div")
+        let macTool2 = document.createElement("div")
+        let macTool3 = document.createElement("div")
+        let languageType = document.createElement("div")
+        languageType.innerText = language
+        macTool.setAttribute('class', 'mac-tool')
+        macTool1.setAttribute('class', 'mac bb1')
+        macTool2.setAttribute('class', 'mac bb2')
+        macTool3.setAttribute('class', 'mac bb3')
+        languageType.setAttribute('class', 'language-type')
+        macTool.appendChild(macTool1)
+        macTool.appendChild(macTool2)
+        macTool.appendChild(macTool3)
+        macTool.appendChild(languageType)
+
+        if (container.classList.contains("highlight")) {
+            container.appendChild(copybutton);
+            container.appendChild(macTool)
+        } else if (container.parentNode.firstChild == container) {
+            
+        } else if (codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.nodeName == "TABLE") {
+            
+            codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.appendChild(copybutton);
+            container.appendChild(macTool)
+        } else {
+            
+            codeblock.parentNode.appendChild(copybutton);
+            container.appendChild(macTool)
+        }
+    });
+</script>
+</body>
+
+</html>

@@ -1,0 +1,645 @@
+<!DOCTYPE html>
+<html lang="en" dir="auto">
+
+<head><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="index, follow">
+<title>DDPM | Kend&#39;s Blog</title>
+<meta name="keywords" content="">
+<meta name="description" content="整体架构 DDPM可分为以下两个部分 其中Denoise内部：输入图片&#43;step，预测其噪声 为什么step也是一个重要的输入：从噪声到原图，所要">
+<meta name="author" content="Kend">
+<link rel="canonical" href="https://iendi.github.io/en/posts/ai/diffusion/">
+
+
+<link crossorigin="anonymous" href="/assets/css/stylesheet.2b3a9b630d724ad2b56cb3217ca569e88f4344d61fa91c496bfd01d1128c4950.css" integrity="" rel="preload stylesheet" as="style">
+<script defer crossorigin="anonymous" src="/assets/js/highlight.f413e19d0714851f6474e7ee9632408e58ac146fbdbe62747134bea2fa3415e0.js" integrity="sha256-9BPhnQcUhR9kdOfuljJAjlisFG&#43;9vmJ0cTS&#43;ovo0FeA="
+        onload="hljs.initHighlightingOnLoad();"></script>
+<link rel="icon" href="https://iendi.github.io/img/1.png">
+<link rel="icon" type="image/png" sizes="16x16" href="https://iendi.github.io/img/1.png">
+<link rel="icon" type="image/png" sizes="32x32" href="https://iendi.github.io/img/1.png">
+<link rel="apple-touch-icon" href="https://iendi.github.io/1.png">
+<link rel="mask-icon" href="https://iendi.github.io/1.png">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<link rel="alternate" hreflang="en" href="https://iendi.github.io/en/posts/ai/diffusion/">
+<noscript>
+    <style>
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+</noscript>
+<script>
+    MathJax = {
+      tex: {
+        inlineMath: [["$", "$"]],
+      },
+      displayMath: [
+        ["$$", "$$"]
+      ],
+      svg: {
+        fontCache: "global",
+      },
+    };
+  </script>
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script
+    id="MathJax-script"
+    async
+    src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"
+  ></script>
+
+
+  
+
+<meta property="og:title" content="DDPM" />
+<meta property="og:description" content="整体架构 DDPM可分为以下两个部分 其中Denoise内部：输入图片&#43;step，预测其噪声 为什么step也是一个重要的输入：从噪声到原图，所要" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://iendi.github.io/en/posts/ai/diffusion/" /><meta property="article:section" content="posts" />
+<meta property="article:published_time" content="2023-10-29T22:20:58+08:00" />
+<meta property="article:modified_time" content="2023-10-29T22:20:58+08:00" />
+
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="DDPM"/>
+<meta name="twitter:description" content="整体架构 DDPM可分为以下两个部分 其中Denoise内部：输入图片&#43;step，预测其噪声 为什么step也是一个重要的输入：从噪声到原图，所要"/>
+
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position":  1 ,
+      "name": "📚文章",
+      "item": "https://iendi.github.io/en/posts/"
+    }, 
+    {
+      "@type": "ListItem",
+      "position":  2 ,
+      "name": "💻AI",
+      "item": "https://iendi.github.io/en/posts/ai/"
+    }, 
+    {
+      "@type": "ListItem",
+      "position":  3 ,
+      "name": "DDPM",
+      "item": "https://iendi.github.io/en/posts/ai/diffusion/"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "DDPM",
+  "name": "DDPM",
+  "description": "整体架构 DDPM可分为以下两个部分 其中Denoise内部：输入图片+step，预测其噪声 为什么step也是一个重要的输入：从噪声到原图，所要",
+  "keywords": [
+    
+  ],
+  "articleBody": "整体架构 DDPM可分为以下两个部分\n其中Denoise内部：输入图片+step，预测其噪声\n为什么step也是一个重要的输入：从噪声到原图，所要预测的噪声强度是不同的 训练和推理部分如下所示\n训练过程 训练过程如下所示，Unet里有一个位置编码，是关于时间步的，每个时间步是有一个线性调度器的，每个时间添加的噪声的方差是不一样的，所以将时间步作为编码嵌入的话，可以将模型预测的噪声更加的准确\n其中，损失函数如下：\n$$ \\text { Loss }=\\left\\|\\varepsilon-\\varepsilon_{\\theta}\\left(x_t, t\\right)\\right\\|^2=\\left\\|\\varepsilon-\\varepsilon_{\\theta}\\left(\\sqrt{\\bar{\\alpha}_t}x_0+\\sqrt{1-\\bar{\\alpha}_t}\\varepsilon_t, t\\right)\\right\\|^2 $$\nt为step，t越大，$a_T$越小，加的噪声越多\n先进行forward process，生成每个step对应的图片和噪声数据集，即target noise 实际训练时，t是随机取值，不用按顺序从大到小 目标是noise predictor预测的噪声值接近真实噪声 noisy image 如下： 数学推导 $\\alpha_t=1-\\beta_t, \\beta_t$要越大越好，论文中从0.0001到0.02； 方差参数$\\beta_t$可以固定为一个常数，也可以选择作为时间段的一个时间表。可以定义一个方差表，它可以是线性的、二次的、余弦的等等 最初的DDPM作者利用了一个从到增加的线性时间表，$\\beta_t$从$10^{-4}$到$0.02$线性增加 $\\bar{\\alpha}=\\prod_{s=1}^t \\alpha_s$，为累乘 $x_t=\\sqrt{\\alpha_t} x_{t-1}+\\sqrt{1-\\alpha_t} \\varepsilon_t, \\varepsilon_t \\sim N(0,1)$，每一时刻的噪声均独立 推导过程如下，从第一步到第二步用到了重参数技巧：\n$\\begin{aligned} q\\left(x_t \\mid x_{t-1}\\right) \u0026 =N\\left(x_t ; \\sqrt{\\alpha_t} x_{t-1},\\left(1-\\alpha_t\\right) I\\right) \\\\\\ \u0026 =\\underbrace{\\sqrt{\\alpha_t} x_{t-1}}_{x_{t-2} \\text { 来表示 } x_{t-1}}+\\sqrt{1-\\alpha_t} \\varepsilon_t \\\\\\ \u0026 =\\sqrt{\\alpha_t}\\left(\\sqrt{\\alpha_{t-1}} x_{t-2}+\\sqrt{1-\\alpha_{t-1}} \\varepsilon_{t-1}\\right)+\\sqrt{1-\\alpha_t} \\varepsilon_t \\\\\\ \u0026 =\\sqrt{\\alpha_t \\alpha_{t-1}} x_{t-2}+\\underbrace{\\sqrt{\\alpha_t-\\alpha_t \\alpha_{t-1}} \\varepsilon_{t-1}+\\sqrt{1-\\alpha_t} \\varepsilon_t}_{\\text {两个独立正态分布相加 }} \\\\\\ \u0026 =\\sqrt{\\alpha_t \\alpha_{t-1}} x_{t-2}+\\sqrt{1-\\alpha_t \\alpha_{t-1}} \\varepsilon \\\\\\ \u0026 \\ldots \\\\\\ \u0026 =\\sqrt{\\bar{\\alpha}_t} x_0+\\sqrt{1-\\bar{\\alpha}_t} \\varepsilon \\\\\\ \u0026 \\therefore q\\left(x_t \\mid x_0\\right)=N\\left(x_t ; \\sqrt{\\bar{\\alpha}_t} x_0, \\sqrt{1-\\bar{\\alpha}_t} I\\right) \\end{aligned}$\n推理过程（采样） 采样过程中，根据给定的噪声和condition（step, text…），输出对应的采样图\n根据噪声$x_t$预测$x_{t-1}$ 加上采样的噪声$z$，如果是最后一次采样（$t==1$），就不添加噪声 数学推导 首先我们来看常见生成模型的目标函数，其中$z$为图像的隐空间表示，Network一般为一个Decoder\n给定网络参数$\\theta$，我们要让输出$x$的分布$P_{\\theta}(x)$尽可能接近$P_{data}(x)$： $$ \\text { Sample }\\left\\{x^1, x^2, \\ldots, x^m\\right\\} \\text { from } P_{\\text {data }}(x)\\\\\\ \\theta^{*}=\\arg \\max _{\\theta} \\prod_{i=1}^m P_{\\theta}\\left(x^i\\right)=\\arg \\max _{\\theta} \\log \\prod_{i=1}^m P_{\\theta}\\left(x^i\\right) \\\\=\\arg \\max _{\\theta} \\sum_{i=1}^m \\log P_{\\theta}\\left(x^i\\right)$$ 我们从输入随机采样得到图片$x^i$，目标是$P_{\\theta}(x^i)$有最大值，即最大似然估计\n*补充知识点：\n期望是对随机变量的数值进行加权平均的概念。当随机变量是连续型变量时，期望可以通过积分来计算。设$X$是一个连续型随机变量，其概率密度函数为$f(x)$。对于一个函数$g(X)$，它关于X的期望可以表示为 $$ E[g(X)] = ∫g(x) f(x) dx $$\n**重参数化：**使计算过程可导 $$z \\sim N\\left(z, \\mu, \\sigma^2 I\\right) \\longrightarrow z=\\mu+\\sigma \\cdot \\epsilon, \\epsilon \\sim N(0, I)$$\n求$P_{\\theta}(x)$的下界，使其最大：\n同样的，推导可得，DDPM的下界：\n以下公式参考[2]，详细过程见原文，这边只写简化后的结果 $$-\\log \\left(p_{\\theta}\\left(x_0\\right)\\right) \\leq \\underbrace{\\log \\left(\\frac{q\\left(x_{1: T} \\mid x_0\\right)}{p_{\\theta}\\left(x_{0: T}\\right)}\\right)}_{\\text {变分下界, 可以优化它 }} \\\\ \\log \\left(\\frac{q\\left(x_{1: T} \\mid x_0\\right)}{p_{\\theta}\\left(x_{0: T}\\right)}\\right) =\\underbrace{{D_{K L}\\left(q\\left(x_t \\mid x_0\\right) \\| p\\left(x_T\\right)\\right)}}_{q \\text { 只是个正向过程没有可学习参数 }}+\\sum_{t=2}^T D_{K L}\\left(q\\left(x_{t-1} \\mid x_t, x_0\\right) \\| p_{\\theta}\\left(x_{t-1} \\mid x_t\\right)\\right)-\\log \\left(p_{\\theta}\\left(x_0 \\mid x_1\\right)\\right)$$\n第一项KL散度可以忽略，因为q只是个正向过程，没有可学习参数，换句话说就是它是固定的。\n第二项KL散度，左边和右边都是正态分布，左边的$q\\left(x_{t-1} \\mid x_t, x_0\\right)$是真实值，我们想求的；右边的${p_{\\theta}\\left(x_{t-1} \\mid x_t\\right)}$是神经网络估计的\n$$\\sum_{t=2}^T D_{K L}(\\underbrace{q\\left(x_{t-1} \\mid x_t, x_0\\right)}_{N\\left(x_{t-1} ; \\tilde{\\mu_t}\\left(x_t, x_0\\right), \\tilde{\\beta_t} I\\right)} \\| \\overbrace{p_{\\theta}\\left(x_{t-1} \\mid x_t\\right)}^{N\\left(x_{t-1} ; \\mu_{\\theta}\\left(x_t, t\\right), \\beta I\\right.})$$\n首先，通过变化，可以获得$\\tilde{\\mu_t}$的值，这里的$\\varepsilon$为真实噪声值 $$\\\\ \\begin{aligned} \\underbrace{\\tilde{\\mu_t}\\left(x_t, x_0\\right)}_{\\text {不再依赖 } x_0} \u0026 \u0026 =\\frac1{\\sqrt{\\alpha_t}}\\left(x_t-\\frac{\\beta_t}{\\sqrt{1-\\bar{\\alpha}_t}} \\varepsilon\\right) \\end{aligned}$$\n我们需要减小KL散度，由于方差是固定的，我们无法优化，所以需要将它们的均值之差减小，原论文中使用的是简单的均方误差： $$\\begin{aligned} L_t \u0026 =\\frac1{2 \\sigma_t^2}\\left\\|\\tilde{\\mu}_t\\left(x_t, x_0\\right)-\\mu_{\\theta}\\left(x_t, t\\right)\\right\\|^2 \\\\ \u0026 =\\frac1{2 \\sigma_t^2}\\left\\|\\frac1{\\sqrt{\\alpha_t}}\\left(x_t-\\frac{\\beta_t}{\\sqrt{1-\\bar{\\alpha}_t}} \\varepsilon\\right)-\\frac1{\\sqrt{\\alpha_t}}\\left(x_t-\\frac{\\beta_t}{\\sqrt{1-\\bar{\\alpha}_t}} \\varepsilon_{\\theta}\\left(x_t, t\\right)\\right)\\right\\|^2 \\\\ \u0026 =\\frac{\\beta_t^2}{2 \\sigma_t^2 \\alpha_t\\left(1-\\bar{\\alpha}_t\\right)} \\underbrace{\\left\\|\\varepsilon-\\varepsilon_{\\theta}\\left(x_t, t\\right)\\right\\|^2}_{m s e} \\\\ \u0026 -\u003e\\left\\|\\varepsilon-\\varepsilon_{\\theta}\\left(x_t, t\\right)\\right\\|^2=\\left\\|\\varepsilon-\\varepsilon_{\\theta}\\left(\\sqrt{\\bar{\\alpha}_t} x_0+\\sqrt{1-\\bar{\\alpha}_t} \\varepsilon_t, t\\right)\\right\\|^2 \\end{aligned}$$\n最终，DDPM的过程可概括为如下： $$ x_{t-1}=N\\left(x_{t-1} ; \\frac1{\\sqrt{\\alpha_t}}\\left(x_t-\\frac{\\beta_t}{\\sqrt{1-\\bar{\\alpha}_t}} \\varepsilon_{\\theta}\\left(x_t, t\\right)\\right), \\Sigma_{\\theta}\\left(x_t, t\\right)\\right) $$\n每个时间步通过$x_t$和$t$来预测高斯噪声$\\varepsilon_{\\theta}$，根据上面公式计算得到均值$\\mu$ 得到方差$\\Sigma_{\\theta}\\left(x_t, t\\right)$； 代入公式得到$q\\left(x_{t-1} \\mid x_t, x_0\\right)$，利用重参数化得到$x_{t-1}$ 因为我们计算了$D_{K L}\\left(q\\left(x_{t-1} \\mid x_t, x_0\\right) \\| p_{\\theta}\\left(x_{t-1} \\mid x_t\\right)\\right)$，故可以利用$q\\left(x_{t-1} \\mid x_t\\right)$来近似$p\\left(x_{t-1} \\mid x_t\\right)$ 参考资料:\nML 2023 Spring (ntu.edu.tw)\n保姆级讲解 Diffusion 扩散模型（DDPM）\n",
+  "wordCount" : "1850",
+  "inLanguage": "en",
+  "datePublished": "2023-10-29T22:20:58+08:00",
+  "dateModified": "2023-10-29T22:20:58+08:00",
+  "author":{
+    "@type": "Person",
+    "name": "Kend"
+  },
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://iendi.github.io/en/posts/ai/diffusion/"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "Kend's Blog",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://iendi.github.io/img/1.png"
+    }
+  }
+}
+</script>
+</head>
+
+<body class="" id="top">
+<script>
+    if (localStorage.getItem("pref-theme") === "dark") {
+        document.body.classList.add('dark');
+    }
+
+</script>
+
+<header class="header">
+    <nav class="nav">
+        <div class="logo">
+            <a href="https://iendi.github.io/en/" accesskey="h" title="Kend&#39;s Blog (Alt + H)">
+                <img src="https://iendi.github.io/img/1.png" alt="" aria-label="logo"
+                    height="35">Kend&#39;s Blog</a>
+            <div class="logo-switches">
+                <button id="theme-toggle" accesskey="t" title="(Alt + T)">
+                    <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <ul id="menu">
+            <li>
+                <a href="https://iendi.github.io/en/search" title="🔍搜索 (Alt &#43; /)" accesskey=/>
+                    <span>🔍搜索</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://iendi.github.io/en/" title="🏠主页">
+                    <span>🏠主页</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://iendi.github.io/en/posts" title="📚文章">
+                    <span>📚文章</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://iendi.github.io/en/archives/" title="⏱时间轴">
+                    <span>⏱时间轴</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://iendi.github.io/en/tags" title="🔖标签">
+                    <span>🔖标签</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://iendi.github.io/en/about" title="🙋🏻‍♂️关于">
+                    <span>🙋🏻‍♂️关于</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</header>
+<main class="main">
+
+<article class="post-single">
+  <header class="post-header">
+    <div class="breadcrumbs"><a href="https://iendi.github.io/en/">主页</a>&nbsp;»&nbsp;<a href="https://iendi.github.io/en/posts/">📚文章</a>&nbsp;»&nbsp;<a href="https://iendi.github.io/en/posts/ai/">💻AI</a></div>
+    <h1 class="post-title entry-hint-parent">
+      DDPM
+    </h1>
+    <div class="post-meta"><span title='2023-10-29 22:20:58 +0800 CST'>2023-10-29</span>&nbsp;·&nbsp;4 min&nbsp;·&nbsp;Kend
+
+
+
+
+&nbsp;|&nbsp;标签: &nbsp;
+    </div>
+  </header> <aside id="toc-container" class="toc-container wide">
+    <div class="toc">
+        <details  open>
+            <summary accesskey="c" title="(Alt + C)">
+                <span class="details">文章目录</span>
+            </summary>
+
+            <div class="inner"><ul>
+                    <li>
+                        <a href="#%e6%95%b4%e4%bd%93%e6%9e%b6%e6%9e%84" aria-label="整体架构">整体架构</a></li>
+                    <li>
+                        <a href="#%e8%ae%ad%e7%bb%83%e8%bf%87%e7%a8%8b" aria-label="训练过程">训练过程</a><ul>
+                            
+                    <li>
+                        <a href="#%e6%95%b0%e5%ad%a6%e6%8e%a8%e5%af%bc" aria-label="数学推导">数学推导</a></li></ul>
+                    </li>
+                    <li>
+                        <a href="#%e6%8e%a8%e7%90%86%e8%bf%87%e7%a8%8b%e9%87%87%e6%a0%b7" aria-label="推理过程（采样）">推理过程（采样）</a><ul>
+                            
+                    <li>
+                        <a href="#%e6%95%b0%e5%ad%a6%e6%8e%a8%e5%af%bc-1" aria-label="数学推导">数学推导</a>
+                    </li>
+                </ul>
+                </li>
+                </ul>
+            </div>
+        </details>
+    </div>
+</aside>
+<script>
+    let activeElement;
+    let elements;
+    window.addEventListener('DOMContentLoaded', function (event) {
+        checkTocPosition();
+
+        elements = document.querySelectorAll('h1[id],h2[id],h3[id],h4[id],h5[id],h6[id]');
+         
+         activeElement = elements[0];
+         const id = encodeURI(activeElement.getAttribute('id')).toLowerCase();
+         document.querySelector(`.inner ul li a[href="#${id}"]`).classList.add('active');
+     }, false);
+
+    window.addEventListener('resize', function(event) {
+        checkTocPosition();
+    }, false);
+
+    window.addEventListener('scroll', () => {
+        
+        activeElement = Array.from(elements).find((element) => {
+            if ((getOffsetTop(element) - window.pageYOffset) > 0 && 
+                (getOffsetTop(element) - window.pageYOffset) < window.innerHeight/2) {
+                return element;
+            }
+        }) || activeElement
+
+        elements.forEach(element => {
+             const id = encodeURI(element.getAttribute('id')).toLowerCase();
+             if (element === activeElement){
+                 document.querySelector(`.inner ul li a[href="#${id}"]`).classList.add('active');
+             } else {
+                 document.querySelector(`.inner ul li a[href="#${id}"]`).classList.remove('active');
+             }
+         })
+     }, false);
+
+    const main = parseInt(getComputedStyle(document.body).getPropertyValue('--article-width'), 10);
+    const toc = parseInt(getComputedStyle(document.body).getPropertyValue('--toc-width'), 10);
+    const gap = parseInt(getComputedStyle(document.body).getPropertyValue('--gap'), 10);
+
+    function checkTocPosition() {
+        const width = document.body.scrollWidth;
+
+        if (width - main - (toc * 2) - (gap * 4) > 0) {
+            document.getElementById("toc-container").classList.add("wide");
+        } else {
+            document.getElementById("toc-container").classList.remove("wide");
+        }
+    }
+
+    function getOffsetTop(element) {
+        if (!element.getClientRects().length) {
+            return 0;
+        }
+        let rect = element.getBoundingClientRect();
+        let win = element.ownerDocument.defaultView;
+        return rect.top + win.pageYOffset;   
+    }
+</script>
+  <div class="post-content"><h3 id="整体架构">整体架构<a hidden class="anchor" aria-hidden="true" href="#整体架构">#</a></h3>
+<p>DDPM可分为以下两个部分</p>
+<img src="image-20231106150512666.png" alt="image-20231106150512666" style="zoom:33%;" />
+<p>其中Denoise内部：输入图片+step，预测其噪声</p>
+<ul>
+<li>为什么step也是一个重要的输入：从噪声到原图，所要预测的噪声强度是不同的</li>
+</ul>
+<img src="image-20231028211558935.png" alt="image-20231028211558935" style="zoom:80%;" />
+<p>训练和推理部分如下所示</p>
+<img src="image-20231106150218795.png" alt="image-20231106150218795" style="zoom:80%;" />
+<h3 id="训练过程">训练过程<a hidden class="anchor" aria-hidden="true" href="#训练过程">#</a></h3>
+<p>训练过程如下所示，Unet里有一个<strong>位置编码</strong>，是关于时间步的，每个时间步是有一个线性调度器的，每个时间添加的噪声的方差是不一样的，所以将时间步作为编码嵌入的话，可以将模型预测的噪声更加的准确</p>
+<img src="640" alt="img" style="zoom:80%;" />
+<p>其中，损失函数如下：</p>
+<p>$$ \text { Loss }=\left\|\varepsilon-\varepsilon_{\theta}\left(x_t, t\right)\right\|^2=\left\|\varepsilon-\varepsilon_{\theta}\left(\sqrt{\bar{\alpha}_t}x_0+\sqrt{1-\bar{\alpha}_t}\varepsilon_t, t\right)\right\|^2 $$</p>
+<img src="image-20231028213812364.png" alt="image-20231028213812364" style="zoom:80%;" />
+<p>t为step，t越大，$a_T$越小，加的噪声越多</p>
+<ul>
+<li>先进行<code>forward process</code>，生成每个step对应的图片和噪声数据集，即target noise</li>
+<li>实际训练时，t是随机取值，不用按顺序从大到小</li>
+<li>目标是noise predictor预测的噪声值接近真实噪声
+<ul>
+<li>noisy image 如下：
+<img src="image-20231106162229197.png" alt="image-20231106162229197" style="zoom:80%;" /></li>
+</ul>
+</li>
+</ul>
+<h4 id="数学推导">数学推导<a hidden class="anchor" aria-hidden="true" href="#数学推导">#</a></h4>
+<ul>
+<li>$\alpha_t=1-\beta_t, \beta_t$要越大越好，论文中从0.0001到0.02；
+<ul>
+<li>方差参数$\beta_t$可以固定为一个常数，也可以选择作为时间段的一个时间表。可以定义一个方差表，它可以是线性的、二次的、余弦的等等</li>
+<li>最初的DDPM作者利用了一个从到增加的线性时间表，$\beta_t$从$10^{-4}$到$0.02$线性增加</li>
+</ul>
+</li>
+<li>$\bar{\alpha}=\prod_{s=1}^t \alpha_s$，为累乘</li>
+<li>$x_t=\sqrt{\alpha_t} x_{t-1}+\sqrt{1-\alpha_t} \varepsilon_t,  \varepsilon_t \sim N(0,1)$，每一时刻的噪声均独立</li>
+</ul>
+<p>推导过程如下，从第一步到第二步用到了<strong>重参数技巧</strong>：</p>
+<p>$\begin{aligned}
+q\left(x_t \mid x_{t-1}\right) &amp; =N\left(x_t ; \sqrt{\alpha_t} x_{t-1},\left(1-\alpha_t\right) I\right) \\\
+&amp; =\underbrace{\sqrt{\alpha_t} x_{t-1}}_{x_{t-2} \text { 来表示 } x_{t-1}}+\sqrt{1-\alpha_t} \varepsilon_t \\\
+&amp; =\sqrt{\alpha_t}\left(\sqrt{\alpha_{t-1}} x_{t-2}+\sqrt{1-\alpha_{t-1}} \varepsilon_{t-1}\right)+\sqrt{1-\alpha_t} \varepsilon_t \\\
+&amp; =\sqrt{\alpha_t \alpha_{t-1}} x_{t-2}+\underbrace{\sqrt{\alpha_t-\alpha_t \alpha_{t-1}} \varepsilon_{t-1}+\sqrt{1-\alpha_t} \varepsilon_t}_{\text {两个独立正态分布相加 }} \\\
+&amp; =\sqrt{\alpha_t \alpha_{t-1}} x_{t-2}+\sqrt{1-\alpha_t \alpha_{t-1}} \varepsilon \\\
+&amp; \ldots \\\
+&amp; =\sqrt{\bar{\alpha}_t} x_0+\sqrt{1-\bar{\alpha}_t} \varepsilon \\\
+&amp; \therefore q\left(x_t \mid x_0\right)=N\left(x_t ; \sqrt{\bar{\alpha}_t} x_0, \sqrt{1-\bar{\alpha}_t} I\right)
+\end{aligned}$</p>
+<h3 id="推理过程采样">推理过程（采样）<a hidden class="anchor" aria-hidden="true" href="#推理过程采样">#</a></h3>
+<p>采样过程中，根据给定的噪声和<code>condition</code>（step, text&hellip;），输出对应的采样图</p>
+<img src="image-20231107094442143.png" alt="image-20231107094442143" style="zoom:40%;" />
+<img src="image-20231028215441186.png" alt="image-20231028215441186" style="zoom:80%;" />
+<ul>
+<li>根据噪声$x_t$预测$x_{t-1}$</li>
+<li>加上采样的噪声$z$，如果是最后一次采样（$t==1$），就不添加噪声</li>
+</ul>
+<h4 id="数学推导-1">数学推导<a hidden class="anchor" aria-hidden="true" href="#数学推导-1">#</a></h4>
+<p>首先我们来看常见生成模型的目标函数，其中$z$为图像的隐空间表示，Network一般为一个Decoder</p>
+<img src="image-20231106163444153.png" alt="image-20231106163444153" style="zoom:80%;" />
+<p>给定网络参数$\theta$，我们要让输出$x$的分布$P_{\theta}(x)$尽可能接近$P_{data}(x)$：
+$$
+\text { Sample }\left\{x^1, x^2, \ldots, x^m\right\} \text { from } P_{\text {data }}(x)\\\
+\theta^{*}=\arg \max _{\theta} \prod_{i=1}^m P_{\theta}\left(x^i\right)=\arg \max _{\theta} \log \prod_{i=1}^m P_{\theta}\left(x^i\right)
+\\=\arg \max _{\theta} \sum_{i=1}^m \log P_{\theta}\left(x^i\right)$$
+我们从输入随机采样得到图片$x^i$，目标是$P_{\theta}(x^i)$有最大值，即最大似然估计</p>
+<hr>
+<p>*补充知识点：</p>
+<p><strong>期望</strong>是对随机变量的数值进行加权平均的概念。当随机变量是连续型变量时，期望可以通过积分来计算。设$X$是一个连续型随机变量，其概率密度函数为$f(x)$。对于一个函数$g(X)$，它关于X的期望可以表示为
+$$
+E[g(X)] = ∫g(x) f(x) dx
+$$</p>
+<p>**重参数化：**使计算过程可导
+$$z \sim N\left(z, \mu, \sigma^2 I\right) \longrightarrow  z=\mu+\sigma \cdot \epsilon, \epsilon \sim N(0, I)$$</p>
+<hr>
+<p>求$P_{\theta}(x)$的下界，使其最大：</p>
+<img src="image-20231106204700016.png" alt="image-20231106204700016" style="zoom:80%;" />
+<p>同样的，推导可得，DDPM的下界：</p>
+<img src="image-20231106204817216.png" alt="image-20231106204817216" style="zoom:80%;" />
+<p>以下公式参考[<a href="https://mp.weixin.qq.com/s/jgfqPv__nEcoFbazo2LbUA">2</a>]，详细过程见原文，这边只写简化后的结果
+$$-\log \left(p_{\theta}\left(x_0\right)\right) \leq \underbrace{\log \left(\frac{q\left(x_{1: T} \mid x_0\right)}{p_{\theta}\left(x_{0: T}\right)}\right)}_{\text {变分下界, 可以优化它 }}
+\\
+\log \left(\frac{q\left(x_{1: T} \mid x_0\right)}{p_{\theta}\left(x_{0: T}\right)}\right)
+=\underbrace{{D_{K L}\left(q\left(x_t \mid x_0\right) \| p\left(x_T\right)\right)}}_{q \text { 只是个正向过程没有可学习参数 }}+\sum_{t=2}^T D_{K L}\left(q\left(x_{t-1} \mid x_t, x_0\right) \| p_{\theta}\left(x_{t-1} \mid x_t\right)\right)-\log \left(p_{\theta}\left(x_0 \mid x_1\right)\right)$$</p>
+<ul>
+<li>
+<p>第一项KL散度可以忽略，因为q<strong>只是个正向过程，没有可学习参数</strong>，换句话说就是它是固定的。</p>
+</li>
+<li>
+<p>第二项KL散度，左边和右边都是正态分布，左边的$q\left(x_{t-1} \mid x_t, x_0\right)$是真实值，我们想求的；右边的${p_{\theta}\left(x_{t-1} \mid x_t\right)}$是神经网络估计的</p>
+<p>$$\sum_{t=2}^T D_{K L}(\underbrace{q\left(x_{t-1} \mid x_t, x_0\right)}_{N\left(x_{t-1} ; \tilde{\mu_t}\left(x_t, x_0\right), \tilde{\beta_t} I\right)} \| \overbrace{p_{\theta}\left(x_{t-1} \mid x_t\right)}^{N\left(x_{t-1} ; \mu_{\theta}\left(x_t, t\right), \beta I\right.})$$</p>
+<ul>
+<li>
+<p>首先，通过变化，可以获得$\tilde{\mu_t}$的值，这里的$\varepsilon$为真实噪声值
+$$\\
+\begin{aligned}
+\underbrace{\tilde{\mu_t}\left(x_t, x_0\right)}_{\text {不再依赖 } x_0} &amp;
+&amp; =\frac1{\sqrt{\alpha_t}}\left(x_t-\frac{\beta_t}{\sqrt{1-\bar{\alpha}_t}} \varepsilon\right)
+\end{aligned}$$</p>
+</li>
+<li>
+<p>我们需要减小KL散度，由于方差是固定的，我们无法优化，所以需要将它们的均值之差减小，原论文中使用的是简单的均方误差：
+$$\begin{aligned}
+L_t &amp; =\frac1{2 \sigma_t^2}\left\|\tilde{\mu}_t\left(x_t, x_0\right)-\mu_{\theta}\left(x_t, t\right)\right\|^2 \\
+&amp; =\frac1{2 \sigma_t^2}\left\|\frac1{\sqrt{\alpha_t}}\left(x_t-\frac{\beta_t}{\sqrt{1-\bar{\alpha}_t}} \varepsilon\right)-\frac1{\sqrt{\alpha_t}}\left(x_t-\frac{\beta_t}{\sqrt{1-\bar{\alpha}_t}} \varepsilon_{\theta}\left(x_t, t\right)\right)\right\|^2 \\
+&amp; =\frac{\beta_t^2}{2 \sigma_t^2 \alpha_t\left(1-\bar{\alpha}_t\right)} \underbrace{\left\|\varepsilon-\varepsilon_{\theta}\left(x_t, t\right)\right\|^2}_{m s e} \\
+&amp; -&gt;\left\|\varepsilon-\varepsilon_{\theta}\left(x_t, t\right)\right\|^2=\left\|\varepsilon-\varepsilon_{\theta}\left(\sqrt{\bar{\alpha}_t} x_0+\sqrt{1-\bar{\alpha}_t} \varepsilon_t, t\right)\right\|^2
+\end{aligned}$$</p>
+</li>
+</ul>
+</li>
+</ul>
+<p>最终，DDPM的过程可概括为如下：
+$$ x_{t-1}=N\left(x_{t-1} ; \frac1{\sqrt{\alpha_t}}\left(x_t-\frac{\beta_t}{\sqrt{1-\bar{\alpha}_t}} \varepsilon_{\theta}\left(x_t, t\right)\right), \Sigma_{\theta}\left(x_t, t\right)\right) $$</p>
+<ul>
+<li>每个时间步通过$x_t$和$t$来预测高斯噪声$\varepsilon_{\theta}$，根据上面公式计算得到均值$\mu$</li>
+<li>得到方差$\Sigma_{\theta}\left(x_t, t\right)$；</li>
+<li>代入公式得到$q\left(x_{t-1} \mid x_t, x_0\right)$，利用重参数化得到$x_{t-1}$
+<ul>
+<li>因为我们计算了$D_{K L}\left(q\left(x_{t-1} \mid x_t, x_0\right) \| p_{\theta}\left(x_{t-1} \mid x_t\right)\right)$，故可以利用$q\left(x_{t-1} \mid x_t\right)$来近似$p\left(x_{t-1} \mid x_t\right)$</li>
+</ul>
+</li>
+</ul>
+<blockquote>
+<p>参考资料:</p>
+<p><a href="https://speech.ee.ntu.edu.tw/~hylee/ml/2023-spring.php">ML 2023 Spring (ntu.edu.tw)</a></p>
+<p><a href="https://mp.weixin.qq.com/s/jgfqPv__nEcoFbazo2LbUA">保姆级讲解 Diffusion 扩散模型（DDPM）</a></p>
+</blockquote>
+
+
+  </div>
+
+  <footer class="post-footer">
+    <ul class="post-tags">
+    </ul>
+<nav class="paginav">
+  <a class="prev" href="https://iendi.github.io/en/posts/lc/%E5%85%B6%E4%BB%96/1/">
+    <span class="title">« 上一页</span>
+    <br>
+    <span>位运算&amp;倍增</span>
+  </a>
+  <a class="next" href="https://iendi.github.io/en/posts/ai/vit/">
+    <span class="title">下一页 »</span>
+    <br>
+    <span>ViT</span>
+  </a>
+</nav>
+
+  </footer>
+</article>
+    </main>
+    
+<footer class="footer">
+    <span>
+        Copyright
+        &copy;
+        -2024
+        <a href="https://iendi.github.io/en/" style="color:#939393;">Kend&#39;s Blog</a>
+        All Rights Reserved
+    </span>
+    <a href="https://beian.miit.gov.cn/" target="_blank" style="color:#939393;"></a>&nbsp;
+    <span>
+        <a target="_blank" href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=null"
+           style="display:inline-block;text-decoration:none;height:20px;color:#939393;">
+            <img src="" style="float:left;margin: 0px 5px 0px 0px;"/>
+            
+        </a>
+    </span>
+    <span id="busuanzi_container">
+        <span class="fa fa-user"></span> <span id="busuanzi_value_site_uv"></span>
+        <span class="fa fa-eye"></span> <span id="busuanzi_value_site_pv"></span>
+    </span>
+</footer>
+<a href="#top" aria-label="go to top" title="Go to Top (Alt + G)" class="top-link" id="top-link" accesskey="g">
+    <span class="topInner">
+        <svg class="topSvg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentColor">
+            <path d="M12 6H0l6-6z"/>
+        </svg>
+        <span id="read_progress"></span>
+    </span>
+</a>
+
+<script>
+    document.addEventListener('scroll', function (e) {
+        const readProgress = document.getElementById("read_progress");
+        const scrollHeight = document.documentElement.scrollHeight;
+        const clientHeight = document.documentElement.clientHeight;
+        const scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
+        readProgress.innerText = ((scrollTop / (scrollHeight - clientHeight)).toFixed(2) * 100).toFixed(0);
+    })
+</script>
+
+<script>
+    let menu = document.getElementById('menu')
+    if (menu) {
+        menu.scrollLeft = localStorage.getItem("menu-scroll-position");
+        menu.onscroll = function () {
+            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+        }
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+</script>
+<script>
+    let mybutton = document.getElementById("top-link");
+    window.onscroll = function () {
+        if (document.body.scrollTop > 200 || document.documentElement.scrollTop > 200) {
+            mybutton.style.visibility = "visible";
+            mybutton.style.opacity = "1";
+        } else {
+            mybutton.style.visibility = "hidden";
+            mybutton.style.opacity = "0";
+        }
+    };
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        (function() {
+            document.cookie = "change-themes" + "="+ escape ("false");
+        })()
+
+        if (document.body.className.includes("dark")) {
+            document.body.classList.remove('dark');
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            document.body.classList.add('dark');
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    });
+</script>
+
+<script>
+    document.body.addEventListener('copy', function (e) {
+        if (window.getSelection().toString() && window.getSelection().toString().length > 50) {
+            let clipboardData = e.clipboardData || window.clipboardData;
+            if (clipboardData) {
+                e.preventDefault();
+                let htmlData = window.getSelection().toString() +
+                    '\r\n\n————————————————\r\n' +
+                    '版权声明：本文为「'+"Kend's Blog"+'」的原创文章，遵循CC 4.0 BY-SA版权协议，转载请附上原文出处链接及本声明。' +
+                '\r\n原文链接：' + location.href;
+                let textData = window.getSelection().toString() +
+                    '\r\n\n————————————————\r\n' +
+                    '版权声明：本文为「'+"Kend's Blog"+'」的原创文章，遵循CC 4.0 BY-SA版权协议，转载请附上原文出处链接及本声明。' +
+                '\r\n原文链接：' + location.href;
+                clipboardData.setData('text/html', htmlData);
+                clipboardData.setData('text/plain', textData);
+            }
+        }
+    });
+</script>
+<script>
+    document.querySelectorAll('pre > code').forEach((codeblock) => {
+        const container = codeblock.parentNode.parentNode;
+        const copybutton = document.createElement('button');
+        copybutton.classList.add('copy-code');
+        copybutton.innerText = '📄复制';
+
+        function copyingDone() {
+            copybutton.innerText = '👌🏻已复制!';
+            setTimeout(() => {
+                copybutton.innerText = '📄复制';
+            }, 2000);
+        }
+
+        copybutton.addEventListener('click', (cb) => {
+            if ('clipboard' in navigator) {
+                let text = codeblock.textContent +
+                    '\r\n————————————————\r\n' +
+                    '版权声明：本文为「'+"Kend's Blog"+'」的原创文章，遵循CC 4.0 BY-SA版权协议，转载请附上原文出处链接及本声明。' +
+                '\r\n原文链接：' + location.href;
+                navigator.clipboard.writeText(text);
+                copyingDone();
+                return;
+            }
+
+            const range = document.createRange();
+            range.selectNodeContents(codeblock);
+            const selection = window.getSelection();
+            selection.removeAllRanges();
+            selection.addRange(range);
+            try {
+                document.execCommand('copy');
+                copyingDone();
+            } catch (e) {}
+            selection.removeRange(range);
+        });
+
+        let language = codeblock.className.replaceAll("language-", "")
+        let macTool = document.createElement("div")
+        let macTool1 = document.createElement("div")
+        let macTool2 = document.createElement("div")
+        let macTool3 = document.createElement("div")
+        let languageType = document.createElement("div")
+        languageType.innerText = language
+        macTool.setAttribute('class', 'mac-tool')
+        macTool1.setAttribute('class', 'mac bb1')
+        macTool2.setAttribute('class', 'mac bb2')
+        macTool3.setAttribute('class', 'mac bb3')
+        languageType.setAttribute('class', 'language-type')
+        macTool.appendChild(macTool1)
+        macTool.appendChild(macTool2)
+        macTool.appendChild(macTool3)
+        macTool.appendChild(languageType)
+
+        if (container.classList.contains("highlight")) {
+            container.appendChild(copybutton);
+            container.appendChild(macTool)
+        } else if (container.parentNode.firstChild == container) {
+            
+        } else if (codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.nodeName == "TABLE") {
+            
+            codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.appendChild(copybutton);
+            container.appendChild(macTool)
+        } else {
+            
+            codeblock.parentNode.appendChild(copybutton);
+            container.appendChild(macTool)
+        }
+    });
+</script>
+</body>
+
+</html>

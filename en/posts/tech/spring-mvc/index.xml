@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
+  <channel>
+    <title>Spring MVC on Kend&#39;s Blog</title>
+    <link>https://iendi.github.io/en/posts/tech/spring-mvc/</link>
+    <description>Recent content in Spring MVC on Kend&#39;s Blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en</language>
+    <lastBuildDate>Tue, 20 Jul 2021 22:20:58 +0800</lastBuildDate>
+    <atom:link href="https://iendi.github.io/en/posts/tech/spring-mvc/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>05. 数据验证</title>
+      <link>https://iendi.github.io/en/posts/tech/spring-mvc/05.-%E6%95%B0%E6%8D%AE%E9%AA%8C%E8%AF%81/</link>
+      <pubDate>Tue, 20 Jul 2021 22:20:58 +0800</pubDate>
+      <guid>https://iendi.github.io/en/posts/tech/spring-mvc/05.-%E6%95%B0%E6%8D%AE%E9%AA%8C%E8%AF%81/</guid>
+      <description>单个类验证 通过JSR-303 验证框架加Hibernate Validator机制进行验证 先引入依赖： &amp;lt;dependency&amp;gt; &amp;lt;groupId&amp;gt;org.hibernate&amp;lt;/groupId&amp;gt; &amp;lt;artifactId&amp;gt;hibernate-validator&amp;lt;/artifactId&amp;gt; &amp;lt;version&amp;gt;6.1.0.Final&amp;lt;/version&amp;gt; &amp;lt;/dependency&amp;gt; 然后在📃springmvc-se</description>
+    </item>
+    <item>
+      <title>04. 文件上传与下载</title>
+      <link>https://iendi.github.io/en/posts/tech/spring-mvc/04.-%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0%E4%B8%8E%E4%B8%8B%E8%BD%BD/</link>
+      <pubDate>Mon, 19 Jul 2021 22:20:58 +0800</pubDate>
+      <guid>https://iendi.github.io/en/posts/tech/spring-mvc/04.-%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0%E4%B8%8E%E4%B8%8B%E8%BD%BD/</guid>
+      <description>文件上传 文件上传通过MultipartResolver接口，有两个实现类，分别为StandardServletMultipartResolv</description>
+    </item>
+    <item>
+      <title>02. 控制器获取参数及返回</title>
+      <link>https://iendi.github.io/en/posts/tech/spring-mvc/02.-%E6%8E%A7%E5%88%B6%E5%99%A8%E8%8E%B7%E5%8F%96%E5%8F%82%E6%95%B0/</link>
+      <pubDate>Sun, 18 Jul 2021 22:20:58 +0800</pubDate>
+      <guid>https://iendi.github.io/en/posts/tech/spring-mvc/02.-%E6%8E%A7%E5%88%B6%E5%99%A8%E8%8E%B7%E5%8F%96%E5%8F%82%E6%95%B0/</guid>
+      <description>获取参数 1. 无注解下获取参数 无注解下，要求参数名与HTTP请求的参数名一致 @Controller public class MyController { @RequestMapping(&amp;#34;/hello&amp;#34;) @ResponseBody public Object sayHello(String name,Integer age,String str){ Map&amp;lt;String,Integer&amp;gt; map=new HashMap&amp;lt;&amp;gt;(); map.put(name,age); sout(str); return map; } 请求URL：http://</description>
+    </item>
+    <item>
+      <title>03. 参数绑定</title>
+      <link>https://iendi.github.io/en/posts/tech/spring-mvc/03.-%E5%8F%82%E6%95%B0%E7%BB%91%E5%AE%9A/</link>
+      <pubDate>Sun, 18 Jul 2021 22:20:58 +0800</pubDate>
+      <guid>https://iendi.github.io/en/posts/tech/spring-mvc/03.-%E5%8F%82%E6%95%B0%E7%BB%91%E5%AE%9A/</guid>
+      <description>对前端传来的参数，绑定至已有对象中 通过表单post数据，首先先在web.xml中加入filter，防止中文乱码 &amp;lt;filter&amp;gt; &amp;lt;filter-name&amp;gt;encoding&amp;lt;/filter-name&amp;gt; &amp;lt;filter-class&amp;gt;org.springframework.web.filter.CharacterEncodingFilter&amp;lt;/filter-class&amp;gt; &amp;lt;init-param&amp;gt; &amp;lt;param-name&amp;gt;encoding&amp;lt;/param-name&amp;gt; &amp;lt;param-value&amp;gt;UTF-8&amp;lt;/param-value&amp;gt; &amp;lt;/init-param&amp;gt; &amp;lt;init-param&amp;gt; &amp;lt;param-name&amp;gt;forceRequestEncoding&amp;lt;/param-name&amp;gt; &amp;lt;param-value&amp;gt;true&amp;lt;/param-value&amp;gt; &amp;lt;/init-param&amp;gt; &amp;lt;init-param&amp;gt; &amp;lt;param-name&amp;gt;forceResponseEncoding&amp;lt;/param-name&amp;gt; &amp;lt;param-value&amp;gt;true&amp;lt;/param-value&amp;gt; &amp;lt;/init-param&amp;gt;</description>
+    </item>
+    <item>
+      <title>01. Spring MVC全流程及简单配置</title>
+      <link>https://iendi.github.io/en/posts/tech/spring-mvc/01.-spring-mvc%E5%85%A8%E6%B5%81%E7%A8%8B%E5%8F%8A%E7%AE%80%E5%8D%95%E9%85%8D%E7%BD%AE/</link>
+      <pubDate>Fri, 16 Jul 2021 22:20:58 +0800</pubDate>
+      <guid>https://iendi.github.io/en/posts/tech/spring-mvc/01.-spring-mvc%E5%85%A8%E6%B5%81%E7%A8%8B%E5%8F%8A%E7%AE%80%E5%8D%95%E9%85%8D%E7%BD%AE/</guid>
+      <description>MVC 全流程 通过@RequestMapping注解，将控制器(Controller) 扫描进HandleMapping DispatcherServ</description>
+    </item>
+  </channel>
+</rss>

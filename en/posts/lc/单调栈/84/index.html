@@ -1,0 +1,615 @@
+<!DOCTYPE html>
+<html lang="en" dir="auto">
+
+<head><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="index, follow">
+<title>单调栈 | Kend&#39;s Blog</title>
+<meta name="keywords" content="">
+<meta name="description" content="解决 &ldquo;next greater number&rdquo; 问题 496. 下一个更大元素 I 给你两个 没有重复元素 的数组 nums1 和 nums2 ，其中nums1 是 nums2 的子集。 请你找出 nums1 中每个元素在 nums2 中的下一个比其大的值。 nums1">
+<meta name="author" content="Kend">
+<link rel="canonical" href="https://iendi.github.io/en/posts/lc/%E5%8D%95%E8%B0%83%E6%A0%88/84/">
+
+
+<link crossorigin="anonymous" href="/assets/css/stylesheet.2b3a9b630d724ad2b56cb3217ca569e88f4344d61fa91c496bfd01d1128c4950.css" integrity="" rel="preload stylesheet" as="style">
+<script defer crossorigin="anonymous" src="/assets/js/highlight.f413e19d0714851f6474e7ee9632408e58ac146fbdbe62747134bea2fa3415e0.js" integrity="sha256-9BPhnQcUhR9kdOfuljJAjlisFG&#43;9vmJ0cTS&#43;ovo0FeA="
+        onload="hljs.initHighlightingOnLoad();"></script>
+<link rel="icon" href="https://iendi.github.io/img/1.png">
+<link rel="icon" type="image/png" sizes="16x16" href="https://iendi.github.io/img/1.png">
+<link rel="icon" type="image/png" sizes="32x32" href="https://iendi.github.io/img/1.png">
+<link rel="apple-touch-icon" href="https://iendi.github.io/1.png">
+<link rel="mask-icon" href="https://iendi.github.io/1.png">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<link rel="alternate" hreflang="en" href="https://iendi.github.io/en/posts/lc/%E5%8D%95%E8%B0%83%E6%A0%88/84/">
+<noscript>
+    <style>
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+</noscript>
+<script>
+    MathJax = {
+      tex: {
+        inlineMath: [["$", "$"]],
+      },
+      displayMath: [
+        ["$$", "$$"]
+      ],
+      svg: {
+        fontCache: "global",
+      },
+    };
+  </script>
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script
+    id="MathJax-script"
+    async
+    src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"
+  ></script>
+
+
+  
+
+<meta property="og:title" content="单调栈" />
+<meta property="og:description" content="解决 &ldquo;next greater number&rdquo; 问题 496. 下一个更大元素 I 给你两个 没有重复元素 的数组 nums1 和 nums2 ，其中nums1 是 nums2 的子集。 请你找出 nums1 中每个元素在 nums2 中的下一个比其大的值。 nums1" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://iendi.github.io/en/posts/lc/%E5%8D%95%E8%B0%83%E6%A0%88/84/" /><meta property="article:section" content="posts" />
+<meta property="article:published_time" content="2021-07-12T22:20:58+08:00" />
+<meta property="article:modified_time" content="2021-07-12T22:20:58+08:00" />
+
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="单调栈"/>
+<meta name="twitter:description" content="解决 &ldquo;next greater number&rdquo; 问题 496. 下一个更大元素 I 给你两个 没有重复元素 的数组 nums1 和 nums2 ，其中nums1 是 nums2 的子集。 请你找出 nums1 中每个元素在 nums2 中的下一个比其大的值。 nums1"/>
+
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position":  1 ,
+      "name": "📚文章",
+      "item": "https://iendi.github.io/en/posts/"
+    }, 
+    {
+      "@type": "ListItem",
+      "position":  2 ,
+      "name": "📓刷题",
+      "item": "https://iendi.github.io/en/posts/lc/"
+    }, 
+    {
+      "@type": "ListItem",
+      "position":  4 ,
+      "name": "单调栈",
+      "item": "https://iendi.github.io/en/posts/lc/%E5%8D%95%E8%B0%83%E6%A0%88/84/"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "单调栈",
+  "name": "单调栈",
+  "description": "解决 \u0026ldquo;next greater number\u0026rdquo; 问题 496. 下一个更大元素 I 给你两个 没有重复元素 的数组 nums1 和 nums2 ，其中nums1 是 nums2 的子集。 请你找出 nums1 中每个元素在 nums2 中的下一个比其大的值。 nums1",
+  "keywords": [
+    
+  ],
+  "articleBody": "解决 “next greater number” 问题\n496. 下一个更大元素 I 给你两个 没有重复元素 的数组 nums1 和 nums2 ，其中nums1 是 nums2 的子集。\n请你找出 nums1 中每个元素在 nums2 中的下一个比其大的值。\nnums1 中数字 x 的下一个更大元素是指 x 在 nums2 中对应位置的右边的第一个比 x 大的元素。如果不存在，对应位置输出 -1 。\n思路：\n先对nums2从尾到头，通过单调栈寻找下一个更大数，存入HashMap nums1直接通过HashMap提取，返回答案 重点是通过单调栈寻找下一个更大数 class Solution { public int[] nextGreaterElement(int[] nums1, int[] nums2) { int[] ans=new int[nums1.length]; HashMap\u003cInteger,Integer\u003e num=build(nums2); for(int i=0;i\u003cnums1.length;i++){ ans[i]=num.get(nums1[i]); } return ans; } public HashMap\u003cInteger,Integer\u003e build(int[] nums2){ Stack\u003cInteger\u003e stack=new Stack\u003c\u003e(); HashMap\u003cInteger,Integer\u003e ans=new HashMap\u003c\u003e(); //nums2从尾到头 for(int i=nums2.length-1;i\u003e=0;i--){ while(!stack.empty()\u0026\u0026nums2[i]\u003e=stack.peek()){ stack.pop(); } int v=stack.empty()?-1:stack.peek(); stack.push(nums2[i]);//进栈，进行后面的大小判定 ans.put(nums2[i],v); } return ans; } } 503. 下一个更大元素 II 环形数组\n思路：\n把原数组“复制”一份，如原来[1,2,1]——\u003e[1,2,1,1,2,1]，再对新数组通过单调栈处理即可 通过==取余==操作，达到不增长数组空间 class Solution { public int[] nextGreaterElements(int[] nums) { int len=nums.length; int[] ans=new int[len]; Stack\u003cInteger\u003e s=new Stack\u003c\u003e(); //nums数组变为原来的两倍 for(int i=2*len-1;i\u003e=0;i--){ while(!s.empty()\u0026\u0026nums[i%len]\u003e=s.peek()){ s.pop(); } //ans最终会被赋两趟值，[len+1,len+2..,2len-1]被[1,2,..len-1]覆盖 ans[i%len]=s.empty()?-1:s.peek(); s.push(nums[i%len]); } return ans; } } 739. 每日温度 请根据每日 气温 列表，重新生成一个列表。对应位置的输出为：要想观测到更高的气温，至少需要等待的天数。如果气温在这之后都不会升高，请在该位置用 0 来代替\n例如，给定一个列表 temperatures = [73, 74, 75, 71, 69, 72, 76, 73]，你的输出应该是 [1, 1, 4, 2, 1, 1, 0, 0]\n思路：\n也是单调栈，不过存入栈的是索引 class Solution { public int[] dailyTemperatures(int[] temperatures) { Stack\u003cInteger\u003e s=new Stack\u003c\u003e(); int[] ans=new int[temperatures.length]; for(int i=temperatures.length-1;i\u003e=0;i--){ while(!s.empty()\u0026\u0026temperatures[i]\u003e=temperatures[s.peek()]){ s.pop(); } ans[i]=s.empty()?0:s.peek()-i; s.push(i); } return ans; } } 84. 柱状图中最大的矩形\n(还不会)\n给定 n 个非负整数，用来表示柱状图中各个柱子的高度。每个柱子彼此相邻，且宽度为 1\n求在该柱状图中，能够勾勒出来的矩形的最大面积\n思路：\n对数组遍历，每个点的值为高，往左\u0026往右直到遇到比当前值小的点，为宽\n数组两端个加个0，便于判断，通过System的静态复制方法\nint[] tmp = new int[heights.length + 2]; System.arraycopy(heights, 0, tmp, 1, heights.length); //temp中未赋值的[0]和[heights.length+1]初始化为0 ",
+  "wordCount" : "828",
+  "inLanguage": "en",
+  "datePublished": "2021-07-12T22:20:58+08:00",
+  "dateModified": "2021-07-12T22:20:58+08:00",
+  "author":{
+    "@type": "Person",
+    "name": "Kend"
+  },
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://iendi.github.io/en/posts/lc/%E5%8D%95%E8%B0%83%E6%A0%88/84/"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "Kend's Blog",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://iendi.github.io/img/1.png"
+    }
+  }
+}
+</script>
+</head>
+
+<body class="" id="top">
+<script>
+    if (localStorage.getItem("pref-theme") === "dark") {
+        document.body.classList.add('dark');
+    }
+
+</script>
+
+<header class="header">
+    <nav class="nav">
+        <div class="logo">
+            <a href="https://iendi.github.io/en/" accesskey="h" title="Kend&#39;s Blog (Alt + H)">
+                <img src="https://iendi.github.io/img/1.png" alt="" aria-label="logo"
+                    height="35">Kend&#39;s Blog</a>
+            <div class="logo-switches">
+                <button id="theme-toggle" accesskey="t" title="(Alt + T)">
+                    <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <ul id="menu">
+            <li>
+                <a href="https://iendi.github.io/en/search" title="🔍搜索 (Alt &#43; /)" accesskey=/>
+                    <span>🔍搜索</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://iendi.github.io/en/" title="🏠主页">
+                    <span>🏠主页</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://iendi.github.io/en/posts" title="📚文章">
+                    <span>📚文章</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://iendi.github.io/en/archives/" title="⏱时间轴">
+                    <span>⏱时间轴</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://iendi.github.io/en/tags" title="🔖标签">
+                    <span>🔖标签</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://iendi.github.io/en/about" title="🙋🏻‍♂️关于">
+                    <span>🙋🏻‍♂️关于</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</header>
+<main class="main">
+
+<article class="post-single">
+  <header class="post-header">
+    <div class="breadcrumbs"><a href="https://iendi.github.io/en/">主页</a>&nbsp;»&nbsp;<a href="https://iendi.github.io/en/posts/">📚文章</a>&nbsp;»&nbsp;<a href="https://iendi.github.io/en/posts/lc/">📓刷题</a></div>
+    <h1 class="post-title entry-hint-parent">
+      单调栈
+    </h1>
+    <div class="post-meta"><span title='2021-07-12 22:20:58 +0800 CST'>2021-07-12</span>&nbsp;·&nbsp;2 min&nbsp;·&nbsp;Kend
+
+
+
+
+&nbsp;|&nbsp;标签: &nbsp;
+    </div>
+  </header> <aside id="toc-container" class="toc-container wide">
+    <div class="toc">
+        <details  open>
+            <summary accesskey="c" title="(Alt + C)">
+                <span class="details">文章目录</span>
+            </summary>
+
+            <div class="inner"><ul>
+                    <li>
+                        <a href="#496-%e4%b8%8b%e4%b8%80%e4%b8%aa%e6%9b%b4%e5%a4%a7%e5%85%83%e7%b4%a0-ihttpsleetcode-cncomproblemsnext-greater-element-i" aria-label="496. 下一个更大元素 I"><a href="https://leetcode-cn.com/problems/next-greater-element-i/">496. 下一个更大元素 I</a></a></li>
+                    <li>
+                        <a href="#503-%e4%b8%8b%e4%b8%80%e4%b8%aa%e6%9b%b4%e5%a4%a7%e5%85%83%e7%b4%a0-iihttpsleetcode-cncomproblemsnext-greater-element-ii" aria-label="503. 下一个更大元素 II"><a href="https://leetcode-cn.com/problems/next-greater-element-ii/">503. 下一个更大元素 II</a></a></li>
+                    <li>
+                        <a href="#739-%e6%af%8f%e6%97%a5%e6%b8%a9%e5%ba%a6httpsleetcode-cncomproblemsdaily-temperatures" aria-label="739. 每日温度"><a href="https://leetcode-cn.com/problems/daily-temperatures/">739. 每日温度</a></a>
+                    </li>
+                </ul>
+            </div>
+        </details>
+    </div>
+</aside>
+<script>
+    let activeElement;
+    let elements;
+    window.addEventListener('DOMContentLoaded', function (event) {
+        checkTocPosition();
+
+        elements = document.querySelectorAll('h1[id],h2[id],h3[id],h4[id],h5[id],h6[id]');
+         
+         activeElement = elements[0];
+         const id = encodeURI(activeElement.getAttribute('id')).toLowerCase();
+         document.querySelector(`.inner ul li a[href="#${id}"]`).classList.add('active');
+     }, false);
+
+    window.addEventListener('resize', function(event) {
+        checkTocPosition();
+    }, false);
+
+    window.addEventListener('scroll', () => {
+        
+        activeElement = Array.from(elements).find((element) => {
+            if ((getOffsetTop(element) - window.pageYOffset) > 0 && 
+                (getOffsetTop(element) - window.pageYOffset) < window.innerHeight/2) {
+                return element;
+            }
+        }) || activeElement
+
+        elements.forEach(element => {
+             const id = encodeURI(element.getAttribute('id')).toLowerCase();
+             if (element === activeElement){
+                 document.querySelector(`.inner ul li a[href="#${id}"]`).classList.add('active');
+             } else {
+                 document.querySelector(`.inner ul li a[href="#${id}"]`).classList.remove('active');
+             }
+         })
+     }, false);
+
+    const main = parseInt(getComputedStyle(document.body).getPropertyValue('--article-width'), 10);
+    const toc = parseInt(getComputedStyle(document.body).getPropertyValue('--toc-width'), 10);
+    const gap = parseInt(getComputedStyle(document.body).getPropertyValue('--gap'), 10);
+
+    function checkTocPosition() {
+        const width = document.body.scrollWidth;
+
+        if (width - main - (toc * 2) - (gap * 4) > 0) {
+            document.getElementById("toc-container").classList.add("wide");
+        } else {
+            document.getElementById("toc-container").classList.remove("wide");
+        }
+    }
+
+    function getOffsetTop(element) {
+        if (!element.getClientRects().length) {
+            return 0;
+        }
+        let rect = element.getBoundingClientRect();
+        let win = element.ownerDocument.defaultView;
+        return rect.top + win.pageYOffset;   
+    }
+</script>
+  <div class="post-content"><p>解决 <strong>&ldquo;next greater number&rdquo;</strong> 问题</p>
+<blockquote>
+<h4 id="496-下一个更大元素-ihttpsleetcode-cncomproblemsnext-greater-element-i"><a href="https://leetcode-cn.com/problems/next-greater-element-i/">496. 下一个更大元素 I</a><a hidden class="anchor" aria-hidden="true" href="#496-下一个更大元素-ihttpsleetcode-cncomproblemsnext-greater-element-i">#</a></h4>
+<p>给你两个 没有重复元素 的数组 nums1 和 nums2 ，其中nums1 是 nums2 的子集。</p>
+<p>请你找出 nums1 中每个元素在 nums2 中的下一个比其大的值。</p>
+<p>nums1 中数字 x 的下一个更大元素是指 x 在 nums2 中对应位置的右边的第一个比 x 大的元素。如果不存在，对应位置输出 -1 。</p>
+</blockquote>
+<p>思路：</p>
+<ul>
+<li>先对nums2从尾到头，通过单调栈寻找下一个更大数，存入HashMap</li>
+<li>nums1直接通过HashMap提取，返回答案</li>
+<li>重点是通过单调栈寻找下一个更大数</li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Solution</span> { 
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">int</span><span style="color:#f92672">[]</span> <span style="color:#a6e22e">nextGreaterElement</span>(<span style="color:#66d9ef">int</span><span style="color:#f92672">[]</span> nums1, <span style="color:#66d9ef">int</span><span style="color:#f92672">[]</span> nums2) {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">int</span><span style="color:#f92672">[]</span> ans<span style="color:#f92672">=</span><span style="color:#66d9ef">new</span> <span style="color:#66d9ef">int</span><span style="color:#f92672">[</span>nums1.<span style="color:#a6e22e">length</span><span style="color:#f92672">]</span>;
+</span></span><span style="display:flex;"><span>        HashMap<span style="color:#f92672">&lt;</span>Integer,Integer<span style="color:#f92672">&gt;</span> num<span style="color:#f92672">=</span>build(nums2);
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">for</span>(<span style="color:#66d9ef">int</span> i<span style="color:#f92672">=</span>0;i<span style="color:#f92672">&lt;</span>nums1.<span style="color:#a6e22e">length</span>;i<span style="color:#f92672">++</span>){
+</span></span><span style="display:flex;"><span>            ans<span style="color:#f92672">[</span>i<span style="color:#f92672">]=</span>num.<span style="color:#a6e22e">get</span>(nums1<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span>);
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> ans;
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> HashMap<span style="color:#f92672">&lt;</span>Integer,Integer<span style="color:#f92672">&gt;</span> <span style="color:#a6e22e">build</span>(<span style="color:#66d9ef">int</span><span style="color:#f92672">[]</span> nums2){
+</span></span><span style="display:flex;"><span>        Stack<span style="color:#f92672">&lt;</span>Integer<span style="color:#f92672">&gt;</span> stack<span style="color:#f92672">=</span><span style="color:#66d9ef">new</span> Stack<span style="color:#f92672">&lt;&gt;</span>();
+</span></span><span style="display:flex;"><span>        HashMap<span style="color:#f92672">&lt;</span>Integer,Integer<span style="color:#f92672">&gt;</span> ans<span style="color:#f92672">=</span><span style="color:#66d9ef">new</span> HashMap<span style="color:#f92672">&lt;&gt;</span>();
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e">//nums2从尾到头</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">for</span>(<span style="color:#66d9ef">int</span> i<span style="color:#f92672">=</span>nums2.<span style="color:#a6e22e">length</span><span style="color:#f92672">-</span>1;i<span style="color:#f92672">&gt;=</span>0;i<span style="color:#f92672">--</span>){
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">while</span>(<span style="color:#f92672">!</span>stack.<span style="color:#a6e22e">empty</span>()<span style="color:#f92672">&amp;&amp;</span>nums2<span style="color:#f92672">[</span>i<span style="color:#f92672">]&gt;=</span>stack.<span style="color:#a6e22e">peek</span>()){
+</span></span><span style="display:flex;"><span>                stack.<span style="color:#a6e22e">pop</span>();
+</span></span><span style="display:flex;"><span>            }
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">int</span> v<span style="color:#f92672">=</span>stack.<span style="color:#a6e22e">empty</span>()<span style="color:#f92672">?-</span>1:stack.<span style="color:#a6e22e">peek</span>();
+</span></span><span style="display:flex;"><span>            stack.<span style="color:#a6e22e">push</span>(nums2<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span>);<span style="color:#75715e">//进栈，进行后面的大小判定</span>
+</span></span><span style="display:flex;"><span>            ans.<span style="color:#a6e22e">put</span>(nums2<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span>,v);
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> ans;
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><blockquote>
+<h4 id="503-下一个更大元素-iihttpsleetcode-cncomproblemsnext-greater-element-ii"><a href="https://leetcode-cn.com/problems/next-greater-element-ii/">503. 下一个更大元素 II</a><a hidden class="anchor" aria-hidden="true" href="#503-下一个更大元素-iihttpsleetcode-cncomproblemsnext-greater-element-ii">#</a></h4>
+<p>环形数组</p>
+</blockquote>
+<p>思路：</p>
+<ul>
+<li>把原数组“复制”一份，如原来<code>[1,2,1]</code>——&gt;<code>[1,2,1,1,2,1]</code>，再对新数组通过单调栈处理即可</li>
+<li>通过==取余==操作，达到不增长数组空间</li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Solution</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">int</span><span style="color:#f92672">[]</span> <span style="color:#a6e22e">nextGreaterElements</span>(<span style="color:#66d9ef">int</span><span style="color:#f92672">[]</span> nums) {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">int</span> len<span style="color:#f92672">=</span>nums.<span style="color:#a6e22e">length</span>;
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">int</span><span style="color:#f92672">[]</span> ans<span style="color:#f92672">=</span><span style="color:#66d9ef">new</span> <span style="color:#66d9ef">int</span><span style="color:#f92672">[</span>len<span style="color:#f92672">]</span>;
+</span></span><span style="display:flex;"><span>        Stack<span style="color:#f92672">&lt;</span>Integer<span style="color:#f92672">&gt;</span> s<span style="color:#f92672">=</span><span style="color:#66d9ef">new</span> Stack<span style="color:#f92672">&lt;&gt;</span>();
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e">//nums数组变为原来的两倍</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">for</span>(<span style="color:#66d9ef">int</span> i<span style="color:#f92672">=</span>2<span style="color:#f92672">*</span>len<span style="color:#f92672">-</span>1;i<span style="color:#f92672">&gt;=</span>0;i<span style="color:#f92672">--</span>){
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">while</span>(<span style="color:#f92672">!</span>s.<span style="color:#a6e22e">empty</span>()<span style="color:#f92672">&amp;&amp;</span>nums<span style="color:#f92672">[</span>i<span style="color:#f92672">%</span>len<span style="color:#f92672">]&gt;=</span>s.<span style="color:#a6e22e">peek</span>()){
+</span></span><span style="display:flex;"><span>                s.<span style="color:#a6e22e">pop</span>();
+</span></span><span style="display:flex;"><span>            }
+</span></span><span style="display:flex;"><span>            <span style="color:#75715e">//ans最终会被赋两趟值，[len+1,len+2..,2len-1]被[1,2,..len-1]覆盖</span>
+</span></span><span style="display:flex;"><span>            ans<span style="color:#f92672">[</span>i<span style="color:#f92672">%</span>len<span style="color:#f92672">]=</span>s.<span style="color:#a6e22e">empty</span>()<span style="color:#f92672">?-</span>1:s.<span style="color:#a6e22e">peek</span>();
+</span></span><span style="display:flex;"><span>            s.<span style="color:#a6e22e">push</span>(nums<span style="color:#f92672">[</span>i<span style="color:#f92672">%</span>len<span style="color:#f92672">]</span>);
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> ans;
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><blockquote>
+<h4 id="739-每日温度httpsleetcode-cncomproblemsdaily-temperatures"><a href="https://leetcode-cn.com/problems/daily-temperatures/">739. 每日温度</a><a hidden class="anchor" aria-hidden="true" href="#739-每日温度httpsleetcode-cncomproblemsdaily-temperatures">#</a></h4>
+<p>请根据每日 气温 列表，重新生成一个列表。对应位置的输出为：要想观测到更高的气温，至少需要等待的天数。如果气温在这之后都不会升高，请在该位置用 0 来代替</p>
+<p>例如，给定一个列表 temperatures = [73, 74, 75, 71, 69, 72, 76, 73]，你的输出应该是 [1, 1, 4, 2, 1, 1, 0, 0]</p>
+</blockquote>
+<p>思路：</p>
+<ul>
+<li>也是单调栈，不过存入栈的是索引</li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Solution</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">int</span><span style="color:#f92672">[]</span> <span style="color:#a6e22e">dailyTemperatures</span>(<span style="color:#66d9ef">int</span><span style="color:#f92672">[]</span> temperatures) {
+</span></span><span style="display:flex;"><span>        Stack<span style="color:#f92672">&lt;</span>Integer<span style="color:#f92672">&gt;</span> s<span style="color:#f92672">=</span><span style="color:#66d9ef">new</span> Stack<span style="color:#f92672">&lt;&gt;</span>();
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">int</span><span style="color:#f92672">[]</span> ans<span style="color:#f92672">=</span><span style="color:#66d9ef">new</span> <span style="color:#66d9ef">int</span><span style="color:#f92672">[</span>temperatures.<span style="color:#a6e22e">length</span><span style="color:#f92672">]</span>;
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">for</span>(<span style="color:#66d9ef">int</span> i<span style="color:#f92672">=</span>temperatures.<span style="color:#a6e22e">length</span><span style="color:#f92672">-</span>1;i<span style="color:#f92672">&gt;=</span>0;i<span style="color:#f92672">--</span>){
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">while</span>(<span style="color:#f92672">!</span>s.<span style="color:#a6e22e">empty</span>()<span style="color:#f92672">&amp;&amp;</span>temperatures<span style="color:#f92672">[</span>i<span style="color:#f92672">]&gt;=</span>temperatures<span style="color:#f92672">[</span>s.<span style="color:#a6e22e">peek</span>()<span style="color:#f92672">]</span>){
+</span></span><span style="display:flex;"><span>                s.<span style="color:#a6e22e">pop</span>();
+</span></span><span style="display:flex;"><span>            }
+</span></span><span style="display:flex;"><span>            ans<span style="color:#f92672">[</span>i<span style="color:#f92672">]=</span>s.<span style="color:#a6e22e">empty</span>()<span style="color:#f92672">?</span>0:s.<span style="color:#a6e22e">peek</span>()<span style="color:#f92672">-</span>i;
+</span></span><span style="display:flex;"><span>            s.<span style="color:#a6e22e">push</span>(i);
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> ans;
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><blockquote>
+<p><a href="https://leetcode-cn.com/problems/largest-rectangle-in-histogram/">84. 柱状图中最大的矩形</a></p>
+<p>(还不会)</p>
+<p>给定 <em>n</em> 个非负整数，用来表示柱状图中各个柱子的高度。每个柱子彼此相邻，且宽度为 1</p>
+<p>求在该柱状图中，能够勾勒出来的矩形的最大面积</p>
+<img src="https://assets.leetcode-cn.com/aliyun-lc-upload/uploads/2018/10/12/histogram_area.png">
+</blockquote>
+<p>思路：</p>
+<ul>
+<li>
+<p>对数组遍历，每个点的值为高，往左&amp;往右直到遇到比当前值小的点，为宽</p>
+</li>
+<li>
+<p>数组两端个加个0，便于判断，通过<code>System</code>的静态复制方法</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#66d9ef">int</span><span style="color:#f92672">[]</span> tmp <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#66d9ef">int</span><span style="color:#f92672">[</span>heights.<span style="color:#a6e22e">length</span> <span style="color:#f92672">+</span> 2<span style="color:#f92672">]</span>;
+</span></span><span style="display:flex;"><span>System.<span style="color:#a6e22e">arraycopy</span>(heights, 0, tmp, 1, heights.<span style="color:#a6e22e">length</span>);
+</span></span><span style="display:flex;"><span><span style="color:#75715e">//temp中未赋值的[0]和[heights.length+1]初始化为0</span>
+</span></span></code></pre></div><p><img loading="lazy" src="image-20210711215859326.png" alt="image-20210711215859326"  />
+</p>
+</li>
+</ul>
+
+
+  </div>
+
+  <footer class="post-footer">
+    <ul class="post-tags">
+    </ul>
+<nav class="paginav">
+  <a class="prev" href="https://iendi.github.io/en/posts/lc/%E5%85%B6%E4%BB%96/%E6%BB%91%E5%8A%A8%E7%AA%97%E5%8F%A3/">
+    <span class="title">« 上一页</span>
+    <br>
+    <span>滑动窗口</span>
+  </a>
+  <a class="next" href="https://iendi.github.io/en/posts/tech/spring/aop/">
+    <span class="title">下一页 »</span>
+    <br>
+    <span>AOP</span>
+  </a>
+</nav>
+
+  </footer>
+</article>
+    </main>
+    
+<footer class="footer">
+    <span>
+        Copyright
+        &copy;
+        -2024
+        <a href="https://iendi.github.io/en/" style="color:#939393;">Kend&#39;s Blog</a>
+        All Rights Reserved
+    </span>
+    <a href="https://beian.miit.gov.cn/" target="_blank" style="color:#939393;"></a>&nbsp;
+    <span>
+        <a target="_blank" href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=null"
+           style="display:inline-block;text-decoration:none;height:20px;color:#939393;">
+            <img src="" style="float:left;margin: 0px 5px 0px 0px;"/>
+            
+        </a>
+    </span>
+    <span id="busuanzi_container">
+        <span class="fa fa-user"></span> <span id="busuanzi_value_site_uv"></span>
+        <span class="fa fa-eye"></span> <span id="busuanzi_value_site_pv"></span>
+    </span>
+</footer>
+<a href="#top" aria-label="go to top" title="Go to Top (Alt + G)" class="top-link" id="top-link" accesskey="g">
+    <span class="topInner">
+        <svg class="topSvg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentColor">
+            <path d="M12 6H0l6-6z"/>
+        </svg>
+        <span id="read_progress"></span>
+    </span>
+</a>
+
+<script>
+    document.addEventListener('scroll', function (e) {
+        const readProgress = document.getElementById("read_progress");
+        const scrollHeight = document.documentElement.scrollHeight;
+        const clientHeight = document.documentElement.clientHeight;
+        const scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
+        readProgress.innerText = ((scrollTop / (scrollHeight - clientHeight)).toFixed(2) * 100).toFixed(0);
+    })
+</script>
+
+<script>
+    let menu = document.getElementById('menu')
+    if (menu) {
+        menu.scrollLeft = localStorage.getItem("menu-scroll-position");
+        menu.onscroll = function () {
+            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+        }
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+</script>
+<script>
+    let mybutton = document.getElementById("top-link");
+    window.onscroll = function () {
+        if (document.body.scrollTop > 200 || document.documentElement.scrollTop > 200) {
+            mybutton.style.visibility = "visible";
+            mybutton.style.opacity = "1";
+        } else {
+            mybutton.style.visibility = "hidden";
+            mybutton.style.opacity = "0";
+        }
+    };
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        (function() {
+            document.cookie = "change-themes" + "="+ escape ("false");
+        })()
+
+        if (document.body.className.includes("dark")) {
+            document.body.classList.remove('dark');
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            document.body.classList.add('dark');
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    });
+</script>
+
+<script>
+    document.body.addEventListener('copy', function (e) {
+        if (window.getSelection().toString() && window.getSelection().toString().length > 50) {
+            let clipboardData = e.clipboardData || window.clipboardData;
+            if (clipboardData) {
+                e.preventDefault();
+                let htmlData = window.getSelection().toString() +
+                    '\r\n\n————————————————\r\n' +
+                    '版权声明：本文为「'+"Kend's Blog"+'」的原创文章，遵循CC 4.0 BY-SA版权协议，转载请附上原文出处链接及本声明。' +
+                '\r\n原文链接：' + location.href;
+                let textData = window.getSelection().toString() +
+                    '\r\n\n————————————————\r\n' +
+                    '版权声明：本文为「'+"Kend's Blog"+'」的原创文章，遵循CC 4.0 BY-SA版权协议，转载请附上原文出处链接及本声明。' +
+                '\r\n原文链接：' + location.href;
+                clipboardData.setData('text/html', htmlData);
+                clipboardData.setData('text/plain', textData);
+            }
+        }
+    });
+</script>
+<script>
+    document.querySelectorAll('pre > code').forEach((codeblock) => {
+        const container = codeblock.parentNode.parentNode;
+        const copybutton = document.createElement('button');
+        copybutton.classList.add('copy-code');
+        copybutton.innerText = '📄复制';
+
+        function copyingDone() {
+            copybutton.innerText = '👌🏻已复制!';
+            setTimeout(() => {
+                copybutton.innerText = '📄复制';
+            }, 2000);
+        }
+
+        copybutton.addEventListener('click', (cb) => {
+            if ('clipboard' in navigator) {
+                let text = codeblock.textContent +
+                    '\r\n————————————————\r\n' +
+                    '版权声明：本文为「'+"Kend's Blog"+'」的原创文章，遵循CC 4.0 BY-SA版权协议，转载请附上原文出处链接及本声明。' +
+                '\r\n原文链接：' + location.href;
+                navigator.clipboard.writeText(text);
+                copyingDone();
+                return;
+            }
+
+            const range = document.createRange();
+            range.selectNodeContents(codeblock);
+            const selection = window.getSelection();
+            selection.removeAllRanges();
+            selection.addRange(range);
+            try {
+                document.execCommand('copy');
+                copyingDone();
+            } catch (e) {}
+            selection.removeRange(range);
+        });
+
+        let language = codeblock.className.replaceAll("language-", "")
+        let macTool = document.createElement("div")
+        let macTool1 = document.createElement("div")
+        let macTool2 = document.createElement("div")
+        let macTool3 = document.createElement("div")
+        let languageType = document.createElement("div")
+        languageType.innerText = language
+        macTool.setAttribute('class', 'mac-tool')
+        macTool1.setAttribute('class', 'mac bb1')
+        macTool2.setAttribute('class', 'mac bb2')
+        macTool3.setAttribute('class', 'mac bb3')
+        languageType.setAttribute('class', 'language-type')
+        macTool.appendChild(macTool1)
+        macTool.appendChild(macTool2)
+        macTool.appendChild(macTool3)
+        macTool.appendChild(languageType)
+
+        if (container.classList.contains("highlight")) {
+            container.appendChild(copybutton);
+            container.appendChild(macTool)
+        } else if (container.parentNode.firstChild == container) {
+            
+        } else if (codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.nodeName == "TABLE") {
+            
+            codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.appendChild(copybutton);
+            container.appendChild(macTool)
+        } else {
+            
+            codeblock.parentNode.appendChild(copybutton);
+            container.appendChild(macTool)
+        }
+    });
+</script>
+</body>
+
+</html>

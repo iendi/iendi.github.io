@@ -1,0 +1,728 @@
+<!DOCTYPE html>
+<html lang="en" dir="auto">
+
+<head><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="index, follow">
+<title>Docker 基本知识 | Kend&#39;s Blog</title>
+<meta name="keywords" content="docker">
+<meta name="description" content="常见命令 镜像命令 docker pull ：下载镜像 docker images：列出本地主机上的镜像 docker search httpd ：在docker hub上查找指定名称的镜像 docker rmi httpd：删除镜像 docker">
+<meta name="author" content="Kend">
+<link rel="canonical" href="https://iendi.github.io/en/posts/tech/%E4%B8%AD%E9%97%B4%E4%BB%B6/docker/">
+
+
+<link crossorigin="anonymous" href="/assets/css/stylesheet.2b3a9b630d724ad2b56cb3217ca569e88f4344d61fa91c496bfd01d1128c4950.css" integrity="" rel="preload stylesheet" as="style">
+<script defer crossorigin="anonymous" src="/assets/js/highlight.f413e19d0714851f6474e7ee9632408e58ac146fbdbe62747134bea2fa3415e0.js" integrity="sha256-9BPhnQcUhR9kdOfuljJAjlisFG&#43;9vmJ0cTS&#43;ovo0FeA="
+        onload="hljs.initHighlightingOnLoad();"></script>
+<link rel="icon" href="https://iendi.github.io/img/1.png">
+<link rel="icon" type="image/png" sizes="16x16" href="https://iendi.github.io/img/1.png">
+<link rel="icon" type="image/png" sizes="32x32" href="https://iendi.github.io/img/1.png">
+<link rel="apple-touch-icon" href="https://iendi.github.io/1.png">
+<link rel="mask-icon" href="https://iendi.github.io/1.png">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<link rel="alternate" hreflang="en" href="https://iendi.github.io/en/posts/tech/%E4%B8%AD%E9%97%B4%E4%BB%B6/docker/">
+<noscript>
+    <style>
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+</noscript>
+<script>
+    MathJax = {
+      tex: {
+        inlineMath: [["$", "$"]],
+      },
+      displayMath: [
+        ["$$", "$$"]
+      ],
+      svg: {
+        fontCache: "global",
+      },
+    };
+  </script>
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script
+    id="MathJax-script"
+    async
+    src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"
+  ></script>
+
+
+  
+
+<meta property="og:title" content="Docker 基本知识" />
+<meta property="og:description" content="常见命令 镜像命令 docker pull ：下载镜像 docker images：列出本地主机上的镜像 docker search httpd ：在docker hub上查找指定名称的镜像 docker rmi httpd：删除镜像 docker" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://iendi.github.io/en/posts/tech/%E4%B8%AD%E9%97%B4%E4%BB%B6/docker/" /><meta property="article:section" content="posts" />
+<meta property="article:published_time" content="2024-04-30T19:43:09+08:00" />
+<meta property="article:modified_time" content="2024-04-30T19:43:09+08:00" />
+
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Docker 基本知识"/>
+<meta name="twitter:description" content="常见命令 镜像命令 docker pull ：下载镜像 docker images：列出本地主机上的镜像 docker search httpd ：在docker hub上查找指定名称的镜像 docker rmi httpd：删除镜像 docker"/>
+
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position":  1 ,
+      "name": "📚文章",
+      "item": "https://iendi.github.io/en/posts/"
+    }, 
+    {
+      "@type": "ListItem",
+      "position":  2 ,
+      "name": "🧑‍💻后端",
+      "item": "https://iendi.github.io/en/posts/tech/"
+    }, 
+    {
+      "@type": "ListItem",
+      "position":  4 ,
+      "name": "Docker 基本知识",
+      "item": "https://iendi.github.io/en/posts/tech/%E4%B8%AD%E9%97%B4%E4%BB%B6/docker/"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "Docker 基本知识",
+  "name": "Docker 基本知识",
+  "description": "常见命令 镜像命令 docker pull ：下载镜像 docker images：列出本地主机上的镜像 docker search httpd ：在docker hub上查找指定名称的镜像 docker rmi httpd：删除镜像 docker",
+  "keywords": [
+    "docker"
+  ],
+  "articleBody": "常见命令 镜像命令\ndocker pull ：下载镜像 docker images：列出本地主机上的镜像 docker search httpd ：在docker hub上查找指定名称的镜像 docker rmi httpd：删除镜像 docker tag 860c279d2fec kend/centos:dev：设置镜像标签 镜像ID 用户名/镜像源名(repository name): 新的标签名(tag) 运行镜像，指定容器名\ndocker run -d --name dc -p 8080:8080 kend/myProject:latest /bin/echo \"Hello world\" -d: 不输出结果，后台模式启动，返回容器ID 后台模式：退出终端后，仍继续运行 -i 支持交互式操作 -t 开启终端 可以连在一起写➡-it -p 8080:8080：公网端口：容器内端口 比如我写了个web项目，启动在8080端口，-p 123:8080，我就能通过访问localhost:123去访问 kend/myProject:latest : 镜像名 /bin/echo \"Hello world：在启动的容器里执行的命令，要保证镜像为linux，才能执行该语句，不过推荐CMD语句写在Dockerfile中 容器操作\ndocker ps ：查看容器状态 docker stop/start/rm name(id)：停止/启动/删除容器 如果-d后台运行后想进入容器，怎么做呢，使用docker exec：\ndocker exec -it 243c32535da7 /bin/bash 如上，运行后进入容器并启动bash\ndocker top name(id)：查看容器内进程 查看日志\ndocker logs -f -t --tail 100 name(id)\n-f：保持对日志的实时跟踪 -t：加上时间戳 --tail 100：只显示最新的100行 构建镜像 Dockerfile文件 FROM：定制的镜像都是基于 FROM 的镜像，这里的 nginx 就是定制需要的基础镜像。后续的操作都是基于 nginx。\nRUN：用于执行后面跟着的命令行命令。有以下俩种格式：\nshell 格式：\nRUN \u003c命令行命令\u003e # \u003c命令行命令\u003e 等同于，在终端操作的 shell 命令。 exec 格式：\nRUN [\"可执行文件\", \"参数1\", \"参数2\"] # 例如： # RUN [\"./test.php\", \"dev\", \"offline\"] 等价于 RUN ./test.php dev offline 注意：Dockerfile 的指令每执行一次都会在 docker 上新建一层。所以过多无意义的层，会造成镜像膨胀过大。例如：\nFROM centos RUN yum -y install wget RUN wget -O redis.tar.gz \"http://download.redis.io/releases/redis-5.0.3.tar.gz\" RUN tar -xvf redis.tar.gz 以上执行会创建 3 层镜像。可简化为以下格式：\nFROM centos RUN yum -y install wget \\ \u0026\u0026 wget -O redis.tar.gz \"http://download.redis.io/releases/redis-5.0.3.tar.gz\" \\ \u0026\u0026 tar -xvf redis.tar.gz 如上，以 \u0026\u0026 符号连接命令，这样执行后，只会创建 1 层镜像\n指令\nDockerfile 指令 说明 使用 FROM 指定基础镜像，用于后续的指令构建。 MAINTAINER 指定Dockerfile的作者/维护者。（已弃用，推荐使用LABEL指令） LABEL 添加镜像的元数据，使用键值对的形式。 RUN 在构建过程中在镜像中执行命令。 docker build时运行 CMD 指定容器创建时的默认命令。（可以被覆盖） docker run 时运行CMD [\"\u003c可执行文件或命令\u003e\",\"\",\"\",…]多个CMD时，仅最后一个生效 ENTRYPOINT 设置容器创建时的主要命令。（不可被覆盖） 不会被docker run的参数所覆盖多个ENTRYPOINT时，仅最后一个生效 ENV 在容器内部设置环境变量。 ENV = =…\n$key1 可以访问 ARG 定义在构建过程中传递给构建器的变量，可使用 “docker build” 命令设置。 跟ENV类似，不过只在docker build时运行 ADD 将文件、目录或远程URL复制到镜像中。 COPY(自动解压版) COPY 将文件或目录复制到镜像中。 COPY \u003c源路径1\u003e… \u003c目标路径\u003e WORKDIR 设置后续指令的工作目录。 WORKDIR \u003c工作目录路径\u003e USER 指定后续指令的用户上下文。 USER \u003c用户名\u003e[:\u003c用户组\u003e] ONBUILD 当该镜像被用作另一个构建过程的基础时，添加触发器。 创建时不运行，被FROM时运行 STOPSIGNAL 设置发送给容器以退出的系统调用信号。 HEALTHCHECK 定义周期性检查容器健康状态的命令。 举个例子：\n# Dockerfile FROM golang:1.16-buster AS builder RUN mkdir /src ADD . /src WORKDIR /src RUN go env -w GO111MODULE=auto RUN go build -o main . FROM gcr.io/distroless/base-debian10 WORKDIR / COPY --from=builder /src/main /main EXPOSE 3000 ENTRYPOINT [\"/main\"] COPY --from=builder /src/main /main\n多阶段构建：\n以上代码从名为builder的构建阶段的容器中，将/src/main目录下的文件复制到当前正在构建的容器的/main目录下\n构建时从其他镜像复制文件:\nCOPY --from=nginx:latest /etc/nginx/nginx.conf /nginx.conf 创建镜像 docker build -t kend/centos:6.7 . -t ：指定要创建的目标镜像名 . ：Docker上下文，如果没指定Dockerfile，则在上下文中寻找 或者指定文件：\ndocker build -t kend/centos:6.7 . -f Dockerfile.copy 参考资料：\nDocker Dockerfile | 菜鸟教程 (runoob.com)\nDockerfile 多阶段构建 · Docker – 从入门到实践 (docker-practice.github.io)\n",
+  "wordCount" : "1655",
+  "inLanguage": "en",
+  "datePublished": "2024-04-30T19:43:09+08:00",
+  "dateModified": "2024-04-30T19:43:09+08:00",
+  "author":{
+    "@type": "Person",
+    "name": "Kend"
+  },
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://iendi.github.io/en/posts/tech/%E4%B8%AD%E9%97%B4%E4%BB%B6/docker/"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "Kend's Blog",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://iendi.github.io/img/1.png"
+    }
+  }
+}
+</script>
+</head>
+
+<body class="" id="top">
+<script>
+    if (localStorage.getItem("pref-theme") === "dark") {
+        document.body.classList.add('dark');
+    }
+
+</script>
+
+<header class="header">
+    <nav class="nav">
+        <div class="logo">
+            <a href="https://iendi.github.io/en/" accesskey="h" title="Kend&#39;s Blog (Alt + H)">
+                <img src="https://iendi.github.io/img/1.png" alt="" aria-label="logo"
+                    height="35">Kend&#39;s Blog</a>
+            <div class="logo-switches">
+                <button id="theme-toggle" accesskey="t" title="(Alt + T)">
+                    <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <ul id="menu">
+            <li>
+                <a href="https://iendi.github.io/en/search" title="🔍搜索 (Alt &#43; /)" accesskey=/>
+                    <span>🔍搜索</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://iendi.github.io/en/" title="🏠主页">
+                    <span>🏠主页</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://iendi.github.io/en/posts" title="📚文章">
+                    <span>📚文章</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://iendi.github.io/en/archives/" title="⏱时间轴">
+                    <span>⏱时间轴</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://iendi.github.io/en/tags" title="🔖标签">
+                    <span>🔖标签</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://iendi.github.io/en/about" title="🙋🏻‍♂️关于">
+                    <span>🙋🏻‍♂️关于</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</header>
+<main class="main">
+
+<article class="post-single">
+  <header class="post-header">
+    <div class="breadcrumbs"><a href="https://iendi.github.io/en/">主页</a>&nbsp;»&nbsp;<a href="https://iendi.github.io/en/posts/">📚文章</a>&nbsp;»&nbsp;<a href="https://iendi.github.io/en/posts/tech/">🧑‍💻后端</a></div>
+    <h1 class="post-title entry-hint-parent">
+      Docker 基本知识
+    </h1>
+    <div class="post-meta"><span title='2024-04-30 19:43:09 +0800 CST'>2024-04-30</span>&nbsp;·&nbsp;4 min&nbsp;·&nbsp;Kend
+
+
+
+
+&nbsp;|&nbsp;标签: &nbsp;
+    <ul class="post-tags-meta">
+        <a href="https://iendi.github.io/en/tags/docker/">Docker</a>
+    </ul>
+    </div>
+  </header> <aside id="toc-container" class="toc-container wide">
+    <div class="toc">
+        <details  open>
+            <summary accesskey="c" title="(Alt + C)">
+                <span class="details">文章目录</span>
+            </summary>
+
+            <div class="inner"><ul>
+                    <li>
+                        <a href="#%e5%b8%b8%e8%a7%81%e5%91%bd%e4%bb%a4" aria-label="常见命令">常见命令</a></li>
+                    <li>
+                        <a href="#%e6%9e%84%e5%bb%ba%e9%95%9c%e5%83%8f" aria-label="构建镜像">构建镜像</a><ul>
+                            
+                    <li>
+                        <a href="#dockerfile%e6%96%87%e4%bb%b6" aria-label="Dockerfile文件">Dockerfile文件</a></li>
+                    <li>
+                        <a href="#%e5%88%9b%e5%bb%ba%e9%95%9c%e5%83%8f" aria-label="创建镜像">创建镜像</a>
+                    </li>
+                </ul>
+                </li>
+                </ul>
+            </div>
+        </details>
+    </div>
+</aside>
+<script>
+    let activeElement;
+    let elements;
+    window.addEventListener('DOMContentLoaded', function (event) {
+        checkTocPosition();
+
+        elements = document.querySelectorAll('h1[id],h2[id],h3[id],h4[id],h5[id],h6[id]');
+         
+         activeElement = elements[0];
+         const id = encodeURI(activeElement.getAttribute('id')).toLowerCase();
+         document.querySelector(`.inner ul li a[href="#${id}"]`).classList.add('active');
+     }, false);
+
+    window.addEventListener('resize', function(event) {
+        checkTocPosition();
+    }, false);
+
+    window.addEventListener('scroll', () => {
+        
+        activeElement = Array.from(elements).find((element) => {
+            if ((getOffsetTop(element) - window.pageYOffset) > 0 && 
+                (getOffsetTop(element) - window.pageYOffset) < window.innerHeight/2) {
+                return element;
+            }
+        }) || activeElement
+
+        elements.forEach(element => {
+             const id = encodeURI(element.getAttribute('id')).toLowerCase();
+             if (element === activeElement){
+                 document.querySelector(`.inner ul li a[href="#${id}"]`).classList.add('active');
+             } else {
+                 document.querySelector(`.inner ul li a[href="#${id}"]`).classList.remove('active');
+             }
+         })
+     }, false);
+
+    const main = parseInt(getComputedStyle(document.body).getPropertyValue('--article-width'), 10);
+    const toc = parseInt(getComputedStyle(document.body).getPropertyValue('--toc-width'), 10);
+    const gap = parseInt(getComputedStyle(document.body).getPropertyValue('--gap'), 10);
+
+    function checkTocPosition() {
+        const width = document.body.scrollWidth;
+
+        if (width - main - (toc * 2) - (gap * 4) > 0) {
+            document.getElementById("toc-container").classList.add("wide");
+        } else {
+            document.getElementById("toc-container").classList.remove("wide");
+        }
+    }
+
+    function getOffsetTop(element) {
+        if (!element.getClientRects().length) {
+            return 0;
+        }
+        let rect = element.getBoundingClientRect();
+        let win = element.ownerDocument.defaultView;
+        return rect.top + win.pageYOffset;   
+    }
+</script>
+  <div class="post-content"><h3 id="常见命令">常见命令<a hidden class="anchor" aria-hidden="true" href="#常见命令">#</a></h3>
+<blockquote>
+<p>镜像命令</p>
+</blockquote>
+<ul>
+<li><code>docker pull</code> ：下载镜像</li>
+<li><code>docker images</code>：列出本地主机上的镜像</li>
+<li><code>docker search httpd</code> ：在docker hub上查找指定名称的镜像</li>
+<li><code>docker rmi httpd</code>：删除镜像</li>
+<li><code>docker tag 860c279d2fec kend/centos:dev</code>：设置镜像标签
+<ul>
+<li>镜像ID 用户名/镜像源名(repository name): 新的标签名(tag)</li>
+</ul>
+</li>
+</ul>
+<blockquote>
+<p>运行镜像，指定容器名</p>
+</blockquote>
+<ul>
+<li><code>docker run -d --name dc -p 8080:8080 kend/myProject:latest /bin/echo &quot;Hello world&quot;</code>
+<ul>
+<li><code>-d</code>: 不输出结果，后台模式启动，返回容器ID
+<ul>
+<li>后台模式：退出终端后，仍继续运行</li>
+<li><code>-i </code>支持交互式操作</li>
+<li><code>-t </code>开启终端</li>
+<li>可以连在一起写➡<code>-it</code></li>
+</ul>
+</li>
+<li><code>-p 8080:8080</code>：公网端口：容器内端口
+<ul>
+<li>比如我写了个web项目，启动在8080端口，<code>-p 123:8080</code>，我就能通过访问<code>localhost:123</code>去访问</li>
+</ul>
+</li>
+<li><code>kend/myProject:latest</code> : 镜像名</li>
+<li><code>/bin/echo &quot;Hello world</code>：在启动的容器里执行的命令，要保证镜像为<code>linux</code>，才能执行该语句，不过推荐CMD语句写在<code>Dockerfile</code>中</li>
+</ul>
+</li>
+</ul>
+<blockquote>
+<p>容器操作</p>
+</blockquote>
+<ul>
+<li><code>docker ps</code> ：查看容器状态</li>
+<li><code>docker stop/start/rm name(id)</code>：停止/启动/删除容器</li>
+</ul>
+<p>如果-d后台运行后想进入容器，怎么做呢，使用<code>docker exec</code>：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>docker exec -it 243c32535da7 /bin/bash
+</span></span></code></pre></div><p>如上，运行后进入容器并启动bash</p>
+<ul>
+<li><code>docker top name(id)</code>：查看容器内进程</li>
+</ul>
+<blockquote>
+<p>查看日志</p>
+</blockquote>
+<p><code>docker logs -f -t --tail 100 name(id)</code></p>
+<ul>
+<li><code>-f</code>：保持对日志的实时跟踪</li>
+<li><code>-t</code>：加上时间戳</li>
+<li><code>--tail 100</code>：只显示最新的100行</li>
+</ul>
+<h3 id="构建镜像">构建镜像<a hidden class="anchor" aria-hidden="true" href="#构建镜像">#</a></h3>
+<h4 id="dockerfile文件">Dockerfile文件<a hidden class="anchor" aria-hidden="true" href="#dockerfile文件">#</a></h4>
+<p><strong>FROM</strong>：定制的镜像都是基于 FROM 的镜像，这里的 nginx 就是定制需要的基础镜像。后续的操作都是基于 nginx。</p>
+<p><strong>RUN</strong>：用于执行后面跟着的命令行命令。有以下俩种格式：</p>
+<p>shell 格式：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-dockerfile" data-lang="dockerfile"><span style="display:flex;"><span><span style="color:#66d9ef">RUN</span> &lt;命令行命令&gt;<span style="color:#960050;background-color:#1e0010">
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#75715e"># &lt;命令行命令&gt; 等同于，在终端操作的 shell 命令。</span><span style="color:#960050;background-color:#1e0010">
+</span></span></span></code></pre></div><p>exec 格式：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-dockerfile" data-lang="dockerfile"><span style="display:flex;"><span><span style="color:#66d9ef">RUN</span> <span style="color:#f92672">[</span><span style="color:#e6db74">&#34;可执行文件&#34;</span>, <span style="color:#e6db74">&#34;参数1&#34;</span>, <span style="color:#e6db74">&#34;参数2&#34;</span><span style="color:#f92672">]</span><span style="color:#960050;background-color:#1e0010">
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#75715e"># 例如：</span><span style="color:#960050;background-color:#1e0010">
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#75715e"># RUN [&#34;./test.php&#34;, &#34;dev&#34;, &#34;offline&#34;] 等价于 RUN ./test.php dev offline</span><span style="color:#960050;background-color:#1e0010">
+</span></span></span></code></pre></div><p><strong>注意</strong>：Dockerfile 的指令每执行一次都会在 docker 上新建一层。所以过多无意义的层，会造成镜像膨胀过大。例如：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-dockerfile" data-lang="dockerfile"><span style="display:flex;"><span><span style="color:#66d9ef">FROM</span><span style="color:#e6db74"> centos</span><span style="color:#960050;background-color:#1e0010">
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#66d9ef">RUN</span> yum -y install wget<span style="color:#960050;background-color:#1e0010">
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#66d9ef">RUN</span> wget -O redis.tar.gz <span style="color:#e6db74">&#34;http://download.redis.io/releases/redis-5.0.3.tar.gz&#34;</span><span style="color:#960050;background-color:#1e0010">
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#66d9ef">RUN</span> tar -xvf redis.tar.gz<span style="color:#960050;background-color:#1e0010">
+</span></span></span></code></pre></div><p>以上执行会创建 3 层镜像。可简化为以下格式：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-dockerfile" data-lang="dockerfile"><span style="display:flex;"><span><span style="color:#66d9ef">FROM</span><span style="color:#e6db74"> centos</span><span style="color:#960050;background-color:#1e0010">
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#66d9ef">RUN</span> yum -y install wget <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>    <span style="color:#f92672">&amp;&amp;</span> wget -O redis.tar.gz <span style="color:#e6db74">&#34;http://download.redis.io/releases/redis-5.0.3.tar.gz&#34;</span> <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>    <span style="color:#f92672">&amp;&amp;</span> tar -xvf redis.tar.gz<span style="color:#960050;background-color:#1e0010">
+</span></span></span></code></pre></div><p>如上，以 <strong>&amp;&amp;</strong> 符号连接命令，这样执行后，只会创建 1 层镜像</p>
+<blockquote>
+<p>指令</p>
+</blockquote>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">Dockerfile 指令</th>
+<th style="text-align:left">说明</th>
+<th>使用</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">FROM</td>
+<td style="text-align:left">指定基础镜像，用于后续的指令构建。</td>
+<td></td>
+</tr>
+<tr>
+<td style="text-align:left">MAINTAINER</td>
+<td style="text-align:left">指定Dockerfile的作者/维护者。（已弃用，推荐使用LABEL指令）</td>
+<td></td>
+</tr>
+<tr>
+<td style="text-align:left">LABEL</td>
+<td style="text-align:left">添加镜像的元数据，使用键值对的形式。</td>
+<td></td>
+</tr>
+<tr>
+<td style="text-align:left">RUN</td>
+<td style="text-align:left">在构建过程中在镜像中执行命令。</td>
+<td>docker build时运行</td>
+</tr>
+<tr>
+<td style="text-align:left">CMD</td>
+<td style="text-align:left">指定容器创建时的默认命令。（可以被覆盖）</td>
+<td>docker run 时运行<br/>CMD [&quot;&lt;可执行文件或命令&gt;&quot;,&quot;<param1>&quot;,&quot;<param2>&quot;,&hellip;]<br/>多个CMD时，仅最后一个生效</td>
+</tr>
+<tr>
+<td style="text-align:left">ENTRYPOINT</td>
+<td style="text-align:left">设置容器创建时的主要命令。（不可被覆盖）</td>
+<td>不会被docker run的参数所覆盖<br/>多个ENTRYPOINT时，仅最后一个生效</td>
+</tr>
+<tr>
+<td style="text-align:left">ENV</td>
+<td style="text-align:left">在容器内部设置环境变量。</td>
+<td>ENV <key1>=<value1> <key2>=<value2>&hellip;<br />$key1 可以访问</td>
+</tr>
+<tr>
+<td style="text-align:left">ARG</td>
+<td style="text-align:left">定义在构建过程中传递给构建器的变量，可使用 &ldquo;docker build&rdquo; 命令设置。</td>
+<td>跟ENV类似，不过只在docker build时运行</td>
+</tr>
+<tr>
+<td style="text-align:left">ADD</td>
+<td style="text-align:left">将文件、目录或远程URL复制到镜像中。</td>
+<td>COPY(自动解压版)</td>
+</tr>
+<tr>
+<td style="text-align:left">COPY</td>
+<td style="text-align:left">将文件或目录复制到镜像中。</td>
+<td>COPY &lt;源路径1&gt;&hellip;  &lt;目标路径&gt;</td>
+</tr>
+<tr>
+<td style="text-align:left">WORKDIR</td>
+<td style="text-align:left">设置后续指令的工作目录。</td>
+<td>WORKDIR &lt;工作目录路径&gt;</td>
+</tr>
+<tr>
+<td style="text-align:left">USER</td>
+<td style="text-align:left">指定后续指令的用户上下文。</td>
+<td>USER &lt;用户名&gt;[:&lt;用户组&gt;]</td>
+</tr>
+<tr>
+<td style="text-align:left">ONBUILD</td>
+<td style="text-align:left">当该镜像被用作另一个构建过程的基础时，添加触发器。</td>
+<td>创建时不运行，被FROM时运行</td>
+</tr>
+<tr>
+<td style="text-align:left">STOPSIGNAL</td>
+<td style="text-align:left">设置发送给容器以退出的系统调用信号。</td>
+<td></td>
+</tr>
+<tr>
+<td style="text-align:left">HEALTHCHECK</td>
+<td style="text-align:left">定义周期性检查容器健康状态的命令。</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<p>举个例子：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-dockerfile" data-lang="dockerfile"><span style="display:flex;"><span><span style="color:#75715e"># Dockerfile</span><span style="color:#960050;background-color:#1e0010">
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#66d9ef">FROM</span><span style="color:#e6db74"> golang:1.16-buster AS builder</span><span style="color:#960050;background-color:#1e0010">
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#66d9ef">RUN</span> mkdir /src<span style="color:#960050;background-color:#1e0010">
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#66d9ef">ADD</span> . /src<span style="color:#960050;background-color:#1e0010">
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#66d9ef">WORKDIR</span><span style="color:#e6db74"> /src</span><span style="color:#960050;background-color:#1e0010">
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010">
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#66d9ef">RUN</span> go env -w GO111MODULE<span style="color:#f92672">=</span>auto<span style="color:#960050;background-color:#1e0010">
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#66d9ef">RUN</span> go build -o main .<span style="color:#960050;background-color:#1e0010">
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010">
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#66d9ef">FROM</span><span style="color:#e6db74"> gcr.io/distroless/base-debian10</span><span style="color:#960050;background-color:#1e0010">
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010">
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#66d9ef">WORKDIR</span><span style="color:#e6db74"> /</span><span style="color:#960050;background-color:#1e0010">
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010">
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#66d9ef">COPY</span> --from<span style="color:#f92672">=</span>builder /src/main /main<span style="color:#960050;background-color:#1e0010">
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#66d9ef">EXPOSE</span><span style="color:#e6db74"> 3000</span><span style="color:#960050;background-color:#1e0010">
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#66d9ef">ENTRYPOINT</span> [<span style="color:#e6db74">&#34;/main&#34;</span>]<span style="color:#960050;background-color:#1e0010">
+</span></span></span></code></pre></div><p><code>COPY --from=builder /src/main /main</code></p>
+<blockquote>
+<p>多阶段构建：</p>
+</blockquote>
+<p>以上代码从名为<code>builder</code>的构建阶段的容器中，将<code>/src/main</code>目录下的文件复制到当前正在构建的容器的<code>/main</code>目录下</p>
+<blockquote>
+<p>构建时从其他镜像复制文件:</p>
+</blockquote>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-docker" data-lang="docker"><span style="display:flex;"><span><span style="color:#66d9ef">COPY</span> --from<span style="color:#f92672">=</span>nginx:latest /etc/nginx/nginx.conf /nginx.conf<span style="color:#960050;background-color:#1e0010">
+</span></span></span></code></pre></div><h4 id="创建镜像">创建镜像<a hidden class="anchor" aria-hidden="true" href="#创建镜像">#</a></h4>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>docker build -t kend/centos:6.7 .
+</span></span></code></pre></div><ul>
+<li><code>-t</code> ：指定要创建的目标镜像名</li>
+<li><code>.</code> ：Docker上下文，如果没指定Dockerfile，则在上下文中寻找</li>
+</ul>
+<p>或者指定文件：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>docker build -t kend/centos:6.7 . -f Dockerfile.copy
+</span></span></code></pre></div><blockquote>
+<p>参考资料：</p>
+<p><a href="https://www.runoob.com/docker/docker-dockerfile.html">Docker Dockerfile | 菜鸟教程 (runoob.com)</a></p>
+<p><a href="https://docker-practice.github.io/zh-cn/image/multistage-builds/">Dockerfile 多阶段构建 · Docker &ndash; 从入门到实践 (docker-practice.github.io)</a></p>
+</blockquote>
+
+
+  </div>
+
+  <footer class="post-footer">
+    <ul class="post-tags">
+      <li><a href="https://iendi.github.io/en/tags/docker/">Docker</a></li>
+    </ul>
+<nav class="paginav">
+  <a class="prev" href="https://iendi.github.io/en/posts/lc/%E5%9B%BE/bfs/">
+    <span class="title">« 上一页</span>
+    <br>
+    <span>BFS搜索</span>
+  </a>
+  <a class="next" href="https://iendi.github.io/en/posts/lc/%E5%9B%9E%E6%BA%AF/repeat/">
+    <span class="title">下一页 »</span>
+    <br>
+    <span>回溯中的去重问题</span>
+  </a>
+</nav>
+
+  </footer>
+</article>
+    </main>
+    
+<footer class="footer">
+    <span>
+        Copyright
+        &copy;
+        -2024
+        <a href="https://iendi.github.io/en/" style="color:#939393;">Kend&#39;s Blog</a>
+        All Rights Reserved
+    </span>
+    <a href="https://beian.miit.gov.cn/" target="_blank" style="color:#939393;"></a>&nbsp;
+    <span>
+        <a target="_blank" href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=null"
+           style="display:inline-block;text-decoration:none;height:20px;color:#939393;">
+            <img src="" style="float:left;margin: 0px 5px 0px 0px;"/>
+            
+        </a>
+    </span>
+    <span id="busuanzi_container">
+        <span class="fa fa-user"></span> <span id="busuanzi_value_site_uv"></span>
+        <span class="fa fa-eye"></span> <span id="busuanzi_value_site_pv"></span>
+    </span>
+</footer>
+<a href="#top" aria-label="go to top" title="Go to Top (Alt + G)" class="top-link" id="top-link" accesskey="g">
+    <span class="topInner">
+        <svg class="topSvg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentColor">
+            <path d="M12 6H0l6-6z"/>
+        </svg>
+        <span id="read_progress"></span>
+    </span>
+</a>
+
+<script>
+    document.addEventListener('scroll', function (e) {
+        const readProgress = document.getElementById("read_progress");
+        const scrollHeight = document.documentElement.scrollHeight;
+        const clientHeight = document.documentElement.clientHeight;
+        const scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
+        readProgress.innerText = ((scrollTop / (scrollHeight - clientHeight)).toFixed(2) * 100).toFixed(0);
+    })
+</script>
+
+<script>
+    let menu = document.getElementById('menu')
+    if (menu) {
+        menu.scrollLeft = localStorage.getItem("menu-scroll-position");
+        menu.onscroll = function () {
+            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+        }
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+</script>
+<script>
+    let mybutton = document.getElementById("top-link");
+    window.onscroll = function () {
+        if (document.body.scrollTop > 200 || document.documentElement.scrollTop > 200) {
+            mybutton.style.visibility = "visible";
+            mybutton.style.opacity = "1";
+        } else {
+            mybutton.style.visibility = "hidden";
+            mybutton.style.opacity = "0";
+        }
+    };
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        (function() {
+            document.cookie = "change-themes" + "="+ escape ("false");
+        })()
+
+        if (document.body.className.includes("dark")) {
+            document.body.classList.remove('dark');
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            document.body.classList.add('dark');
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    });
+</script>
+
+<script>
+    document.body.addEventListener('copy', function (e) {
+        if (window.getSelection().toString() && window.getSelection().toString().length > 50) {
+            let clipboardData = e.clipboardData || window.clipboardData;
+            if (clipboardData) {
+                e.preventDefault();
+                let htmlData = window.getSelection().toString() +
+                    '\r\n\n————————————————\r\n' +
+                    '版权声明：本文为「'+"Kend's Blog"+'」的原创文章，遵循CC 4.0 BY-SA版权协议，转载请附上原文出处链接及本声明。' +
+                '\r\n原文链接：' + location.href;
+                let textData = window.getSelection().toString() +
+                    '\r\n\n————————————————\r\n' +
+                    '版权声明：本文为「'+"Kend's Blog"+'」的原创文章，遵循CC 4.0 BY-SA版权协议，转载请附上原文出处链接及本声明。' +
+                '\r\n原文链接：' + location.href;
+                clipboardData.setData('text/html', htmlData);
+                clipboardData.setData('text/plain', textData);
+            }
+        }
+    });
+</script>
+<script>
+    document.querySelectorAll('pre > code').forEach((codeblock) => {
+        const container = codeblock.parentNode.parentNode;
+        const copybutton = document.createElement('button');
+        copybutton.classList.add('copy-code');
+        copybutton.innerText = '📄复制';
+
+        function copyingDone() {
+            copybutton.innerText = '👌🏻已复制!';
+            setTimeout(() => {
+                copybutton.innerText = '📄复制';
+            }, 2000);
+        }
+
+        copybutton.addEventListener('click', (cb) => {
+            if ('clipboard' in navigator) {
+                let text = codeblock.textContent +
+                    '\r\n————————————————\r\n' +
+                    '版权声明：本文为「'+"Kend's Blog"+'」的原创文章，遵循CC 4.0 BY-SA版权协议，转载请附上原文出处链接及本声明。' +
+                '\r\n原文链接：' + location.href;
+                navigator.clipboard.writeText(text);
+                copyingDone();
+                return;
+            }
+
+            const range = document.createRange();
+            range.selectNodeContents(codeblock);
+            const selection = window.getSelection();
+            selection.removeAllRanges();
+            selection.addRange(range);
+            try {
+                document.execCommand('copy');
+                copyingDone();
+            } catch (e) {}
+            selection.removeRange(range);
+        });
+
+        let language = codeblock.className.replaceAll("language-", "")
+        let macTool = document.createElement("div")
+        let macTool1 = document.createElement("div")
+        let macTool2 = document.createElement("div")
+        let macTool3 = document.createElement("div")
+        let languageType = document.createElement("div")
+        languageType.innerText = language
+        macTool.setAttribute('class', 'mac-tool')
+        macTool1.setAttribute('class', 'mac bb1')
+        macTool2.setAttribute('class', 'mac bb2')
+        macTool3.setAttribute('class', 'mac bb3')
+        languageType.setAttribute('class', 'language-type')
+        macTool.appendChild(macTool1)
+        macTool.appendChild(macTool2)
+        macTool.appendChild(macTool3)
+        macTool.appendChild(languageType)
+
+        if (container.classList.contains("highlight")) {
+            container.appendChild(copybutton);
+            container.appendChild(macTool)
+        } else if (container.parentNode.firstChild == container) {
+            
+        } else if (codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.nodeName == "TABLE") {
+            
+            codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.appendChild(copybutton);
+            container.appendChild(macTool)
+        } else {
+            
+            codeblock.parentNode.appendChild(copybutton);
+            container.appendChild(macTool)
+        }
+    });
+</script>
+</body>
+
+</html>

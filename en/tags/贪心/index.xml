@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
+  <channel>
+    <title>贪心 on Kend&#39;s Blog</title>
+    <link>https://iendi.github.io/en/tags/%E8%B4%AA%E5%BF%83/</link>
+    <description>Recent content in 贪心 on Kend&#39;s Blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en</language>
+    <lastBuildDate>Wed, 10 Apr 2024 21:02:08 +0800</lastBuildDate>
+    <atom:link href="https://iendi.github.io/en/tags/%E8%B4%AA%E5%BF%83/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>0410每日一题</title>
+      <link>https://iendi.github.io/en/posts/lc/%E8%B4%AA%E5%BF%83/0410/</link>
+      <pubDate>Wed, 10 Apr 2024 21:02:08 +0800</pubDate>
+      <guid>https://iendi.github.io/en/posts/lc/%E8%B4%AA%E5%BF%83/0410/</guid>
+      <description>1702. 修改后的最大二进制字符串 - 力扣（LeetCode） 给一个二进制字符串，可以做以下操作 操作1：把00-&amp;gt;10 操作2：把10-&amp;gt;0</description>
+    </item>
+  </channel>
+</rss>

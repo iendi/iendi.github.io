@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
+  <channel>
+    <title>💻AI on Kend&#39;s Blog</title>
+    <link>https://iendi.github.io/en/posts/ai/</link>
+    <description>Recent content in 💻AI on Kend&#39;s Blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en</language>
+    <lastBuildDate>Sun, 29 Oct 2023 22:20:58 +0800</lastBuildDate>
+    <atom:link href="https://iendi.github.io/en/posts/ai/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>DDPM</title>
+      <link>https://iendi.github.io/en/posts/ai/diffusion/</link>
+      <pubDate>Sun, 29 Oct 2023 22:20:58 +0800</pubDate>
+      <guid>https://iendi.github.io/en/posts/ai/diffusion/</guid>
+      <description>整体架构 DDPM可分为以下两个部分 其中Denoise内部：输入图片+step，预测其噪声 为什么step也是一个重要的输入：从噪声到原图，所要</description>
+    </item>
+    <item>
+      <title>ViT</title>
+      <link>https://iendi.github.io/en/posts/ai/vit/</link>
+      <pubDate>Thu, 06 Jul 2023 22:20:58 +0800</pubDate>
+      <guid>https://iendi.github.io/en/posts/ai/vit/</guid>
+      <description>整体结构 分为三个部分，Linear Projection of Flattened Patches(Embedding层)、Encoder和MLP Head分类头 下图是不同版本ViT的参</description>
+    </item>
+    <item>
+      <title>Bert</title>
+      <link>https://iendi.github.io/en/posts/ai/bert/</link>
+      <pubDate>Wed, 05 Jul 2023 22:20:58 +0800</pubDate>
+      <guid>https://iendi.github.io/en/posts/ai/bert/</guid>
+      <description>BERT的全称为Bidirectional Encoder Representation from Transformers，主要针对Transformer的Encoder部分进行预训练，包括</description>
+    </item>
+    <item>
+      <title>Transformer基础知识</title>
+      <link>https://iendi.github.io/en/posts/ai/transformer/</link>
+      <pubDate>Thu, 08 Jun 2023 22:20:58 +0800</pubDate>
+      <guid>https://iendi.github.io/en/posts/ai/transformer/</guid>
+      <description>Seq2Seq模型 定义 包括两个部分： 编码器：将一个变长、可变类型的输入序列编码成一个固定长度、定长的向量，该向量中包含了输入序列的所有信息 解</description>
+    </item>
+    <item>
+      <title>Pyside6</title>
+      <link>https://iendi.github.io/en/posts/ai/pyside6/</link>
+      <pubDate>Wed, 17 May 2023 22:20:58 +0800</pubDate>
+      <guid>https://iendi.github.io/en/posts/ai/pyside6/</guid>
+      <description>利用pyside6对python程序进行快速上手开发，实现模型的部署，请先安装pyside6相关依赖： pip install pyside6 pip install qt-material Pyside6基础知识 窗口</description>
+    </item>
+  </channel>
+</rss>

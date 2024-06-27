@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
+  <channel>
+    <title>图 on Kend&#39;s Blog</title>
+    <link>https://iendi.github.io/en/tags/%E5%9B%BE/</link>
+    <description>Recent content in 图 on Kend&#39;s Blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en</language>
+    <lastBuildDate>Mon, 13 May 2024 15:40:28 +0800</lastBuildDate>
+    <atom:link href="https://iendi.github.io/en/tags/%E5%9B%BE/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>BFS搜索</title>
+      <link>https://iendi.github.io/en/posts/lc/%E5%9B%BE/bfs/</link>
+      <pubDate>Mon, 13 May 2024 15:40:28 +0800</pubDate>
+      <guid>https://iendi.github.io/en/posts/lc/%E5%9B%BE/bfs/</guid>
+      <description>回溯做了一星期，都是用dfs，今天刚好每日一题是bfs 994. 腐烂的橘子 - 力扣（LeetCode） m x n 网格 grid 中： 值 0 代表空单元格； 值 1 代表新鲜橘</description>
+    </item>
+    <item>
+      <title>Dijkstra算法</title>
+      <link>https://iendi.github.io/en/posts/lc/%E5%9B%BE/1/</link>
+      <pubDate>Sun, 14 Apr 2024 16:49:51 +0800</pubDate>
+      <guid>https://iendi.github.io/en/posts/lc/%E5%9B%BE/1/</guid>
+      <description>首先是图的两种写法，给定int[][] edges //邻接表 //邻接矩阵 Dijkstra是单源最短路径，表示某个节点i到其他节点k的距离 743. 网络延迟时间</description>
+    </item>
+  </channel>
+</rss>

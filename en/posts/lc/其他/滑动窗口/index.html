@@ -1,0 +1,561 @@
+<!DOCTYPE html>
+<html lang="en" dir="auto">
+
+<head><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="index, follow">
+<title>滑动窗口 | Kend&#39;s Blog</title>
+<meta name="keywords" content="">
+<meta name="description" content="经典例题： 76. 最小覆盖子串 给你一个字符串 s 、一个字符串 t 。返回 s 中涵盖 t 所有字符的最小子串。如果 s 中不存在涵盖 t 所有字符的子串，则返回空字符串">
+<meta name="author" content="Kend">
+<link rel="canonical" href="https://iendi.github.io/en/posts/lc/%E5%85%B6%E4%BB%96/%E6%BB%91%E5%8A%A8%E7%AA%97%E5%8F%A3/">
+
+
+<link crossorigin="anonymous" href="/assets/css/stylesheet.2b3a9b630d724ad2b56cb3217ca569e88f4344d61fa91c496bfd01d1128c4950.css" integrity="" rel="preload stylesheet" as="style">
+<script defer crossorigin="anonymous" src="/assets/js/highlight.f413e19d0714851f6474e7ee9632408e58ac146fbdbe62747134bea2fa3415e0.js" integrity="sha256-9BPhnQcUhR9kdOfuljJAjlisFG&#43;9vmJ0cTS&#43;ovo0FeA="
+        onload="hljs.initHighlightingOnLoad();"></script>
+<link rel="icon" href="https://iendi.github.io/img/1.png">
+<link rel="icon" type="image/png" sizes="16x16" href="https://iendi.github.io/img/1.png">
+<link rel="icon" type="image/png" sizes="32x32" href="https://iendi.github.io/img/1.png">
+<link rel="apple-touch-icon" href="https://iendi.github.io/1.png">
+<link rel="mask-icon" href="https://iendi.github.io/1.png">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<link rel="alternate" hreflang="en" href="https://iendi.github.io/en/posts/lc/%E5%85%B6%E4%BB%96/%E6%BB%91%E5%8A%A8%E7%AA%97%E5%8F%A3/">
+<noscript>
+    <style>
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+</noscript>
+<script>
+    MathJax = {
+      tex: {
+        inlineMath: [["$", "$"]],
+      },
+      displayMath: [
+        ["$$", "$$"]
+      ],
+      svg: {
+        fontCache: "global",
+      },
+    };
+  </script>
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script
+    id="MathJax-script"
+    async
+    src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"
+  ></script>
+
+
+  
+
+<meta property="og:title" content="滑动窗口" />
+<meta property="og:description" content="经典例题： 76. 最小覆盖子串 给你一个字符串 s 、一个字符串 t 。返回 s 中涵盖 t 所有字符的最小子串。如果 s 中不存在涵盖 t 所有字符的子串，则返回空字符串" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://iendi.github.io/en/posts/lc/%E5%85%B6%E4%BB%96/%E6%BB%91%E5%8A%A8%E7%AA%97%E5%8F%A3/" /><meta property="article:section" content="posts" />
+<meta property="article:published_time" content="2021-07-15T22:20:58+08:00" />
+<meta property="article:modified_time" content="2021-07-15T22:20:58+08:00" />
+
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="滑动窗口"/>
+<meta name="twitter:description" content="经典例题： 76. 最小覆盖子串 给你一个字符串 s 、一个字符串 t 。返回 s 中涵盖 t 所有字符的最小子串。如果 s 中不存在涵盖 t 所有字符的子串，则返回空字符串"/>
+
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position":  1 ,
+      "name": "📚文章",
+      "item": "https://iendi.github.io/en/posts/"
+    }, 
+    {
+      "@type": "ListItem",
+      "position":  2 ,
+      "name": "📓刷题",
+      "item": "https://iendi.github.io/en/posts/lc/"
+    }, 
+    {
+      "@type": "ListItem",
+      "position":  4 ,
+      "name": "滑动窗口",
+      "item": "https://iendi.github.io/en/posts/lc/%E5%85%B6%E4%BB%96/%E6%BB%91%E5%8A%A8%E7%AA%97%E5%8F%A3/"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "滑动窗口",
+  "name": "滑动窗口",
+  "description": "经典例题： 76. 最小覆盖子串 给你一个字符串 s 、一个字符串 t 。返回 s 中涵盖 t 所有字符的最小子串。如果 s 中不存在涵盖 t 所有字符的子串，则返回空字符串",
+  "keywords": [
+    
+  ],
+  "articleBody": "经典例题：\n76. 最小覆盖子串\n给你一个字符串 s 、一个字符串 t 。返回 s 中涵盖 t 所有字符的最小子串。如果 s 中不存在涵盖 t 所有字符的子串，则返回空字符串 \"\" 。\n获取t中各字符的个数，储存到need数组，获取t中不同字符的个数，存至charNum 增加right，直到[left,right)中包含t中所有字符 如果增加的字符在need数组中，window数组的相应字符数加一 当window[c]==need[c]，即window数组中c字符的数量达到要求，match++ 当match匹配数与t中不同字符的个数charNum相同时，缩小窗口，增加left，直至字符不再符合要求 left 不在need数组中，直接left++ 如果在数组中，判断是否到了最小值（need[left]==window[left]），到了就match–，退出循环，否则window[left]--，继续left++缩小窗口 设置一个minLength储存当前窗口的长度，begin和end储存索引，right继续向右移寻找下一个满足窗口，直到right\u003e=s.length public String minWindow(String s,String t){ //window数组，记录当前窗口中匹配的字符个数 int[] window = new int[256]; int[] need = new int[256]; //1. for (char c : t.toCharArray()) { need[c]++; } int charNum = 0; for (int n : need) { if (n \u003e 0) { charNum++; } } //2. int left=0,right=0,begin=0,end=0,match=0; int minLength = Integer.MAX_VALUE; while(right\u003cs.length()){ char c = s.charAt(right); if(need[c]!=0) { window[c]++; if(window[c]==need[c]) match++; } right++; //3. while(match==charNum){ //4.判断是否为最小窗口 if(right-left\u003cminLength){ minLength=right-left; end=right; begin=left; } char leftChar=s.charAt(left); if(need[leftChar]!=0){ if(window[leftChar]==need[leftChar]){ match--; } window[leftChar]--; } left++; } } return minLength==charNum; } 438. 找到字符串中所有字母异位词\n给定一个字符串 s 和一个非空字符串 p，找到 s 中所有是 p 的字母异位词的子串，返回这些子串的起始索引\n也是一样滑动窗口，在每一次left收缩到最小时，判断right-left长度是否与t.length()一样 public List\u003cInteger\u003e findAnagrams(String s, String p) { List\u003cInteger\u003e ans=new ArrayList\u003c\u003e(); int[] need=new int[256]; int[] window=new int[256]; for(char c:p.toCharArray()){ need[c]++; } int charNum=0; for(int n:need){ if(n\u003e0) charNum++; } int left=0,right=0,match=0; while(right\u003cs.length()){ char c=s.charAt(right); if(need[c]!=0){ window[c]++; if(window[c]==need[c]) match++; } right++; while(match==charNum){ char leftChar=s.charAt(left); if(need[leftChar]!=0){ if(window[leftChar]==need[leftChar]) { match--; //判断，如果和长度相等，加入 if(right-left==p.length()) ans.add(left); } window[leftChar]--; } left++; } } return ans; } 3. 无重复字符的最长子串\n给定一个字符串 s ，请你找出其中不含有重复字符的 最长子串 的长度\n不用need和charNum，只要判断window[c]是否大于1，若大于，收缩left即可 public int lengthOfLongestSubstring(String s) { int[] window=new int[256]; int len=0,left=0,right=0; while(right\u003cs.length()){ char c=s.charAt(right); window[c]++; while(window[c]\u003e1){ char leftChar=s.charAt(left); window[leftChar]--; left++; } len=Math.max(len,right-left+1); right++; } return len; } ",
+  "wordCount" : "884",
+  "inLanguage": "en",
+  "datePublished": "2021-07-15T22:20:58+08:00",
+  "dateModified": "2021-07-15T22:20:58+08:00",
+  "author":{
+    "@type": "Person",
+    "name": "Kend"
+  },
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://iendi.github.io/en/posts/lc/%E5%85%B6%E4%BB%96/%E6%BB%91%E5%8A%A8%E7%AA%97%E5%8F%A3/"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "Kend's Blog",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://iendi.github.io/img/1.png"
+    }
+  }
+}
+</script>
+</head>
+
+<body class="" id="top">
+<script>
+    if (localStorage.getItem("pref-theme") === "dark") {
+        document.body.classList.add('dark');
+    }
+
+</script>
+
+<header class="header">
+    <nav class="nav">
+        <div class="logo">
+            <a href="https://iendi.github.io/en/" accesskey="h" title="Kend&#39;s Blog (Alt + H)">
+                <img src="https://iendi.github.io/img/1.png" alt="" aria-label="logo"
+                    height="35">Kend&#39;s Blog</a>
+            <div class="logo-switches">
+                <button id="theme-toggle" accesskey="t" title="(Alt + T)">
+                    <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <ul id="menu">
+            <li>
+                <a href="https://iendi.github.io/en/search" title="🔍搜索 (Alt &#43; /)" accesskey=/>
+                    <span>🔍搜索</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://iendi.github.io/en/" title="🏠主页">
+                    <span>🏠主页</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://iendi.github.io/en/posts" title="📚文章">
+                    <span>📚文章</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://iendi.github.io/en/archives/" title="⏱时间轴">
+                    <span>⏱时间轴</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://iendi.github.io/en/tags" title="🔖标签">
+                    <span>🔖标签</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://iendi.github.io/en/about" title="🙋🏻‍♂️关于">
+                    <span>🙋🏻‍♂️关于</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</header>
+<main class="main">
+
+<article class="post-single">
+  <header class="post-header">
+    <div class="breadcrumbs"><a href="https://iendi.github.io/en/">主页</a>&nbsp;»&nbsp;<a href="https://iendi.github.io/en/posts/">📚文章</a>&nbsp;»&nbsp;<a href="https://iendi.github.io/en/posts/lc/">📓刷题</a></div>
+    <h1 class="post-title entry-hint-parent">
+      滑动窗口
+    </h1>
+    <div class="post-meta"><span title='2021-07-15 22:20:58 +0800 CST'>2021-07-15</span>&nbsp;·&nbsp;2 min&nbsp;·&nbsp;Kend
+
+
+
+
+&nbsp;|&nbsp;标签: &nbsp;
+    </div>
+  </header> 
+  <div class="post-content"><p>经典例题：</p>
+<blockquote>
+<p><a href="https://leetcode-cn.com/problems/minimum-window-substring/">76. 最小覆盖子串</a></p>
+<p>给你一个字符串 <code>s</code> 、一个字符串 <code>t</code> 。返回 <code>s</code> 中涵盖 <code>t</code> 所有字符的最小子串。如果 <code>s</code> 中不存在涵盖 <code>t</code> 所有字符的子串，则返回空字符串 <code>&quot;&quot;</code> 。</p>
+</blockquote>
+<p><img loading="lazy" src="image-20210714111455419.png" alt="image-20210714111455419"  />
+</p>
+<ol>
+<li>获取t中各字符的个数，储存到<code>need</code>数组，获取t中不同字符的个数，存至<code>charNum</code></li>
+<li>增加<code>right</code>，直到<code>[left,right)</code>中包含t中所有字符
+<ol>
+<li>如果增加的字符在<code>need</code>数组中，<code>window</code>数组的相应字符数加一</li>
+<li>当<code>window[c]==need[c]</code>，即<code>window</code>数组中c字符的数量达到要求，<code>match++</code></li>
+</ol>
+</li>
+<li>当<code>match</code>匹配数与t中不同字符的个数<code>charNum</code>相同时，缩小窗口，增加<code>left</code>，直至字符不再符合要求
+<ol>
+<li>left 不在<code>need</code>数组中，直接left++</li>
+<li>如果在数组中，判断是否到了最小值（<code>need[left]==window[left]</code>），到了就match&ndash;，退出循环，否则<code>window[left]--</code>，继续left++缩小窗口</li>
+</ol>
+</li>
+<li>设置一个<code>minLength</code>储存当前窗口的长度，<code>begin</code>和<code>end</code>储存索引，<code>right</code>继续向右移寻找下一个满足窗口，直到<code>right&gt;=s.length</code></li>
+</ol>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#66d9ef">public</span> String <span style="color:#a6e22e">minWindow</span>(String s,String t){
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">//window数组，记录当前窗口中匹配的字符个数</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">int</span><span style="color:#f92672">[]</span> window <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#66d9ef">int</span><span style="color:#f92672">[</span>256<span style="color:#f92672">]</span>;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">int</span><span style="color:#f92672">[]</span> need <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#66d9ef">int</span><span style="color:#f92672">[</span>256<span style="color:#f92672">]</span>;
+</span></span><span style="display:flex;"><span>	<span style="color:#75715e">//1.</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">char</span> c : t.<span style="color:#a6e22e">toCharArray</span>()) {
+</span></span><span style="display:flex;"><span>        need<span style="color:#f92672">[</span>c<span style="color:#f92672">]++</span>;
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">int</span> charNum <span style="color:#f92672">=</span> 0;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">int</span> n : need) {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> (n <span style="color:#f92672">&gt;</span> 0) {
+</span></span><span style="display:flex;"><span>            charNum<span style="color:#f92672">++</span>;
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>	<span style="color:#75715e">//2.</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">int</span> left<span style="color:#f92672">=</span>0,right<span style="color:#f92672">=</span>0,begin<span style="color:#f92672">=</span>0,end<span style="color:#f92672">=</span>0,match<span style="color:#f92672">=</span>0;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">int</span> minLength <span style="color:#f92672">=</span> Integer.<span style="color:#a6e22e">MAX_VALUE</span>;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">while</span>(right<span style="color:#f92672">&lt;</span>s.<span style="color:#a6e22e">length</span>()){
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">char</span> c <span style="color:#f92672">=</span> s.<span style="color:#a6e22e">charAt</span>(right);
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span>(need<span style="color:#f92672">[</span>c<span style="color:#f92672">]!=</span>0) {
+</span></span><span style="display:flex;"><span>            window<span style="color:#f92672">[</span>c<span style="color:#f92672">]++</span>;
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">if</span>(window<span style="color:#f92672">[</span>c<span style="color:#f92672">]==</span>need<span style="color:#f92672">[</span>c<span style="color:#f92672">]</span>) match<span style="color:#f92672">++</span>;
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>        right<span style="color:#f92672">++</span>;
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e">//3.</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">while</span>(match<span style="color:#f92672">==</span>charNum){
+</span></span><span style="display:flex;"><span>            <span style="color:#75715e">//4.判断是否为最小窗口</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">if</span>(right<span style="color:#f92672">-</span>left<span style="color:#f92672">&lt;</span>minLength){
+</span></span><span style="display:flex;"><span>                minLength<span style="color:#f92672">=</span>right<span style="color:#f92672">-</span>left;
+</span></span><span style="display:flex;"><span>                end<span style="color:#f92672">=</span>right;
+</span></span><span style="display:flex;"><span>                begin<span style="color:#f92672">=</span>left;
+</span></span><span style="display:flex;"><span>            }
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">char</span> leftChar<span style="color:#f92672">=</span>s.<span style="color:#a6e22e">charAt</span>(left);
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">if</span>(need<span style="color:#f92672">[</span>leftChar<span style="color:#f92672">]!=</span>0){
+</span></span><span style="display:flex;"><span>                <span style="color:#66d9ef">if</span>(window<span style="color:#f92672">[</span>leftChar<span style="color:#f92672">]==</span>need<span style="color:#f92672">[</span>leftChar<span style="color:#f92672">]</span>){
+</span></span><span style="display:flex;"><span>                    match<span style="color:#f92672">--</span>;
+</span></span><span style="display:flex;"><span>                }
+</span></span><span style="display:flex;"><span>                window<span style="color:#f92672">[</span>leftChar<span style="color:#f92672">]--</span>;
+</span></span><span style="display:flex;"><span>            }
+</span></span><span style="display:flex;"><span>           left<span style="color:#f92672">++</span>; 
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> minLength<span style="color:#f92672">==</span>charNum;
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><blockquote>
+<p><a href="https://leetcode-cn.com/problems/find-all-anagrams-in-a-string/">438. 找到字符串中所有字母异位词</a></p>
+<p>给定一个字符串 <strong>s</strong> 和一个非空字符串 <strong>p</strong>，找到 <strong>s</strong> 中所有是 <strong>p</strong> 的字母异位词的子串，返回这些子串的起始索引</p>
+</blockquote>
+<ul>
+<li>也是一样滑动窗口，在每一次left收缩到最小时，判断<code>right-left</code>长度是否与<code>t.length()</code>一样</li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#66d9ef">public</span> List<span style="color:#f92672">&lt;</span>Integer<span style="color:#f92672">&gt;</span> <span style="color:#a6e22e">findAnagrams</span>(String s, String p) {
+</span></span><span style="display:flex;"><span>    List<span style="color:#f92672">&lt;</span>Integer<span style="color:#f92672">&gt;</span> ans<span style="color:#f92672">=</span><span style="color:#66d9ef">new</span> ArrayList<span style="color:#f92672">&lt;&gt;</span>();
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">int</span><span style="color:#f92672">[]</span> need<span style="color:#f92672">=</span><span style="color:#66d9ef">new</span> <span style="color:#66d9ef">int</span><span style="color:#f92672">[</span>256<span style="color:#f92672">]</span>;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">int</span><span style="color:#f92672">[]</span> window<span style="color:#f92672">=</span><span style="color:#66d9ef">new</span> <span style="color:#66d9ef">int</span><span style="color:#f92672">[</span>256<span style="color:#f92672">]</span>;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span>(<span style="color:#66d9ef">char</span> c:p.<span style="color:#a6e22e">toCharArray</span>()){
+</span></span><span style="display:flex;"><span>        need<span style="color:#f92672">[</span>c<span style="color:#f92672">]++</span>;
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">int</span> charNum<span style="color:#f92672">=</span>0;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span>(<span style="color:#66d9ef">int</span> n:need){
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span>(n<span style="color:#f92672">&gt;</span>0) charNum<span style="color:#f92672">++</span>;
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">int</span> left<span style="color:#f92672">=</span>0,right<span style="color:#f92672">=</span>0,match<span style="color:#f92672">=</span>0;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">while</span>(right<span style="color:#f92672">&lt;</span>s.<span style="color:#a6e22e">length</span>()){
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">char</span> c<span style="color:#f92672">=</span>s.<span style="color:#a6e22e">charAt</span>(right);
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span>(need<span style="color:#f92672">[</span>c<span style="color:#f92672">]!=</span>0){
+</span></span><span style="display:flex;"><span>            window<span style="color:#f92672">[</span>c<span style="color:#f92672">]++</span>;
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">if</span>(window<span style="color:#f92672">[</span>c<span style="color:#f92672">]==</span>need<span style="color:#f92672">[</span>c<span style="color:#f92672">]</span>) match<span style="color:#f92672">++</span>;
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>        right<span style="color:#f92672">++</span>;
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">while</span>(match<span style="color:#f92672">==</span>charNum){
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">char</span> leftChar<span style="color:#f92672">=</span>s.<span style="color:#a6e22e">charAt</span>(left);
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">if</span>(need<span style="color:#f92672">[</span>leftChar<span style="color:#f92672">]!=</span>0){
+</span></span><span style="display:flex;"><span>                <span style="color:#66d9ef">if</span>(window<span style="color:#f92672">[</span>leftChar<span style="color:#f92672">]==</span>need<span style="color:#f92672">[</span>leftChar<span style="color:#f92672">]</span>) {
+</span></span><span style="display:flex;"><span>                    match<span style="color:#f92672">--</span>;
+</span></span><span style="display:flex;"><span>                    <span style="color:#75715e">//判断，如果和长度相等，加入</span>
+</span></span><span style="display:flex;"><span>                    <span style="color:#66d9ef">if</span>(right<span style="color:#f92672">-</span>left<span style="color:#f92672">==</span>p.<span style="color:#a6e22e">length</span>()) ans.<span style="color:#a6e22e">add</span>(left);
+</span></span><span style="display:flex;"><span>                }
+</span></span><span style="display:flex;"><span>                window<span style="color:#f92672">[</span>leftChar<span style="color:#f92672">]--</span>;
+</span></span><span style="display:flex;"><span>            }
+</span></span><span style="display:flex;"><span>            left<span style="color:#f92672">++</span>;
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> ans;
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><blockquote>
+<p><a href="https://leetcode-cn.com/problems/longest-substring-without-repeating-characters/">3. 无重复字符的最长子串</a></p>
+<p>给定一个字符串 <code>s</code> ，请你找出其中不含有重复字符的 <strong>最长子串</strong> 的长度</p>
+</blockquote>
+<ul>
+<li>不用<code>need</code>和<code>charNum</code>，只要判断<code>window[c]</code>是否大于1，若大于，收缩<code>left</code>即可</li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">lengthOfLongestSubstring</span>(String s) {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">int</span><span style="color:#f92672">[]</span> window<span style="color:#f92672">=</span><span style="color:#66d9ef">new</span> <span style="color:#66d9ef">int</span><span style="color:#f92672">[</span>256<span style="color:#f92672">]</span>;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">int</span> len<span style="color:#f92672">=</span>0,left<span style="color:#f92672">=</span>0,right<span style="color:#f92672">=</span>0;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">while</span>(right<span style="color:#f92672">&lt;</span>s.<span style="color:#a6e22e">length</span>()){
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">char</span> c<span style="color:#f92672">=</span>s.<span style="color:#a6e22e">charAt</span>(right);
+</span></span><span style="display:flex;"><span>        window<span style="color:#f92672">[</span>c<span style="color:#f92672">]++</span>;
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">while</span>(window<span style="color:#f92672">[</span>c<span style="color:#f92672">]&gt;</span>1){
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">char</span> leftChar<span style="color:#f92672">=</span>s.<span style="color:#a6e22e">charAt</span>(left);          
+</span></span><span style="display:flex;"><span>            window<span style="color:#f92672">[</span>leftChar<span style="color:#f92672">]--</span>;
+</span></span><span style="display:flex;"><span>            left<span style="color:#f92672">++</span>;
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>        len<span style="color:#f92672">=</span>Math.<span style="color:#a6e22e">max</span>(len,right<span style="color:#f92672">-</span>left<span style="color:#f92672">+</span>1);
+</span></span><span style="display:flex;"><span>        right<span style="color:#f92672">++</span>;
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> len;
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div>
+
+  </div>
+
+  <footer class="post-footer">
+    <ul class="post-tags">
+    </ul>
+<nav class="paginav">
+  <a class="prev" href="https://iendi.github.io/en/posts/tech/spring-mvc/01.-spring-mvc%E5%85%A8%E6%B5%81%E7%A8%8B%E5%8F%8A%E7%AE%80%E5%8D%95%E9%85%8D%E7%BD%AE/">
+    <span class="title">« 上一页</span>
+    <br>
+    <span>01. Spring MVC全流程及简单配置</span>
+  </a>
+  <a class="next" href="https://iendi.github.io/en/posts/lc/%E5%8D%95%E8%B0%83%E6%A0%88/84/">
+    <span class="title">下一页 »</span>
+    <br>
+    <span>单调栈</span>
+  </a>
+</nav>
+
+  </footer>
+</article>
+    </main>
+    
+<footer class="footer">
+    <span>
+        Copyright
+        &copy;
+        -2024
+        <a href="https://iendi.github.io/en/" style="color:#939393;">Kend&#39;s Blog</a>
+        All Rights Reserved
+    </span>
+    <a href="https://beian.miit.gov.cn/" target="_blank" style="color:#939393;"></a>&nbsp;
+    <span>
+        <a target="_blank" href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=null"
+           style="display:inline-block;text-decoration:none;height:20px;color:#939393;">
+            <img src="" style="float:left;margin: 0px 5px 0px 0px;"/>
+            
+        </a>
+    </span>
+    <span id="busuanzi_container">
+        <span class="fa fa-user"></span> <span id="busuanzi_value_site_uv"></span>
+        <span class="fa fa-eye"></span> <span id="busuanzi_value_site_pv"></span>
+    </span>
+</footer>
+<a href="#top" aria-label="go to top" title="Go to Top (Alt + G)" class="top-link" id="top-link" accesskey="g">
+    <span class="topInner">
+        <svg class="topSvg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentColor">
+            <path d="M12 6H0l6-6z"/>
+        </svg>
+        <span id="read_progress"></span>
+    </span>
+</a>
+
+<script>
+    document.addEventListener('scroll', function (e) {
+        const readProgress = document.getElementById("read_progress");
+        const scrollHeight = document.documentElement.scrollHeight;
+        const clientHeight = document.documentElement.clientHeight;
+        const scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
+        readProgress.innerText = ((scrollTop / (scrollHeight - clientHeight)).toFixed(2) * 100).toFixed(0);
+    })
+</script>
+
+<script>
+    let menu = document.getElementById('menu')
+    if (menu) {
+        menu.scrollLeft = localStorage.getItem("menu-scroll-position");
+        menu.onscroll = function () {
+            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+        }
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+</script>
+<script>
+    let mybutton = document.getElementById("top-link");
+    window.onscroll = function () {
+        if (document.body.scrollTop > 200 || document.documentElement.scrollTop > 200) {
+            mybutton.style.visibility = "visible";
+            mybutton.style.opacity = "1";
+        } else {
+            mybutton.style.visibility = "hidden";
+            mybutton.style.opacity = "0";
+        }
+    };
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        (function() {
+            document.cookie = "change-themes" + "="+ escape ("false");
+        })()
+
+        if (document.body.className.includes("dark")) {
+            document.body.classList.remove('dark');
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            document.body.classList.add('dark');
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    });
+</script>
+
+<script>
+    document.body.addEventListener('copy', function (e) {
+        if (window.getSelection().toString() && window.getSelection().toString().length > 50) {
+            let clipboardData = e.clipboardData || window.clipboardData;
+            if (clipboardData) {
+                e.preventDefault();
+                let htmlData = window.getSelection().toString() +
+                    '\r\n\n————————————————\r\n' +
+                    '版权声明：本文为「'+"Kend's Blog"+'」的原创文章，遵循CC 4.0 BY-SA版权协议，转载请附上原文出处链接及本声明。' +
+                '\r\n原文链接：' + location.href;
+                let textData = window.getSelection().toString() +
+                    '\r\n\n————————————————\r\n' +
+                    '版权声明：本文为「'+"Kend's Blog"+'」的原创文章，遵循CC 4.0 BY-SA版权协议，转载请附上原文出处链接及本声明。' +
+                '\r\n原文链接：' + location.href;
+                clipboardData.setData('text/html', htmlData);
+                clipboardData.setData('text/plain', textData);
+            }
+        }
+    });
+</script>
+<script>
+    document.querySelectorAll('pre > code').forEach((codeblock) => {
+        const container = codeblock.parentNode.parentNode;
+        const copybutton = document.createElement('button');
+        copybutton.classList.add('copy-code');
+        copybutton.innerText = '📄复制';
+
+        function copyingDone() {
+            copybutton.innerText = '👌🏻已复制!';
+            setTimeout(() => {
+                copybutton.innerText = '📄复制';
+            }, 2000);
+        }
+
+        copybutton.addEventListener('click', (cb) => {
+            if ('clipboard' in navigator) {
+                let text = codeblock.textContent +
+                    '\r\n————————————————\r\n' +
+                    '版权声明：本文为「'+"Kend's Blog"+'」的原创文章，遵循CC 4.0 BY-SA版权协议，转载请附上原文出处链接及本声明。' +
+                '\r\n原文链接：' + location.href;
+                navigator.clipboard.writeText(text);
+                copyingDone();
+                return;
+            }
+
+            const range = document.createRange();
+            range.selectNodeContents(codeblock);
+            const selection = window.getSelection();
+            selection.removeAllRanges();
+            selection.addRange(range);
+            try {
+                document.execCommand('copy');
+                copyingDone();
+            } catch (e) {}
+            selection.removeRange(range);
+        });
+
+        let language = codeblock.className.replaceAll("language-", "")
+        let macTool = document.createElement("div")
+        let macTool1 = document.createElement("div")
+        let macTool2 = document.createElement("div")
+        let macTool3 = document.createElement("div")
+        let languageType = document.createElement("div")
+        languageType.innerText = language
+        macTool.setAttribute('class', 'mac-tool')
+        macTool1.setAttribute('class', 'mac bb1')
+        macTool2.setAttribute('class', 'mac bb2')
+        macTool3.setAttribute('class', 'mac bb3')
+        languageType.setAttribute('class', 'language-type')
+        macTool.appendChild(macTool1)
+        macTool.appendChild(macTool2)
+        macTool.appendChild(macTool3)
+        macTool.appendChild(languageType)
+
+        if (container.classList.contains("highlight")) {
+            container.appendChild(copybutton);
+            container.appendChild(macTool)
+        } else if (container.parentNode.firstChild == container) {
+            
+        } else if (codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.nodeName == "TABLE") {
+            
+            codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.appendChild(copybutton);
+            container.appendChild(macTool)
+        } else {
+            
+            codeblock.parentNode.appendChild(copybutton);
+            container.appendChild(macTool)
+        }
+    });
+</script>
+</body>
+
+</html>

@@ -1,0 +1,1366 @@
+<!DOCTYPE html>
+<html lang="en" dir="auto">
+
+<head><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="index, follow">
+<title>Pyside6 | Kend&#39;s Blog</title>
+<meta name="keywords" content="">
+<meta name="description" content="利用pyside6对python程序进行快速上手开发，实现模型的部署，请先安装pyside6相关依赖： pip install pyside6 pip install qt-material Pyside6基础知识 窗口">
+<meta name="author" content="Kend">
+<link rel="canonical" href="https://iendi.github.io/en/posts/ai/pyside6/">
+
+
+<link crossorigin="anonymous" href="/assets/css/stylesheet.2b3a9b630d724ad2b56cb3217ca569e88f4344d61fa91c496bfd01d1128c4950.css" integrity="" rel="preload stylesheet" as="style">
+<script defer crossorigin="anonymous" src="/assets/js/highlight.f413e19d0714851f6474e7ee9632408e58ac146fbdbe62747134bea2fa3415e0.js" integrity="sha256-9BPhnQcUhR9kdOfuljJAjlisFG&#43;9vmJ0cTS&#43;ovo0FeA="
+        onload="hljs.initHighlightingOnLoad();"></script>
+<link rel="icon" href="https://iendi.github.io/img/1.png">
+<link rel="icon" type="image/png" sizes="16x16" href="https://iendi.github.io/img/1.png">
+<link rel="icon" type="image/png" sizes="32x32" href="https://iendi.github.io/img/1.png">
+<link rel="apple-touch-icon" href="https://iendi.github.io/1.png">
+<link rel="mask-icon" href="https://iendi.github.io/1.png">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<link rel="alternate" hreflang="en" href="https://iendi.github.io/en/posts/ai/pyside6/">
+<noscript>
+    <style>
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+</noscript>
+<script>
+    MathJax = {
+      tex: {
+        inlineMath: [["$", "$"]],
+      },
+      displayMath: [
+        ["$$", "$$"]
+      ],
+      svg: {
+        fontCache: "global",
+      },
+    };
+  </script>
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script
+    id="MathJax-script"
+    async
+    src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"
+  ></script>
+
+
+  
+
+<meta property="og:title" content="Pyside6" />
+<meta property="og:description" content="利用pyside6对python程序进行快速上手开发，实现模型的部署，请先安装pyside6相关依赖： pip install pyside6 pip install qt-material Pyside6基础知识 窗口" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://iendi.github.io/en/posts/ai/pyside6/" /><meta property="article:section" content="posts" />
+<meta property="article:published_time" content="2023-05-17T22:20:58+08:00" />
+<meta property="article:modified_time" content="2023-05-17T22:20:58+08:00" />
+
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Pyside6"/>
+<meta name="twitter:description" content="利用pyside6对python程序进行快速上手开发，实现模型的部署，请先安装pyside6相关依赖： pip install pyside6 pip install qt-material Pyside6基础知识 窗口"/>
+
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position":  1 ,
+      "name": "📚文章",
+      "item": "https://iendi.github.io/en/posts/"
+    }, 
+    {
+      "@type": "ListItem",
+      "position":  2 ,
+      "name": "💻AI",
+      "item": "https://iendi.github.io/en/posts/ai/"
+    }, 
+    {
+      "@type": "ListItem",
+      "position":  3 ,
+      "name": "Pyside6",
+      "item": "https://iendi.github.io/en/posts/ai/pyside6/"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "Pyside6",
+  "name": "Pyside6",
+  "description": "利用pyside6对python程序进行快速上手开发，实现模型的部署，请先安装pyside6相关依赖： pip install pyside6 pip install qt-material Pyside6基础知识 窗口",
+  "keywords": [
+    
+  ],
+  "articleBody": "利用pyside6对python程序进行快速上手开发，实现模型的部署，请先安装pyside6相关依赖：\npip install pyside6 pip install qt-material Pyside6基础知识 窗口框/组件 pyside6的窗口框为Widgets, 是可视化的用户界面组件。一般我们都是用Widges类创建一个主界面，然后在其基础上添加组件，创建代码如下：\nw = QWidget() # 设置窗口标题 w.setWindowTitle(\"PySide6程序\") # 展示窗口 w.show() 基本组件：\n都位于位于 PySide6.QtWidgets 包内\n按钮： QPushButton，多用于点击后触发事件 标签：QLabel，显示文字、图片、视频 输入框： QLineEdit，输入文字 下拉框：QComboBox ，下拉选择某个选项 完整演示程序如下：\nimport sys from PySide6.QtWidgets import QApplication, QWidget, QLabel, QPushButton, QLineEdit, QComboBox from qt_material import apply_stylesheet # 创建主窗口类 class MainWindow(QWidget): def __init__(self): super().__init__() # 设置窗口标题 self.setWindowTitle(\"PySide6程序\") # 窗口的大小 self.resize(500, 300) # 添加组件,需要在构造时添加父组件，即self # 文本 self.label = QLabel(\"账号\", self) self.label.setGeometry(50, 50, 50, 50) # 文本框 self.edit = QLineEdit(self) self.edit.setPlaceholderText(\"请输入账号\") self.edit.setGeometry(110, 50, 150, 50) # 下拉框 self.combo_box = QComboBox(self) self.combo_box.addItem(\"男\") self.combo_box.addItem(\"女\") self.combo_box.setGeometry(290, 50, 50, 50) # 按钮 self.btn = QPushButton(\"注册\", self) self.btn.setGeometry(360, 50, 70, 50) if __name__ == '__main__': app = QApplication(sys.argv) w = MainWindow() # 展示窗口 w.show() # 设置主题色为蓝色 apply_stylesheet(app, theme='light_blue_500.xml') # 程序进行循环等待状态，用于持久显示 sys.exit(app.exec()) 信号与槽 其实就是点击按钮后，发出信号，对应执行的函数称之为槽。上述程序，我们希望在点击注册后，控制台输出账号，代码如下：\n==注意==：绑定槽函数时，不用加 “()”\n# 首先，在init中添加绑定函数 # 注意：这里没有() self.btn.clicked.connect(self.click_my_btn) # 在主窗口类中，添加click_my_btn函数 def click_my_btn(self): print(self.edit.text()) 布局 上面程序中我们使用setGeometry函数设置组件的位置，但这种方法会导致我们在放大/缩小窗口时组件位置错乱，因此我们使用布局，使界面能自适应窗口大小。\nfrom PySide6.QtWidgets import QHBoxLayout, QVBoxLayout, QGridLayout 其中QHBoxLayout为水平布局， QVBoxLayout是垂直布局，QGridLayout为栅格布局，可互相叠加嵌套，下面来看一个例子：\nframe是QFrame类的实例，可以理解成一个小窗口，方便对同一frame中的组件进行样式、布局的统一管理。\n上图中，frame 1-3 内为水平布局，frame 4为栅格布局，frame 1-4 组合一起为垂直布局，忽略具体的组件，代码实现如下：\n# 水平布局，传入参数为父组件，即在该组件中应用布局 self.hLayout_1 = QtWidgets.QHBoxLayout(self.frame_1) self.hLayout_1.addWidget(菜单栏) # 添加子组件，此处为伪代码 self.hLayout_1.addWidget(历史数据) # 栅格布局，addWidget（子组件，起始行，起始列，占的行数，占的列数） self.gLayout_4 = QtWidgets.QGridLayout(self.frame_4) self.gLayout_4.addWidget(%, 0, 0, 1, 1) self.gLayout_4.addWidget(CE, 0, 1, 1, 1) self.gLayout_4.addWidget(C, 0, 2, 1, 1) # 垂直布局 self.vLayout = QtWidgets.QVBoxLayout(self) self.vLayout.addWidget(self.frame_1) self.vLayout.addWidget(self.frame_2) self.vLayout.addWidget(self.frame_3) self.vLayout.addWidget(self.frame_4) 无边框化 这一步是为了程序更加美观，如果没有需求可以跳过。\n首先通过属性设置，将原有边框去除：\nfrom PySide6.QtCore import Qt self.setWindowFlag(Qt.FramelessWindowHint) self.setAttribute(Qt.WA_TranslucentBackground) # 背景设置半透明 接着添加移动窗口功能：\n# 重写QWidge中方法 # ---移动功能--- def mousePressEvent(self, event): # 鼠标左键按下时获取鼠标坐标 if event.button() == Qt.LeftButton: self._move_drag = True self.m_Position = event.globalPosition().toPoint() - self.pos() event.accept() self.setCursor(QtGui.QCursor(QtCore.Qt.OpenHandCursor)) def mouseMoveEvent(self, QMouseEvent): # 鼠标在按下左键的情况下移动时,根据坐标移动界面 if Qt.LeftButton and self._move_drag: self.move(QMouseEvent.globalPosition().toPoint() - self.m_Position) QMouseEvent.accept() def mouseReleaseEvent(self, QMouseEvent): # 鼠标按键释放时,取消移动 self._move_drag = False self.setCursor(QtGui.QCursor(QtCore.Qt.ArrowCursor)) 最后，添加最大化、最小化和关闭按钮\n定义标题栏类，包括三个按钮及其图标。直接用我写的即可，已设置好样式。\nfrom PySide6 import QtCore from PySide6.QtGui import QIcon from PySide6.QtWidgets import QFrame, QHBoxLayout, QPushButton class CustomTitleBar(QFrame): def __init__(self, parent): super().__init__(parent) # 设置样式 self.setStyleSheet(''' QFrame{ background-color: rgb(171, 176, 181); border-top-left-radius:10px; border-top-right-radius:10px; border-bottom-left-radius:0px; border-bottom-right-radius:0px; } QPushButton{ border: none; background-color: rgb(171, 176, 181); } QPushButton:pressed{ padding-left:3px; padding-top:3px; } QPushButton:hover{ padding-bottom:3px; } ''') # 设置布局 layout = QHBoxLayout(self) layout.setSpacing(0) layout.setAlignment(QtCore.Qt.AlignRight) # 最小化按钮 btn_minimize = QPushButton(self) btn_minimize.setIcon(QIcon('resource/icons/minus.png')) btn_minimize.clicked.connect(self.parent().showMinimized) layout.addWidget(btn_minimize) # 最大化/恢复按钮 self.btn_maximize_restore = QPushButton(self) self.btn_maximize_restore.setIcon(QIcon('resource/icons/maxmize.png')) layout.addWidget(self.btn_maximize_restore) # 关闭按钮 btn_close = QPushButton(self) btn_close.setIcon(QIcon('resource/icons/close.png')) btn_close.clicked.connect(self.parent().close) layout.addWidget(btn_close) 在主窗口类中引用CustomTitleBar，创建对象并绑定槽函数，用于窗口的放大、缩小。\n# 添加状态栏 self.custom_title_bar = CustomTitleBar(self) self.custom_title_bar.btn_maximize_restore.clicked.connect(self.resize_win) # 槽函数 def resize_win(self): if self.isMaximized(): self.showNormal() self.custom_title_bar.btn_maximize_restore.setIcon( QtGui.QIcon('resource/icons/maxmize.png')) else: self.showMaximized() self.custom_title_bar.btn_maximize_restore.setIcon( QtGui.QIcon('resource/icons/minisize.png')) 其中，图标可以在阿里矢量图标库下载，直接搜索放大、缩小等，下载后的 png 图片存到对应文件夹即可。\n改进后的程序界面如下：\n侧边栏 侧边栏用于显示不同板块，在点击后切换到指定的页面。主要包括左侧的侧边栏以及右侧的页面。\n侧边栏类可以直接用我写的，已设置好样式：\nclass SideBar(QFrame): def __init__(self, parent): super().__init__(parent) # 设置样式 self.setStyleSheet(''' QFrame{ background-color: rgb(221, 223, 226); } QListWidget { color: Black; background-color: rgb(221, 223, 226); } QListWidget::Item:hover { background: rgb(233, 234, 236); border-left: 3px solid rgb(76, 95, 107); } QListWidget::Item:selected { background: rgb(233, 234, 236); border-left: 3px solid rgb(76, 95, 107); } ''') self.list_widget = QListWidget(self) self.list_widget.setFixedWidth(150) self.list_widget.setSpacing(5) layout = QVBoxLayout(self) layout.setSpacing(0) layout.setContentsMargins(1, 1, 0, 0) layout.addWidget(self.list_widget) # 添加item img_icon = QIcon('resource/icons/img_improve.png') self.img_item = QListWidgetItem(img_icon, '视觉提升', self.list_widget) self.img_item.setSizeHint(QtCore.QSize(10, 60)) self.img_item.setTextAlignment(QtCore.Qt.AlignCenter) self.img_item.setSelected(True) red_icon = QIcon('resource/icons/red.png') self.red_item = QListWidgetItem(red_icon, '红外融合', self.list_widget) self.red_item.setSizeHint(QtCore.QSize(10, 60)) self.red_item.setTextAlignment(QtCore.Qt.AlignCenter) 接着，添加右侧页面，我们使用QStackedWidget，并在其中添加多个不同的Widget对应不同的组件：\n# 添加右侧页面 self.stack_widget = QtWidgets.QStackedWidget(self.frame_1) # 添加窗口部件 self.widget_1 = QWidget() self.label_1 = QLabel(\"视觉提升页面\") layout_1 = QtWidgets.QVBoxLayout(self.widget_1) layout_1.addWidget(self.label_1) self.widget_2 = QWidget() self.label_2 = QLabel(\"红外融合页面\") layout_2 = QtWidgets.QVBoxLayout(self.widget_2) layout_2.addWidget(self.label_2) # 添加各个widget到stack_widget中 self.stack_widget.addWidget(self.widget_1) self.stack_widget.addWidget(self.widget_2) self.stack_widget.setCurrentIndex(0) 通过setCurrentIndex方法设置页面，0为widget_1，1为widget_2。最后，添加槽函数，在点击左侧侧边栏按钮时切换页面。\n# 主界面类中，引用侧边栏，并绑定槽函数 self.side_bar = SideBar(self.frame_1) self.side_bar.list_widget.itemClicked.connect(self.item_clicked) #槽函数 def item_clicked(self): item = self.side_bar.list_widget.selectedItems()[0] if item.text() == '视觉提升': self.stack_widget.setCurrentIndex(0) elif item.text() == '红外融合': self.stack_widget.setCurrentIndex(1) 效果如下：\n完整代码如下，其中from components import CustomTitleBar, SideBar的类上面代码已给出，直接创建文件复制进去即可：\nimport sys from PySide6 import QtGui, QtCore, QtWidgets from PySide6.QtWidgets import QApplication, QWidget, QLabel from qt_material import apply_stylesheet from PySide6.QtCore import Qt from components import CustomTitleBar, SideBar class MainWindow(QWidget): def __init__(self): super().__init__() self.init_ui() self._move_drag = False def init_ui(self): # 设置窗口标题、图标 self.setWindowTitle(\"视觉提升\") self.setWindowIcon(QtGui.QIcon('resource/icons/appicon.png')) # 创建窗口类 self.frame = QtWidgets.QFrame(self) self.frame.setObjectName(\"frame\") self.frame.setStyleSheet(''' QFrame { border: 0px; } #frame{ background-color: rgb(242, 242, 242); border-radius:10px; } ''') self.hLayout = QtWidgets.QHBoxLayout(self) self.hLayout.addWidget(self.frame) self.hLayout.setContentsMargins(0, 0, 0, 0) # 使frame完全填充界面 # 窗口的大小 self.resize(800, 600) # 添加状态栏 self.custom_title_bar = CustomTitleBar(self) self.custom_title_bar.btn_maximize_restore.clicked.connect(self.resize_win) # 状态栏下半部分的窗口，frame_1 self.frame_1 = QtWidgets.QFrame(self.frame) self.frame_1.setObjectName(\"frame_1\") # 添加侧边栏 self.side_bar = SideBar(self.frame_1) self.side_bar.list_widget.itemClicked.connect(self.item_clicked) # 添加右侧页面 self.stack_widget = QtWidgets.QStackedWidget(self.frame_1) # 添加窗口部件 self.widget_1 = QWidget() self.label_1 = QLabel(\"视觉提升界面\") layout_1 = QtWidgets.QVBoxLayout(self.widget_1) layout_1.addWidget(self.label_1) self.widget_2 = QWidget() self.label_2 = QLabel(\"红外融合界面\") layout_2 = QtWidgets.QVBoxLayout(self.widget_2) layout_2.addWidget(self.label_2) # 添加各个widget到stack_widget中 self.stack_widget.addWidget(self.widget_1) self.stack_widget.addWidget(self.widget_2) self.stack_widget.setCurrentIndex(0) # 布局: frame中， 状态栏（custom_title_bar）与下面部分（frame_1） self.gLayout = QtWidgets.QGridLayout(self.frame) self.gLayout.addWidget(self.custom_title_bar, 0, 0, 1, 1) self.gLayout.addWidget(self.frame_1, 2, 0, 20, 1) self.gLayout.setSpacing(0) self.gLayout.setContentsMargins(0, 0, 0, 0) # 布局: frame_1中，侧边栏（side_bar）与右侧部分（stackedWidget） self.gLayout_1 = QtWidgets.QGridLayout(self.frame_1) self.gLayout_1.addWidget(self.side_bar, 0, 0, 1, 2) self.gLayout_1.addWidget(self.stack_widget, 0, 2, 1, 10) self.gLayout_1.setSpacing(0) self.gLayout_1.setContentsMargins(0, 0, 0, 0) # # 去边框 self.setWindowFlag(Qt.FramelessWindowHint) self.setAttribute(Qt.WA_TranslucentBackground) # ---移动功能--- def mousePressEvent(self, event): # 鼠标左键按下时获取鼠标坐标 if event.button() == Qt.LeftButton: self._move_drag = True self.m_Position = event.globalPosition().toPoint() - self.pos() event.accept() self.setCursor(QtGui.QCursor(QtCore.Qt.OpenHandCursor)) def mouseMoveEvent(self, QMouseEvent): # 鼠标在按下左键的情况下移动时,根据坐标移动界面 if Qt.LeftButton and self._move_drag: self.move(QMouseEvent.globalPosition().toPoint() - self.m_Position) QMouseEvent.accept() def mouseReleaseEvent(self, QMouseEvent): # 鼠标按键释放时,取消移动 self._move_drag = False self.setCursor(QtGui.QCursor(QtCore.Qt.ArrowCursor)) def resize_win(self): if self.isMaximized(): self.showNormal() self.custom_title_bar.btn_maximize_restore.setIcon( QtGui.QIcon('resource/icons/maxmize.png')) self.side_bar.list_widget.setFixedWidth(150) else: self.showMaximized() self.custom_title_bar.btn_maximize_restore.setIcon( QtGui.QIcon('resource/icons/minisize.png')) self.side_bar.list_widget.setFixedWidth(250) def item_clicked(self): item = self.side_bar.list_widget.selectedItems()[0] if item.text() == '视觉提升': self.stack_widget.setCurrentIndex(0) elif item.text() == '红外融合': self.stack_widget.setCurrentIndex(1) if __name__ == '__main__': app = QApplication(sys.argv) w = MainWindow() w.show() # 设置主题色为蓝色 apply_stylesheet(app, theme='light_blue_500.xml') # 程序进行循环等待状态，用于持久显示 sys.exit(app.exec()) 至此，我们已经完成了一个基础的程序模板。后续开发可以基于这个模板上进行改造。\n结合模型实现可视化 接下来，我将以视觉提升板块为例，介绍如何通过界面进行模型推理及结果的输出，包括图片及视频的处理。\n界面设计 首先，我们添加以下模块：\n上部分：\n选择图片/视频按钮：点击后选择电脑上的某个文件 选择效果下拉框：对给定的模型，选择要应用的效果，包括去雨、去雾、弱光等 确定按钮：点击后，用选择的效果对图片进行优化 中间部分\n图片标签：显示原图与处理后的图片，进行对比 下部分：\n视频控件：3个按钮，对视频的暂停、前进和后退操作 界面如下：\n其中，上部分frame_up和下部分的frame_down直接添加组件+设置水平布局即可，代码如下：\n# 添加右侧页面 self.stack_widget = QtWidgets.QStackedWidget(self.frame_1) # 添加窗口部件 self.widget_1 = QWidget() self.frame_2 = QtWidgets.QFrame(self.widget_1) self.hLayout_1 = QtWidgets.QHBoxLayout(self.widget_1) self.hLayout_1.addWidget(self.frame_2) self.hLayout_1.setContentsMargins(0, 0, 0, 0) # 从上至下 3个frame # 1. frame_up self.frame_up = QtWidgets.QFrame(self.frame_2) self.choose_img_btn = QPushButton(\"选择图片/视频\", self.frame_up) self.choose_img_btn.setMinimumSize(150, 50) self.pre_combobox_text = QLabel(\"效果：\", self.frame_up) self.pre_combobox_text.setMinimumHeight(50) self.combobox = QComboBox(self.frame_up) self.combobox.addItem(\"去雨\") self.combobox.addItem(\"去雾\") self.combobox.addItem(\"弱光\") self.combobox.setMinimumHeight(50) self.admit_btn = QPushButton(\"确定\", self.frame_up) self.admit_btn.setMinimumHeight(50) # frame_up的布局 self.up_layout = QtWidgets.QHBoxLayout(self.frame_up) self.up_layout.addStretch(1) self.up_layout.addWidget(self.choose_img_btn) self.up_layout.addStretch(2) self.up_layout.addWidget(self.pre_combobox_text) self.up_layout.addWidget(self.combobox) self.up_layout.addStretch(1) self.up_layout.addWidget(self.admit_btn) self.up_layout.addStretch(1) # 3. frame down, 视频组件 self.frame_down = QtWidgets.QFrame(self.frame_2) # play \u0026 pause self.playButton = QtWidgets.QPushButton(self.frame_down) self.playButton.setIcon(QtGui.QIcon('resource/icons/play.png')) self.playButton.setIconSize(QtCore.QSize(12, 12)) self.playButton.setMaximumSize(QtCore.QSize(80, 30)) # left \u0026 right button self.leftButton = QtWidgets.QPushButton(self.frame_down) self.rightButton = QtWidgets.QPushButton(self.frame_down) self.leftButton.setIcon(QtGui.QIcon('resource/icons/左箭头.png')) self.leftButton.setIconSize(QtCore.QSize(19, 19)) self.rightButton.setIcon(QtGui.QIcon('resource/icons/右箭头.png')) self.rightButton.setIconSize(QtCore.QSize(19, 19)) self.leftButton.setMaximumSize(QtCore.QSize(50, 30)) self.rightButton.setMaximumSize(QtCore.QSize(50, 30)) # frame_down布局 self.layout_down_2 = QtWidgets.QHBoxLayout(self.frame_down) self.layout_down_2.addWidget(self.leftButton) self.layout_down_2.addWidget(self.playButton) self.layout_down_2.addWidget(self.rightButton) self.layout_down_2.setContentsMargins(0, 0, 0, 0) 中间部分frame_mid通过QSplitter实现两张图片的分割布局，拖动分割线时两侧图片等比例缩放，这里有两点需要注意：\n默认通过QPixmap设置左右两个QLabel的图片时，图片会拉伸至label的尺寸，导致图片显示不全或变形，因此我们在设置图片之前要先将其尺寸缩放到label的尺寸，具体代码如下\n# 设置图片路径 self.pre_imgpath = 'resource/images/1.jpg' self.res_imgpath = 'resource/images/2.jpg' # 根据label大小缩放图片 import cv2 def scaleimg(self): def showimg(label, img_path): img_src = cv2.imdecode(np.fromfile(img_path, dtype=np.uint8), -1) ih, iw, _ = img_src.shape w = label.geometry().width() h = label.geometry().height() # keep original aspect ratio if iw / w \u003e ih / h: scal = w / iw nw = w nh = int(scal * ih) img_src_ = cv2.resize(img_src, (nw, nh)) else: scal = h / ih nw = int(scal * iw) nh = h img_src_ = cv2.resize(img_src, (nw, nh)) frame = cv2.cvtColor(img_src_, cv2.COLOR_BGR2RGB) img = QImage(frame.data, frame.shape[1], frame.shape[0], frame.shape[2] * frame.shape[1],QImage.Format_RGB888) label.setPixmap(QPixmap.fromImage(img)) # label3为左侧框，label4为右侧框 showimg(self.label_3, self.pre_imgpath) showimg(self.label_4, self.res_imgpath) 要实现移动分割线时，图片跟着缩放，要设置splitter的槽函数为scaleimg，这样在每次拖动时，都会重新计算label尺寸，缩放图片，完整代码如下：\n# 2. frame mid, 两张图片对比， 用QSplitter分割 self.frame_mid = QSplitter(self.frame_2) self.frame_mid.setStyleSheet(\"QSplitter::handle {image:url(resource/images/splitter.svg);}\") self.frame_mid.setHandleWidth(20) self.frame_mid.setOrientation(Qt.Horizontal) self.label_3 = QLabel(self.frame_mid) self.label_3.setAlignment(Qt.AlignCenter) self.label_3.setMinimumSize(QSize(50, 50)) self.frame_mid.addWidget(self.label_3) self.label_4 = QLabel(self.frame_mid) self.label_4.setAlignment(Qt.AlignCenter) self.label_4.setMinimumSize(QSize(50, 50)) self.frame_mid.addWidget(self.label_4) # 绑定槽函数 self.frame_mid.splitterMoved.connect(self.scaleimg) 实现效果如下，方便更清晰观察生成后的效果图\n最后，对3个frame进行布局，按照 up:mid:down = 2:10:1的比例\n# 3个frame布局（up, mid, down） self.gLayout_2 = QtWidgets.QGridLayout(self.frame_2) self.gLayout_2.addWidget(self.frame_up, 0, 0, 2, 1) self.gLayout_2.addWidget(self.frame_mid, 2, 0, 10, 1) self.gLayout_2.addWidget(self.frame_down, 12, 0, 1, 1) self.gLayout_2.setSpacing(0) 视频播放 对视频的处理如下所示：\n获取视频文件地址-\u003e对视频进行抽帧-\u003e对抽帧后的图片进行推理-\u003e显示处理后的图片-\u003e利用定时器，实现视频播放\n我们==假设==已完成了视频抽帧与处理，且文件结构如下，其中origin显示抽帧后的图片集合，processed显示处理后的图片，具体如何实现将在下节说明。\n├─results │ ├─videos │ │ └─视频文件名 └─origin └─0000.png └─0001.png └─0002.png └─processed └─0000.png └─0001.png └─0002.png 在此基础上，本节介绍如何对两个文件夹中的图片进行播放，形成对比，实现的效果如下：\n实现原理就是设置一个多线程的定时器，每隔一段时间（fps）就执行一次next_img函数，next_img函数会把左右label的图片都切换成下一张。定时器的代码如下，用到了QThread类，想要执行的任务在run函数中实现，然后实例化对象后通过object_name.start()即可启动。\nfrom PySide6.QtCore import QThread, Signal, QMutex, QMutexLocker import time import os # 视频播放计时器 class VideoTimer(QThread): timeSignal = Signal(str) # 每隔1/frequent秒，切换到下一帧 def __init__(self, frequent=1): QThread.__init__(self) self.stopped = False self.frequent = frequent self.mutex = QMutex() def run(self): with QMutexLocker(self.mutex): self.stopped = False while True: if self.stopped: return self.timeSignal.emit(\"1\") time.sleep(1 / self.frequent) def stop(self): with QMutexLocker(self.mutex): self.stopped = True def is_stopped(self): with QMutexLocker(self.mutex): return self.stopped 在VideoTimer中，我们定义了一个信号 timeSignal = Signal(str)，并每隔1/frequent秒发送一次“1”。在主界面类中，定义VideoTimer对象，并在每次接收到该信号时切换到下一帧。\n# 定义定时器对象，并绑定信号 self.timer = VideoTimer(frequent=10) self.timer.timeSignal.connect(self.show_video_images) # show_video_images函数在下文给出 # 初始化视频播放相关变量 STATUS_INIT = 0 STATUS_PLAYING = 1 STATUS_PAUSE = 2 self.origin_path = '' self.processed_path = '' self.index = 0 #当前播放的帧序号 self.status = self.STATUS_INIT 接着，定义以下函数：\n视频停止时的重置函数reset：停止计时器，重置播放器状态 播放状态切换函数switch_video：如果当前状态为播放，改为暂停；如果为暂停，改为播放 播放按钮图标切换函数icon_change：播放状态切换时，切换⏯️图标 帧上下切换函数pre_img、next_img：切换至上一张/下一张帧 视频播放函数show_video_images：通过调用next_img，完成视频的播放 def reset(self): self.timer.stop() while not self.timer.is_stopped(): time.sleep(0.5) self.status = self.STATUS_INIT self.index = 0 self.icon_change(1) def switch_video(self): if self.origin_path == '' or self.processed_path == '': return if self.status is self.STATUS_INIT: self.timer.start() self.icon_change(2) elif self.status is self.STATUS_PLAYING: self.timer.stop() self.icon_change(1) elif self.status is self.STATUS_PAUSE: self.timer.start() self.icon_change(2) self.status = (self.STATUS_PLAYING, self.STATUS_PAUSE, self.STATUS_PLAYING)[self.status] # 展示图片集，切换上下张 def pre_img(self): if self.processed_path == '' or self.index == 0: return self.index -= 1 left_img_path = self.origin_path + '{:04d}.png'.format(self.index) right_img_path = self.processed_path + '{:04d}.png'.format(self.index) if not os.path.isfile(left_img_path) or not os.path.isfile(right_img_path): time.sleep(1) print('pre,', right_img_path) self.pre_imgpath = left_img_path self.res_imgpath = right_img_path self.scaleimg() def next_img(self): if self.processed_path == '' or self.index == len(os.listdir(self.processed_path)) - 1: return self.index += 1 left_img_path = self.origin_path + '{:04d}.png'.format(self.index) right_img_path = self.processed_path + '{:04d}.png'.format(self.index) if not os.path.isfile(left_img_path) or not os.path.isfile(right_img_path): return print('next,', right_img_path) r_img = QImage(right_img_path) if r_img.size().width() == 0: self.switch_video() return self.pre_imgpath = left_img_path self.res_imgpath = right_img_path self.scaleimg() # 同时修改label_3、label_4的图片，完成视频播放 def show_video_images(self): if self.processed_path == '' or self.index == len(os.listdir(self.origin_path)) - 1: self.reset() # 播放进度赶上生成进度-\u003e暂停 elif self.index == len(os.listdir(self.processed_path)) - 1: self.switch_video() else: self.next_img() 最后，我们将按钮和函数绑定，实现点击中间按钮切换播放/暂停，点击左右按钮切换上下帧\nself.playButton.clicked.connect(self.switch_video) self.leftButton.clicked.connect(self.pre_img) self.rightButton.clicked.connect(self.next_img) 模型推理 选择文件 首先通过QFileDialog选择要进行处理的图像或视频 判断文件是视频还是图片 如果是视频，通过多线程对视频进行抽帧，结果保存至/results/videos/文件名/origin 展示图像 其中多线程抽帧代码如下：\nfrom PySide6.QtCore import QThread, Signal, QMutex, QMutexLocker import os import cv2 # 视频抽帧线程 class Video2Img(QThread): def __init__(self, url): super().__init__() self.url = url # 创建保存文件夹 name = url.split('/')[-1].split('.')[0] self.save_path = f'results/videos/{name}/origin/' os.makedirs(self.save_path, exist_ok=True) def run(self): # 打开视频文件，参数为文件路径 cap = cv2.VideoCapture(self.url) # 获取视频帧率和总帧数 total_frames = int(cap.get(cv2.CAP_PROP_FRAME_COUNT)) # 定义抽帧间隔 interval = 5 # 循环读取视频帧 for i in range(total_frames): ret, frame = cap.read() if i % interval == 0: # 实现对每5帧进行抽取 save_img_path = os.path.join(self.save_path, '{:04d}.png'.format(int(i / interval))) cv2.imencode('.png', frame)[1].tofile(save_img_path) # 释放视频文件 cap.release() 如下所示，对文件名为night_1的视频，生成了对应的文件夹及抽帧结果\n选择文件部分总代码如下：\ndef choose_image(self): global path path, _ = QFileDialog.getOpenFileName(self, '选择图片或视频', 'C:\\\\', 'Image files(*.jpg *.jpeg *.png);;Video Files (*.mp4 *.avi)') # 如果没选择文件 if path == '': return # 如果当前有视频播放，停止 if self.status is self.STATUS_PLAYING: self.reset() # 修改label4为 “请选择效果” self.res_imgpath = 'resource/images/2.jpg' # 判断是视频 or 图片 # 1.视频 type = path.split('.')[-1] if type == 'mp4' or type == 'avi': # 如果是视频，展示控件 self.frame_down.show() # 开一个线程，对视频抽帧，结果保存在/results/videos/文件名/origin self.v2i = Video2Img(path) self.v2i.start() name = path.split('/')[-1].split('.')[0] self.origin_path = f'results/videos/{name}/origin/' self.processed_path = '' img_path = self.origin_path + '0000.png' self.timer.timeSignal.connect(self.show_video_images) self.status = self.STATUS_INIT while not os.path.isfile(img_path): time.sleep(0.5) # 2.图片 else: self.frame_down.hide() img_path = path self.pre_imgpath = img_path self.scaleimg() 最后，绑定按钮与槽函数：\nself.choose_img_btn.clicked.connect(self.choose_image) 推理得到结果 为避免推理时主界面卡顿，我们同样使用多线程进行模型推理：\nfrom PySide6.QtCore import QThread, Signal, QMutex, QMutexLocker import time import os import cv2 from lowlight.low_light import lowlight_res from dehaze.dhaze import dehaze_image from derain.derain import derain_res # 模型推理线程 class VisionImproved(QThread): def __init__(self, url, data, is_dir=False): super().__init__() self.url = url # 图片/文件夹地址 self.data = data # 增强类型 self.dir = is_dir # 是否为文件夹里的图片（视频） def run(self): # 获取图片 if self.data == '弱光': lowlight_res(self.url, self.dir) if self.data == '去雾': dehaze_image(self.url, self.dir) if self.data == '去雨': derain_res(self.url, self.dir) # 释放视频文件 这里的lowlight、derain和dehaze代码我就不给出了，调用后要求在📂/results/videos/文件名/processed中生成结果\n接着，编写img_improve函数，对VisionImproved线程进行调用\ndef img_improve(self): # 获取下拉框中的值 data = self.combobox.currentText() dic = {'弱光': 'lowlight', '去雾': 'dehaze', '去雨': 'derain'} global path # 图片 or 视频 type = path.split('.')[-1] name = path.split('/')[-1].split('.')[0] if type == 'mp4' or type == 'avi': # 创建保存文件夹 save_path = f'results/videos/{name}/processed/' self.processed_path = save_path os.makedirs(save_path, exist_ok=True) img_path = save_path + '0000.png' # 创建线程，用于模型推理 self.vision_improved = VisionImproved(f'results/videos/{name}/', data, is_dir=True) else: save_path = f'results/img/{dic[data]}/' os.makedirs(save_path, exist_ok=True) img_path = save_path + name + '.png' self.vision_improved = VisionImproved(path, data) # 新开线程，用于模型推理 self.vision_improved.start() # 未生成，暂停1秒 while not os.path.isfile(img_path): time.sleep(1) self.res_imgpath = img_path self.scaleimg() 最后，绑定槽函数即可：\nself.admit_btn.clicked.connect(self.img_improve) 待开发 本程序只完成了初步的视频预测，改进部分如下：\n对图片的预测仍然是单张，后续看能否改为批量 每次选择效果后都需要重加载模型，浪费了一定时间。考虑把各个效果的模型整合到一个大类中，方便直接调用 视频播放的策略是：固定帧率，当播放进度超越生成进度时，自动暂停。后续考虑根据生成速度自动调节帧率 模型转成onnx，加快推理速度 增加进度条，显示生成进度 ",
+  "wordCount" : "6501",
+  "inLanguage": "en",
+  "datePublished": "2023-05-17T22:20:58+08:00",
+  "dateModified": "2023-05-17T22:20:58+08:00",
+  "author":{
+    "@type": "Person",
+    "name": "Kend"
+  },
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://iendi.github.io/en/posts/ai/pyside6/"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "Kend's Blog",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://iendi.github.io/img/1.png"
+    }
+  }
+}
+</script>
+</head>
+
+<body class="" id="top">
+<script>
+    if (localStorage.getItem("pref-theme") === "dark") {
+        document.body.classList.add('dark');
+    }
+
+</script>
+
+<header class="header">
+    <nav class="nav">
+        <div class="logo">
+            <a href="https://iendi.github.io/en/" accesskey="h" title="Kend&#39;s Blog (Alt + H)">
+                <img src="https://iendi.github.io/img/1.png" alt="" aria-label="logo"
+                    height="35">Kend&#39;s Blog</a>
+            <div class="logo-switches">
+                <button id="theme-toggle" accesskey="t" title="(Alt + T)">
+                    <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <ul id="menu">
+            <li>
+                <a href="https://iendi.github.io/en/search" title="🔍搜索 (Alt &#43; /)" accesskey=/>
+                    <span>🔍搜索</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://iendi.github.io/en/" title="🏠主页">
+                    <span>🏠主页</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://iendi.github.io/en/posts" title="📚文章">
+                    <span>📚文章</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://iendi.github.io/en/archives/" title="⏱时间轴">
+                    <span>⏱时间轴</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://iendi.github.io/en/tags" title="🔖标签">
+                    <span>🔖标签</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://iendi.github.io/en/about" title="🙋🏻‍♂️关于">
+                    <span>🙋🏻‍♂️关于</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</header>
+<main class="main">
+
+<article class="post-single">
+  <header class="post-header">
+    <div class="breadcrumbs"><a href="https://iendi.github.io/en/">主页</a>&nbsp;»&nbsp;<a href="https://iendi.github.io/en/posts/">📚文章</a>&nbsp;»&nbsp;<a href="https://iendi.github.io/en/posts/ai/">💻AI</a></div>
+    <h1 class="post-title entry-hint-parent">
+      Pyside6
+    </h1>
+    <div class="post-meta"><span title='2023-05-17 22:20:58 +0800 CST'>2023-05-17</span>&nbsp;·&nbsp;13 min&nbsp;·&nbsp;Kend
+
+
+
+
+&nbsp;|&nbsp;标签: &nbsp;
+    </div>
+  </header> <aside id="toc-container" class="toc-container wide">
+    <div class="toc">
+        <details  open>
+            <summary accesskey="c" title="(Alt + C)">
+                <span class="details">文章目录</span>
+            </summary>
+
+            <div class="inner"><ul>
+                    <li>
+                        <a href="#pyside6%e5%9f%ba%e7%a1%80%e7%9f%a5%e8%af%86" aria-label="Pyside6基础知识">Pyside6基础知识</a><ul>
+                            
+                    <li>
+                        <a href="#%e7%aa%97%e5%8f%a3%e6%a1%86%e7%bb%84%e4%bb%b6" aria-label="窗口框/组件">窗口框/组件</a></li>
+                    <li>
+                        <a href="#%e4%bf%a1%e5%8f%b7%e4%b8%8e%e6%a7%bd" aria-label="信号与槽">信号与槽</a></li>
+                    <li>
+                        <a href="#%e5%b8%83%e5%b1%80" aria-label="布局">布局</a></li>
+                    <li>
+                        <a href="#%e6%97%a0%e8%be%b9%e6%a1%86%e5%8c%96" aria-label="无边框化">无边框化</a></li>
+                    <li>
+                        <a href="#%e4%be%a7%e8%be%b9%e6%a0%8f" aria-label="侧边栏">侧边栏</a></li></ul>
+                    </li>
+                    <li>
+                        <a href="#%e7%bb%93%e5%90%88%e6%a8%a1%e5%9e%8b%e5%ae%9e%e7%8e%b0%e5%8f%af%e8%a7%86%e5%8c%96" aria-label="结合模型实现可视化">结合模型实现可视化</a><ul>
+                            
+                    <li>
+                        <a href="#%e7%95%8c%e9%9d%a2%e8%ae%be%e8%ae%a1" aria-label="界面设计">界面设计</a></li>
+                    <li>
+                        <a href="#%e8%a7%86%e9%a2%91%e6%92%ad%e6%94%be" aria-label="视频播放">视频播放</a></li>
+                    <li>
+                        <a href="#%e6%a8%a1%e5%9e%8b%e6%8e%a8%e7%90%86" aria-label="模型推理">模型推理</a><ul>
+                            
+                    <li>
+                        <a href="#%e9%80%89%e6%8b%a9%e6%96%87%e4%bb%b6" aria-label="选择文件">选择文件</a></li>
+                    <li>
+                        <a href="#%e6%8e%a8%e7%90%86%e5%be%97%e5%88%b0%e7%bb%93%e6%9e%9c" aria-label="推理得到结果">推理得到结果</a></li></ul>
+                    </li>
+                    <li>
+                        <a href="#%e5%be%85%e5%bc%80%e5%8f%91" aria-label="待开发">待开发</a>
+                    </li>
+                </ul>
+                </li>
+                </ul>
+            </div>
+        </details>
+    </div>
+</aside>
+<script>
+    let activeElement;
+    let elements;
+    window.addEventListener('DOMContentLoaded', function (event) {
+        checkTocPosition();
+
+        elements = document.querySelectorAll('h1[id],h2[id],h3[id],h4[id],h5[id],h6[id]');
+         
+         activeElement = elements[0];
+         const id = encodeURI(activeElement.getAttribute('id')).toLowerCase();
+         document.querySelector(`.inner ul li a[href="#${id}"]`).classList.add('active');
+     }, false);
+
+    window.addEventListener('resize', function(event) {
+        checkTocPosition();
+    }, false);
+
+    window.addEventListener('scroll', () => {
+        
+        activeElement = Array.from(elements).find((element) => {
+            if ((getOffsetTop(element) - window.pageYOffset) > 0 && 
+                (getOffsetTop(element) - window.pageYOffset) < window.innerHeight/2) {
+                return element;
+            }
+        }) || activeElement
+
+        elements.forEach(element => {
+             const id = encodeURI(element.getAttribute('id')).toLowerCase();
+             if (element === activeElement){
+                 document.querySelector(`.inner ul li a[href="#${id}"]`).classList.add('active');
+             } else {
+                 document.querySelector(`.inner ul li a[href="#${id}"]`).classList.remove('active');
+             }
+         })
+     }, false);
+
+    const main = parseInt(getComputedStyle(document.body).getPropertyValue('--article-width'), 10);
+    const toc = parseInt(getComputedStyle(document.body).getPropertyValue('--toc-width'), 10);
+    const gap = parseInt(getComputedStyle(document.body).getPropertyValue('--gap'), 10);
+
+    function checkTocPosition() {
+        const width = document.body.scrollWidth;
+
+        if (width - main - (toc * 2) - (gap * 4) > 0) {
+            document.getElementById("toc-container").classList.add("wide");
+        } else {
+            document.getElementById("toc-container").classList.remove("wide");
+        }
+    }
+
+    function getOffsetTop(element) {
+        if (!element.getClientRects().length) {
+            return 0;
+        }
+        let rect = element.getBoundingClientRect();
+        let win = element.ownerDocument.defaultView;
+        return rect.top + win.pageYOffset;   
+    }
+</script>
+  <div class="post-content"><p>利用<code>pyside6</code>对python程序进行快速上手开发，实现模型的部署，请先安装<code>pyside6</code>相关依赖：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>pip install pyside6
+</span></span><span style="display:flex;"><span>pip install qt-material
+</span></span></code></pre></div><h3 id="pyside6基础知识">Pyside6基础知识<a hidden class="anchor" aria-hidden="true" href="#pyside6基础知识">#</a></h3>
+<h4 id="窗口框组件">窗口框/组件<a hidden class="anchor" aria-hidden="true" href="#窗口框组件">#</a></h4>
+<p>pyside6的窗口框为Widgets, 是可视化的用户界面组件。一般我们都是用Widges类创建一个主界面，然后在其基础上添加组件，创建代码如下：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>w <span style="color:#f92672">=</span> QWidget()
+</span></span><span style="display:flex;"><span> <span style="color:#75715e"># 设置窗口标题</span>
+</span></span><span style="display:flex;"><span>w<span style="color:#f92672">.</span>setWindowTitle(<span style="color:#e6db74">&#34;PySide6程序&#34;</span>)
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 展示窗口</span>
+</span></span><span style="display:flex;"><span>w<span style="color:#f92672">.</span>show()
+</span></span></code></pre></div><p><strong>基本组件：</strong></p>
+<p>都位于位于 <code>PySide6.QtWidgets</code> 包内</p>
+<ul>
+<li>按钮： <code>QPushButton</code>，多用于点击后触发事件</li>
+<li>标签：<code>QLabel</code>，显示文字、图片、视频</li>
+<li>输入框： <code>QLineEdit</code>，输入文字</li>
+<li>下拉框：<code>QComboBox</code> ，下拉选择某个选项</li>
+</ul>
+<p>完整演示程序如下：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">import</span> sys
+</span></span><span style="display:flex;"><span><span style="color:#f92672">from</span> PySide6.QtWidgets <span style="color:#f92672">import</span> QApplication, QWidget, QLabel, QPushButton, QLineEdit, QComboBox
+</span></span><span style="display:flex;"><span><span style="color:#f92672">from</span> qt_material <span style="color:#f92672">import</span> apply_stylesheet
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 创建主窗口类</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">MainWindow</span>(QWidget):
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">def</span> __init__(self):
+</span></span><span style="display:flex;"><span>        super()<span style="color:#f92672">.</span>__init__()
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e"># 设置窗口标题</span>
+</span></span><span style="display:flex;"><span>        self<span style="color:#f92672">.</span>setWindowTitle(<span style="color:#e6db74">&#34;PySide6程序&#34;</span>)
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e"># 窗口的大小</span>
+</span></span><span style="display:flex;"><span>        self<span style="color:#f92672">.</span>resize(<span style="color:#ae81ff">500</span>, <span style="color:#ae81ff">300</span>)
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e"># 添加组件,需要在构造时添加父组件，即self</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e"># 文本</span>
+</span></span><span style="display:flex;"><span>        self<span style="color:#f92672">.</span>label <span style="color:#f92672">=</span> QLabel(<span style="color:#e6db74">&#34;账号&#34;</span>, self)
+</span></span><span style="display:flex;"><span>        self<span style="color:#f92672">.</span>label<span style="color:#f92672">.</span>setGeometry(<span style="color:#ae81ff">50</span>, <span style="color:#ae81ff">50</span>, <span style="color:#ae81ff">50</span>, <span style="color:#ae81ff">50</span>)
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e"># 文本框</span>
+</span></span><span style="display:flex;"><span>        self<span style="color:#f92672">.</span>edit <span style="color:#f92672">=</span> QLineEdit(self)
+</span></span><span style="display:flex;"><span>        self<span style="color:#f92672">.</span>edit<span style="color:#f92672">.</span>setPlaceholderText(<span style="color:#e6db74">&#34;请输入账号&#34;</span>)
+</span></span><span style="display:flex;"><span>        self<span style="color:#f92672">.</span>edit<span style="color:#f92672">.</span>setGeometry(<span style="color:#ae81ff">110</span>, <span style="color:#ae81ff">50</span>, <span style="color:#ae81ff">150</span>, <span style="color:#ae81ff">50</span>)
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e"># 下拉框</span>
+</span></span><span style="display:flex;"><span>        self<span style="color:#f92672">.</span>combo_box <span style="color:#f92672">=</span> QComboBox(self)
+</span></span><span style="display:flex;"><span>        self<span style="color:#f92672">.</span>combo_box<span style="color:#f92672">.</span>addItem(<span style="color:#e6db74">&#34;男&#34;</span>)
+</span></span><span style="display:flex;"><span>        self<span style="color:#f92672">.</span>combo_box<span style="color:#f92672">.</span>addItem(<span style="color:#e6db74">&#34;女&#34;</span>)
+</span></span><span style="display:flex;"><span>        self<span style="color:#f92672">.</span>combo_box<span style="color:#f92672">.</span>setGeometry(<span style="color:#ae81ff">290</span>, <span style="color:#ae81ff">50</span>, <span style="color:#ae81ff">50</span>, <span style="color:#ae81ff">50</span>)
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e"># 按钮</span>
+</span></span><span style="display:flex;"><span>        self<span style="color:#f92672">.</span>btn <span style="color:#f92672">=</span> QPushButton(<span style="color:#e6db74">&#34;注册&#34;</span>, self)
+</span></span><span style="display:flex;"><span>        self<span style="color:#f92672">.</span>btn<span style="color:#f92672">.</span>setGeometry(<span style="color:#ae81ff">360</span>, <span style="color:#ae81ff">50</span>, <span style="color:#ae81ff">70</span>, <span style="color:#ae81ff">50</span>)
+</span></span><span style="display:flex;"><span>        
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">if</span> __name__ <span style="color:#f92672">==</span> <span style="color:#e6db74">&#39;__main__&#39;</span>:
+</span></span><span style="display:flex;"><span>    app <span style="color:#f92672">=</span> QApplication(sys<span style="color:#f92672">.</span>argv)
+</span></span><span style="display:flex;"><span>    w <span style="color:#f92672">=</span> MainWindow()
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e"># 展示窗口</span>
+</span></span><span style="display:flex;"><span>    w<span style="color:#f92672">.</span>show()
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e"># 设置主题色为蓝色</span>
+</span></span><span style="display:flex;"><span>    apply_stylesheet(app, theme<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;light_blue_500.xml&#39;</span>)
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e"># 程序进行循环等待状态，用于持久显示</span>
+</span></span><span style="display:flex;"><span>    sys<span style="color:#f92672">.</span>exit(app<span style="color:#f92672">.</span>exec())
+</span></span></code></pre></div><img src="image-20230526111645744.png" alt="image-20230526111645744" style="zoom:47%;" />
+<h4 id="信号与槽">信号与槽<a hidden class="anchor" aria-hidden="true" href="#信号与槽">#</a></h4>
+<p>其实就是点击按钮后，发出<code>信号</code>，对应执行的函数称之为<code>槽</code>。上述程序，我们希望在点击注册后，控制台输出账号，代码如下：</p>
+<p>==注意==：绑定槽函数时，不用加 &ldquo;()&rdquo;</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#75715e"># 首先，在init中添加绑定函数</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 注意：这里没有()</span>
+</span></span><span style="display:flex;"><span>self<span style="color:#f92672">.</span>btn<span style="color:#f92672">.</span>clicked<span style="color:#f92672">.</span>connect(self<span style="color:#f92672">.</span>click_my_btn)
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 在主窗口类中，添加click_my_btn函数</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">click_my_btn</span>(self):
+</span></span><span style="display:flex;"><span>    print(self<span style="color:#f92672">.</span>edit<span style="color:#f92672">.</span>text())
+</span></span></code></pre></div><img src="image-20230526170640724.png" alt="image-20230526170640724" style="zoom:50%;" />
+<h4 id="布局">布局<a hidden class="anchor" aria-hidden="true" href="#布局">#</a></h4>
+<p>上面程序中我们使用<code>setGeometry</code>函数设置组件的位置，但这种方法会导致我们在放大/缩小窗口时组件位置错乱，因此我们使用布局，使界面能自适应窗口大小。</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">from</span> PySide6.QtWidgets <span style="color:#f92672">import</span> QHBoxLayout, QVBoxLayout, QGridLayout
+</span></span></code></pre></div><p>其中<code>QHBoxLayout</code>为水平布局， <code>QVBoxLayout</code>是垂直布局，<code>QGridLayout</code>为栅格布局，可互相叠加嵌套，下面来看一个例子：</p>
+<img src="image-20230526164622892.png" alt="image-20230526164622892" style="zoom:35%;" />
+<p>frame是<code>QFrame</code>类的实例，可以理解成一个小窗口，方便对同一frame中的组件进行样式、布局的统一管理。</p>
+<p>上图中，frame 1-3 内为水平布局，frame 4为栅格布局，frame 1-4 组合一起为垂直布局，忽略具体的组件，代码实现如下：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#75715e"># 水平布局，传入参数为父组件，即在该组件中应用布局</span>
+</span></span><span style="display:flex;"><span>self<span style="color:#f92672">.</span>hLayout_1 <span style="color:#f92672">=</span> QtWidgets<span style="color:#f92672">.</span>QHBoxLayout(self<span style="color:#f92672">.</span>frame_1)
+</span></span><span style="display:flex;"><span>self<span style="color:#f92672">.</span>hLayout_1<span style="color:#f92672">.</span>addWidget(菜单栏)  <span style="color:#75715e"># 添加子组件，此处为伪代码</span>
+</span></span><span style="display:flex;"><span>self<span style="color:#f92672">.</span>hLayout_1<span style="color:#f92672">.</span>addWidget(历史数据)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 栅格布局，addWidget（子组件，起始行，起始列，占的行数，占的列数）</span>
+</span></span><span style="display:flex;"><span>self<span style="color:#f92672">.</span>gLayout_4 <span style="color:#f92672">=</span> QtWidgets<span style="color:#f92672">.</span>QGridLayout(self<span style="color:#f92672">.</span>frame_4)
+</span></span><span style="display:flex;"><span>self<span style="color:#f92672">.</span>gLayout_4<span style="color:#f92672">.</span>addWidget(<span style="color:#f92672">%</span>, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">1</span>)
+</span></span><span style="display:flex;"><span>self<span style="color:#f92672">.</span>gLayout_4<span style="color:#f92672">.</span>addWidget(CE, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">1</span>)
+</span></span><span style="display:flex;"><span>self<span style="color:#f92672">.</span>gLayout_4<span style="color:#f92672">.</span>addWidget(C, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">2</span>, <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">1</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 垂直布局</span>
+</span></span><span style="display:flex;"><span>self<span style="color:#f92672">.</span>vLayout <span style="color:#f92672">=</span> QtWidgets<span style="color:#f92672">.</span>QVBoxLayout(self)
+</span></span><span style="display:flex;"><span>self<span style="color:#f92672">.</span>vLayout<span style="color:#f92672">.</span>addWidget(self<span style="color:#f92672">.</span>frame_1)
+</span></span><span style="display:flex;"><span>self<span style="color:#f92672">.</span>vLayout<span style="color:#f92672">.</span>addWidget(self<span style="color:#f92672">.</span>frame_2)
+</span></span><span style="display:flex;"><span>self<span style="color:#f92672">.</span>vLayout<span style="color:#f92672">.</span>addWidget(self<span style="color:#f92672">.</span>frame_3)
+</span></span><span style="display:flex;"><span>self<span style="color:#f92672">.</span>vLayout<span style="color:#f92672">.</span>addWidget(self<span style="color:#f92672">.</span>frame_4)
+</span></span></code></pre></div><h4 id="无边框化">无边框化<a hidden class="anchor" aria-hidden="true" href="#无边框化">#</a></h4>
+<p>这一步是为了程序更加美观，如果没有需求可以跳过。</p>
+<p>首先通过属性设置，将原有边框去除：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">from</span> PySide6.QtCore <span style="color:#f92672">import</span> Qt
+</span></span><span style="display:flex;"><span>self<span style="color:#f92672">.</span>setWindowFlag(Qt<span style="color:#f92672">.</span>FramelessWindowHint)
+</span></span><span style="display:flex;"><span>self<span style="color:#f92672">.</span>setAttribute(Qt<span style="color:#f92672">.</span>WA_TranslucentBackground)  <span style="color:#75715e"># 背景设置半透明</span>
+</span></span></code></pre></div><p>接着添加移动窗口功能：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#75715e"># 重写QWidge中方法</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># ---移动功能---</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">mousePressEvent</span>(self, event):  <span style="color:#75715e"># 鼠标左键按下时获取鼠标坐标</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> event<span style="color:#f92672">.</span>button() <span style="color:#f92672">==</span> Qt<span style="color:#f92672">.</span>LeftButton:
+</span></span><span style="display:flex;"><span>        self<span style="color:#f92672">.</span>_move_drag <span style="color:#f92672">=</span> <span style="color:#66d9ef">True</span>
+</span></span><span style="display:flex;"><span>        self<span style="color:#f92672">.</span>m_Position <span style="color:#f92672">=</span> event<span style="color:#f92672">.</span>globalPosition()<span style="color:#f92672">.</span>toPoint() <span style="color:#f92672">-</span> self<span style="color:#f92672">.</span>pos()
+</span></span><span style="display:flex;"><span>        event<span style="color:#f92672">.</span>accept()
+</span></span><span style="display:flex;"><span>        self<span style="color:#f92672">.</span>setCursor(QtGui<span style="color:#f92672">.</span>QCursor(QtCore<span style="color:#f92672">.</span>Qt<span style="color:#f92672">.</span>OpenHandCursor))
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">mouseMoveEvent</span>(self, QMouseEvent):  <span style="color:#75715e"># 鼠标在按下左键的情况下移动时,根据坐标移动界面</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> Qt<span style="color:#f92672">.</span>LeftButton <span style="color:#f92672">and</span> self<span style="color:#f92672">.</span>_move_drag:
+</span></span><span style="display:flex;"><span>        self<span style="color:#f92672">.</span>move(QMouseEvent<span style="color:#f92672">.</span>globalPosition()<span style="color:#f92672">.</span>toPoint() <span style="color:#f92672">-</span> self<span style="color:#f92672">.</span>m_Position)
+</span></span><span style="display:flex;"><span>        QMouseEvent<span style="color:#f92672">.</span>accept()
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">mouseReleaseEvent</span>(self, QMouseEvent):  <span style="color:#75715e"># 鼠标按键释放时,取消移动</span>
+</span></span><span style="display:flex;"><span>    self<span style="color:#f92672">.</span>_move_drag <span style="color:#f92672">=</span> <span style="color:#66d9ef">False</span>
+</span></span><span style="display:flex;"><span>    self<span style="color:#f92672">.</span>setCursor(QtGui<span style="color:#f92672">.</span>QCursor(QtCore<span style="color:#f92672">.</span>Qt<span style="color:#f92672">.</span>ArrowCursor))
+</span></span></code></pre></div><p>最后，添加最大化、最小化和关闭按钮</p>
+<ul>
+<li>
+<p>定义标题栏类，包括三个按钮及其图标。直接用我写的即可，已设置好样式。</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">from</span> PySide6 <span style="color:#f92672">import</span> QtCore
+</span></span><span style="display:flex;"><span><span style="color:#f92672">from</span> PySide6.QtGui <span style="color:#f92672">import</span> QIcon
+</span></span><span style="display:flex;"><span><span style="color:#f92672">from</span> PySide6.QtWidgets <span style="color:#f92672">import</span> QFrame, QHBoxLayout, QPushButton
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">CustomTitleBar</span>(QFrame):
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">def</span> __init__(self, parent):
+</span></span><span style="display:flex;"><span>        super()<span style="color:#f92672">.</span>__init__(parent)
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e"># 设置样式</span>
+</span></span><span style="display:flex;"><span>        self<span style="color:#f92672">.</span>setStyleSheet(<span style="color:#e6db74">&#39;&#39;&#39;
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">                            QFrame{
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">                               background-color: rgb(171, 176, 181);
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">                               border-top-left-radius:10px;
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">                               border-top-right-radius:10px;
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">                               border-bottom-left-radius:0px;
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">                               border-bottom-right-radius:0px;
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">                            }
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">                            QPushButton{
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">                                border: none;
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">                                background-color: rgb(171, 176, 181);
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">                            }
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">                            QPushButton:pressed{
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">                                padding-left:3px;
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">                                padding-top:3px;
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">                            }
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">                            QPushButton:hover{
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">                                padding-bottom:3px;
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">                            }
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">                           &#39;&#39;&#39;</span>)
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e"># 设置布局</span>
+</span></span><span style="display:flex;"><span>        layout <span style="color:#f92672">=</span> QHBoxLayout(self)
+</span></span><span style="display:flex;"><span>        layout<span style="color:#f92672">.</span>setSpacing(<span style="color:#ae81ff">0</span>)
+</span></span><span style="display:flex;"><span>        layout<span style="color:#f92672">.</span>setAlignment(QtCore<span style="color:#f92672">.</span>Qt<span style="color:#f92672">.</span>AlignRight)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e"># 最小化按钮</span>
+</span></span><span style="display:flex;"><span>        btn_minimize <span style="color:#f92672">=</span> QPushButton(self)
+</span></span><span style="display:flex;"><span>        btn_minimize<span style="color:#f92672">.</span>setIcon(QIcon(<span style="color:#e6db74">&#39;resource/icons/minus.png&#39;</span>))
+</span></span><span style="display:flex;"><span>        btn_minimize<span style="color:#f92672">.</span>clicked<span style="color:#f92672">.</span>connect(self<span style="color:#f92672">.</span>parent()<span style="color:#f92672">.</span>showMinimized)
+</span></span><span style="display:flex;"><span>        layout<span style="color:#f92672">.</span>addWidget(btn_minimize)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e"># 最大化/恢复按钮</span>
+</span></span><span style="display:flex;"><span>        self<span style="color:#f92672">.</span>btn_maximize_restore <span style="color:#f92672">=</span> QPushButton(self)
+</span></span><span style="display:flex;"><span>        self<span style="color:#f92672">.</span>btn_maximize_restore<span style="color:#f92672">.</span>setIcon(QIcon(<span style="color:#e6db74">&#39;resource/icons/maxmize.png&#39;</span>))
+</span></span><span style="display:flex;"><span>        layout<span style="color:#f92672">.</span>addWidget(self<span style="color:#f92672">.</span>btn_maximize_restore)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e"># 关闭按钮</span>
+</span></span><span style="display:flex;"><span>        btn_close <span style="color:#f92672">=</span> QPushButton(self)
+</span></span><span style="display:flex;"><span>        btn_close<span style="color:#f92672">.</span>setIcon(QIcon(<span style="color:#e6db74">&#39;resource/icons/close.png&#39;</span>))
+</span></span><span style="display:flex;"><span>        btn_close<span style="color:#f92672">.</span>clicked<span style="color:#f92672">.</span>connect(self<span style="color:#f92672">.</span>parent()<span style="color:#f92672">.</span>close)
+</span></span><span style="display:flex;"><span>        layout<span style="color:#f92672">.</span>addWidget(btn_close)
+</span></span></code></pre></div></li>
+<li>
+<p>在主窗口类中引用<code>CustomTitleBar</code>，创建对象并绑定槽函数，用于窗口的放大、缩小。</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#75715e"># 添加状态栏</span>
+</span></span><span style="display:flex;"><span>self<span style="color:#f92672">.</span>custom_title_bar <span style="color:#f92672">=</span> CustomTitleBar(self)
+</span></span><span style="display:flex;"><span>self<span style="color:#f92672">.</span>custom_title_bar<span style="color:#f92672">.</span>btn_maximize_restore<span style="color:#f92672">.</span>clicked<span style="color:#f92672">.</span>connect(self<span style="color:#f92672">.</span>resize_win)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 槽函数</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">resize_win</span>(self):
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> self<span style="color:#f92672">.</span>isMaximized():
+</span></span><span style="display:flex;"><span>        self<span style="color:#f92672">.</span>showNormal()
+</span></span><span style="display:flex;"><span>        self<span style="color:#f92672">.</span>custom_title_bar<span style="color:#f92672">.</span>btn_maximize_restore<span style="color:#f92672">.</span>setIcon(
+</span></span><span style="display:flex;"><span>            QtGui<span style="color:#f92672">.</span>QIcon(<span style="color:#e6db74">&#39;resource/icons/maxmize.png&#39;</span>))
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">else</span>:
+</span></span><span style="display:flex;"><span>        self<span style="color:#f92672">.</span>showMaximized()
+</span></span><span style="display:flex;"><span>        self<span style="color:#f92672">.</span>custom_title_bar<span style="color:#f92672">.</span>btn_maximize_restore<span style="color:#f92672">.</span>setIcon(
+</span></span><span style="display:flex;"><span>            QtGui<span style="color:#f92672">.</span>QIcon(<span style="color:#e6db74">&#39;resource/icons/minisize.png&#39;</span>))
+</span></span></code></pre></div></li>
+<li>
+<p>其中，图标可以在<a href="https://www.iconfont.cn/">阿里矢量图标库</a>下载，直接搜索放大、缩小等，下载后的 png 图片存到对应文件夹即可。</p>
+</li>
+</ul>
+<p>改进后的程序界面如下：</p>
+<img src="image-20230526202959592.png" alt="image-20230526202959592" style="zoom:40%;" />
+<h4 id="侧边栏">侧边栏<a hidden class="anchor" aria-hidden="true" href="#侧边栏">#</a></h4>
+<p>侧边栏用于显示不同板块，在点击后切换到指定的页面。主要包括左侧的侧边栏以及右侧的页面。</p>
+<p>侧边栏类可以直接用我写的，已设置好样式：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">SideBar</span>(QFrame):
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">def</span> __init__(self, parent):
+</span></span><span style="display:flex;"><span>        super()<span style="color:#f92672">.</span>__init__(parent)
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e"># 设置样式</span>
+</span></span><span style="display:flex;"><span>        self<span style="color:#f92672">.</span>setStyleSheet(<span style="color:#e6db74">&#39;&#39;&#39;
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">                            QFrame{
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">                               background-color: rgb(221, 223, 226);
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">                            }
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">                            QListWidget {
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">                                color: Black;
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">                                background-color: rgb(221, 223, 226);
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">                            }
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">                            QListWidget::Item:hover {
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">                            background: rgb(233, 234, 236);
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">                            border-left: 3px solid rgb(76, 95, 107);
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">                            }
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">                            QListWidget::Item:selected {
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">                                background: rgb(233, 234, 236);
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">                                border-left: 3px solid rgb(76, 95, 107);
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">                            }
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">                            &#39;&#39;&#39;</span>)
+</span></span><span style="display:flex;"><span>        self<span style="color:#f92672">.</span>list_widget <span style="color:#f92672">=</span> QListWidget(self)
+</span></span><span style="display:flex;"><span>        self<span style="color:#f92672">.</span>list_widget<span style="color:#f92672">.</span>setFixedWidth(<span style="color:#ae81ff">150</span>)
+</span></span><span style="display:flex;"><span>        self<span style="color:#f92672">.</span>list_widget<span style="color:#f92672">.</span>setSpacing(<span style="color:#ae81ff">5</span>)
+</span></span><span style="display:flex;"><span>        layout <span style="color:#f92672">=</span> QVBoxLayout(self)
+</span></span><span style="display:flex;"><span>        layout<span style="color:#f92672">.</span>setSpacing(<span style="color:#ae81ff">0</span>)
+</span></span><span style="display:flex;"><span>        layout<span style="color:#f92672">.</span>setContentsMargins(<span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">0</span>)
+</span></span><span style="display:flex;"><span>        layout<span style="color:#f92672">.</span>addWidget(self<span style="color:#f92672">.</span>list_widget)
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e"># 添加item</span>
+</span></span><span style="display:flex;"><span>        img_icon <span style="color:#f92672">=</span> QIcon(<span style="color:#e6db74">&#39;resource/icons/img_improve.png&#39;</span>)
+</span></span><span style="display:flex;"><span>        self<span style="color:#f92672">.</span>img_item <span style="color:#f92672">=</span> QListWidgetItem(img_icon, <span style="color:#e6db74">&#39;视觉提升&#39;</span>, self<span style="color:#f92672">.</span>list_widget)
+</span></span><span style="display:flex;"><span>        self<span style="color:#f92672">.</span>img_item<span style="color:#f92672">.</span>setSizeHint(QtCore<span style="color:#f92672">.</span>QSize(<span style="color:#ae81ff">10</span>, <span style="color:#ae81ff">60</span>))
+</span></span><span style="display:flex;"><span>        self<span style="color:#f92672">.</span>img_item<span style="color:#f92672">.</span>setTextAlignment(QtCore<span style="color:#f92672">.</span>Qt<span style="color:#f92672">.</span>AlignCenter)
+</span></span><span style="display:flex;"><span>        self<span style="color:#f92672">.</span>img_item<span style="color:#f92672">.</span>setSelected(<span style="color:#66d9ef">True</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        red_icon <span style="color:#f92672">=</span> QIcon(<span style="color:#e6db74">&#39;resource/icons/red.png&#39;</span>)
+</span></span><span style="display:flex;"><span>        self<span style="color:#f92672">.</span>red_item <span style="color:#f92672">=</span> QListWidgetItem(red_icon, <span style="color:#e6db74">&#39;红外融合&#39;</span>, self<span style="color:#f92672">.</span>list_widget)
+</span></span><span style="display:flex;"><span>        self<span style="color:#f92672">.</span>red_item<span style="color:#f92672">.</span>setSizeHint(QtCore<span style="color:#f92672">.</span>QSize(<span style="color:#ae81ff">10</span>, <span style="color:#ae81ff">60</span>))
+</span></span><span style="display:flex;"><span>        self<span style="color:#f92672">.</span>red_item<span style="color:#f92672">.</span>setTextAlignment(QtCore<span style="color:#f92672">.</span>Qt<span style="color:#f92672">.</span>AlignCenter)
+</span></span></code></pre></div><p>接着，添加右侧页面，我们使用<code>QStackedWidget</code>，并在其中添加多个不同的Widget对应不同的组件：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#75715e"># 添加右侧页面</span>
+</span></span><span style="display:flex;"><span>    self<span style="color:#f92672">.</span>stack_widget <span style="color:#f92672">=</span> QtWidgets<span style="color:#f92672">.</span>QStackedWidget(self<span style="color:#f92672">.</span>frame_1)
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e"># 添加窗口部件</span>
+</span></span><span style="display:flex;"><span>    self<span style="color:#f92672">.</span>widget_1 <span style="color:#f92672">=</span> QWidget()
+</span></span><span style="display:flex;"><span>    self<span style="color:#f92672">.</span>label_1 <span style="color:#f92672">=</span> QLabel(<span style="color:#e6db74">&#34;视觉提升页面&#34;</span>)
+</span></span><span style="display:flex;"><span>    layout_1 <span style="color:#f92672">=</span> QtWidgets<span style="color:#f92672">.</span>QVBoxLayout(self<span style="color:#f92672">.</span>widget_1)
+</span></span><span style="display:flex;"><span>    layout_1<span style="color:#f92672">.</span>addWidget(self<span style="color:#f92672">.</span>label_1)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    self<span style="color:#f92672">.</span>widget_2 <span style="color:#f92672">=</span> QWidget()
+</span></span><span style="display:flex;"><span>    self<span style="color:#f92672">.</span>label_2 <span style="color:#f92672">=</span> QLabel(<span style="color:#e6db74">&#34;红外融合页面&#34;</span>)
+</span></span><span style="display:flex;"><span>    layout_2 <span style="color:#f92672">=</span> QtWidgets<span style="color:#f92672">.</span>QVBoxLayout(self<span style="color:#f92672">.</span>widget_2)
+</span></span><span style="display:flex;"><span>    layout_2<span style="color:#f92672">.</span>addWidget(self<span style="color:#f92672">.</span>label_2)
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e"># 添加各个widget到stack_widget中</span>
+</span></span><span style="display:flex;"><span>    self<span style="color:#f92672">.</span>stack_widget<span style="color:#f92672">.</span>addWidget(self<span style="color:#f92672">.</span>widget_1)
+</span></span><span style="display:flex;"><span>    self<span style="color:#f92672">.</span>stack_widget<span style="color:#f92672">.</span>addWidget(self<span style="color:#f92672">.</span>widget_2)
+</span></span><span style="display:flex;"><span>    self<span style="color:#f92672">.</span>stack_widget<span style="color:#f92672">.</span>setCurrentIndex(<span style="color:#ae81ff">0</span>)
+</span></span></code></pre></div><p>通过<code>setCurrentIndex</code>方法设置页面，0为widget_1，1为widget_2。最后，添加槽函数，在点击左侧侧边栏按钮时切换页面。</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#75715e"># 主界面类中，引用侧边栏，并绑定槽函数</span>
+</span></span><span style="display:flex;"><span>self<span style="color:#f92672">.</span>side_bar <span style="color:#f92672">=</span> SideBar(self<span style="color:#f92672">.</span>frame_1)
+</span></span><span style="display:flex;"><span>self<span style="color:#f92672">.</span>side_bar<span style="color:#f92672">.</span>list_widget<span style="color:#f92672">.</span>itemClicked<span style="color:#f92672">.</span>connect(self<span style="color:#f92672">.</span>item_clicked)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#槽函数</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">item_clicked</span>(self):
+</span></span><span style="display:flex;"><span>    item <span style="color:#f92672">=</span> self<span style="color:#f92672">.</span>side_bar<span style="color:#f92672">.</span>list_widget<span style="color:#f92672">.</span>selectedItems()[<span style="color:#ae81ff">0</span>]
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> item<span style="color:#f92672">.</span>text() <span style="color:#f92672">==</span> <span style="color:#e6db74">&#39;视觉提升&#39;</span>:
+</span></span><span style="display:flex;"><span>        self<span style="color:#f92672">.</span>stack_widget<span style="color:#f92672">.</span>setCurrentIndex(<span style="color:#ae81ff">0</span>)
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">elif</span> item<span style="color:#f92672">.</span>text() <span style="color:#f92672">==</span> <span style="color:#e6db74">&#39;红外融合&#39;</span>:
+</span></span><span style="display:flex;"><span>        self<span style="color:#f92672">.</span>stack_widget<span style="color:#f92672">.</span>setCurrentIndex(<span style="color:#ae81ff">1</span>)
+</span></span></code></pre></div><p>效果如下：</p>
+<img src="image-20230527123201598.png" alt="image-20230527123201598" style="zoom:35%;" />
+<p>完整代码如下，其中<code>from components import CustomTitleBar, SideBar</code>的类上面代码已给出，直接创建文件复制进去即可：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">import</span> sys
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">from</span> PySide6 <span style="color:#f92672">import</span> QtGui, QtCore, QtWidgets
+</span></span><span style="display:flex;"><span><span style="color:#f92672">from</span> PySide6.QtWidgets <span style="color:#f92672">import</span> QApplication, QWidget, QLabel
+</span></span><span style="display:flex;"><span><span style="color:#f92672">from</span> qt_material <span style="color:#f92672">import</span> apply_stylesheet
+</span></span><span style="display:flex;"><span><span style="color:#f92672">from</span> PySide6.QtCore <span style="color:#f92672">import</span> Qt
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">from</span> components <span style="color:#f92672">import</span> CustomTitleBar, SideBar
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">MainWindow</span>(QWidget):
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">def</span> __init__(self):
+</span></span><span style="display:flex;"><span>        super()<span style="color:#f92672">.</span>__init__()
+</span></span><span style="display:flex;"><span>        self<span style="color:#f92672">.</span>init_ui()
+</span></span><span style="display:flex;"><span>        self<span style="color:#f92672">.</span>_move_drag <span style="color:#f92672">=</span> <span style="color:#66d9ef">False</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">init_ui</span>(self):
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e"># 设置窗口标题、图标</span>
+</span></span><span style="display:flex;"><span>        self<span style="color:#f92672">.</span>setWindowTitle(<span style="color:#e6db74">&#34;视觉提升&#34;</span>)
+</span></span><span style="display:flex;"><span>        self<span style="color:#f92672">.</span>setWindowIcon(QtGui<span style="color:#f92672">.</span>QIcon(<span style="color:#e6db74">&#39;resource/icons/appicon.png&#39;</span>))
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e"># 创建窗口类</span>
+</span></span><span style="display:flex;"><span>        self<span style="color:#f92672">.</span>frame <span style="color:#f92672">=</span> QtWidgets<span style="color:#f92672">.</span>QFrame(self)
+</span></span><span style="display:flex;"><span>        self<span style="color:#f92672">.</span>frame<span style="color:#f92672">.</span>setObjectName(<span style="color:#e6db74">&#34;frame&#34;</span>)
+</span></span><span style="display:flex;"><span>        self<span style="color:#f92672">.</span>frame<span style="color:#f92672">.</span>setStyleSheet(<span style="color:#e6db74">&#39;&#39;&#39;
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">                                    QFrame { border: 0px; }
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">                                    #frame{
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">                                         background-color: rgb(242, 242, 242);
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">                                         border-radius:10px;
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">                                    }
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">                                 &#39;&#39;&#39;</span>)
+</span></span><span style="display:flex;"><span>        self<span style="color:#f92672">.</span>hLayout <span style="color:#f92672">=</span> QtWidgets<span style="color:#f92672">.</span>QHBoxLayout(self)
+</span></span><span style="display:flex;"><span>        self<span style="color:#f92672">.</span>hLayout<span style="color:#f92672">.</span>addWidget(self<span style="color:#f92672">.</span>frame)
+</span></span><span style="display:flex;"><span>        self<span style="color:#f92672">.</span>hLayout<span style="color:#f92672">.</span>setContentsMargins(<span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">0</span>)  <span style="color:#75715e"># 使frame完全填充界面</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e"># 窗口的大小</span>
+</span></span><span style="display:flex;"><span>        self<span style="color:#f92672">.</span>resize(<span style="color:#ae81ff">800</span>, <span style="color:#ae81ff">600</span>)
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e"># 添加状态栏</span>
+</span></span><span style="display:flex;"><span>        self<span style="color:#f92672">.</span>custom_title_bar <span style="color:#f92672">=</span> CustomTitleBar(self)
+</span></span><span style="display:flex;"><span>        self<span style="color:#f92672">.</span>custom_title_bar<span style="color:#f92672">.</span>btn_maximize_restore<span style="color:#f92672">.</span>clicked<span style="color:#f92672">.</span>connect(self<span style="color:#f92672">.</span>resize_win)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e"># 状态栏下半部分的窗口，frame_1</span>
+</span></span><span style="display:flex;"><span>        self<span style="color:#f92672">.</span>frame_1 <span style="color:#f92672">=</span> QtWidgets<span style="color:#f92672">.</span>QFrame(self<span style="color:#f92672">.</span>frame)
+</span></span><span style="display:flex;"><span>        self<span style="color:#f92672">.</span>frame_1<span style="color:#f92672">.</span>setObjectName(<span style="color:#e6db74">&#34;frame_1&#34;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e"># 添加侧边栏</span>
+</span></span><span style="display:flex;"><span>        self<span style="color:#f92672">.</span>side_bar <span style="color:#f92672">=</span> SideBar(self<span style="color:#f92672">.</span>frame_1)
+</span></span><span style="display:flex;"><span>        self<span style="color:#f92672">.</span>side_bar<span style="color:#f92672">.</span>list_widget<span style="color:#f92672">.</span>itemClicked<span style="color:#f92672">.</span>connect(self<span style="color:#f92672">.</span>item_clicked)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e"># 添加右侧页面</span>
+</span></span><span style="display:flex;"><span>        self<span style="color:#f92672">.</span>stack_widget <span style="color:#f92672">=</span> QtWidgets<span style="color:#f92672">.</span>QStackedWidget(self<span style="color:#f92672">.</span>frame_1)
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e"># 添加窗口部件</span>
+</span></span><span style="display:flex;"><span>        self<span style="color:#f92672">.</span>widget_1 <span style="color:#f92672">=</span> QWidget()
+</span></span><span style="display:flex;"><span>        self<span style="color:#f92672">.</span>label_1 <span style="color:#f92672">=</span> QLabel(<span style="color:#e6db74">&#34;视觉提升界面&#34;</span>)
+</span></span><span style="display:flex;"><span>        layout_1 <span style="color:#f92672">=</span> QtWidgets<span style="color:#f92672">.</span>QVBoxLayout(self<span style="color:#f92672">.</span>widget_1)
+</span></span><span style="display:flex;"><span>        layout_1<span style="color:#f92672">.</span>addWidget(self<span style="color:#f92672">.</span>label_1)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        self<span style="color:#f92672">.</span>widget_2 <span style="color:#f92672">=</span> QWidget()
+</span></span><span style="display:flex;"><span>        self<span style="color:#f92672">.</span>label_2 <span style="color:#f92672">=</span> QLabel(<span style="color:#e6db74">&#34;红外融合界面&#34;</span>)
+</span></span><span style="display:flex;"><span>        layout_2 <span style="color:#f92672">=</span> QtWidgets<span style="color:#f92672">.</span>QVBoxLayout(self<span style="color:#f92672">.</span>widget_2)
+</span></span><span style="display:flex;"><span>        layout_2<span style="color:#f92672">.</span>addWidget(self<span style="color:#f92672">.</span>label_2)
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e"># 添加各个widget到stack_widget中</span>
+</span></span><span style="display:flex;"><span>        self<span style="color:#f92672">.</span>stack_widget<span style="color:#f92672">.</span>addWidget(self<span style="color:#f92672">.</span>widget_1)
+</span></span><span style="display:flex;"><span>        self<span style="color:#f92672">.</span>stack_widget<span style="color:#f92672">.</span>addWidget(self<span style="color:#f92672">.</span>widget_2)
+</span></span><span style="display:flex;"><span>        self<span style="color:#f92672">.</span>stack_widget<span style="color:#f92672">.</span>setCurrentIndex(<span style="color:#ae81ff">0</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e"># 布局: frame中， 状态栏（custom_title_bar）与下面部分（frame_1）</span>
+</span></span><span style="display:flex;"><span>        self<span style="color:#f92672">.</span>gLayout <span style="color:#f92672">=</span> QtWidgets<span style="color:#f92672">.</span>QGridLayout(self<span style="color:#f92672">.</span>frame)
+</span></span><span style="display:flex;"><span>        self<span style="color:#f92672">.</span>gLayout<span style="color:#f92672">.</span>addWidget(self<span style="color:#f92672">.</span>custom_title_bar, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">1</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        self<span style="color:#f92672">.</span>gLayout<span style="color:#f92672">.</span>addWidget(self<span style="color:#f92672">.</span>frame_1, <span style="color:#ae81ff">2</span>, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">20</span>, <span style="color:#ae81ff">1</span>)
+</span></span><span style="display:flex;"><span>        self<span style="color:#f92672">.</span>gLayout<span style="color:#f92672">.</span>setSpacing(<span style="color:#ae81ff">0</span>)
+</span></span><span style="display:flex;"><span>        self<span style="color:#f92672">.</span>gLayout<span style="color:#f92672">.</span>setContentsMargins(<span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">0</span>)
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e"># 布局: frame_1中，侧边栏（side_bar）与右侧部分（stackedWidget）</span>
+</span></span><span style="display:flex;"><span>        self<span style="color:#f92672">.</span>gLayout_1 <span style="color:#f92672">=</span> QtWidgets<span style="color:#f92672">.</span>QGridLayout(self<span style="color:#f92672">.</span>frame_1)
+</span></span><span style="display:flex;"><span>        self<span style="color:#f92672">.</span>gLayout_1<span style="color:#f92672">.</span>addWidget(self<span style="color:#f92672">.</span>side_bar, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">2</span>)
+</span></span><span style="display:flex;"><span>        self<span style="color:#f92672">.</span>gLayout_1<span style="color:#f92672">.</span>addWidget(self<span style="color:#f92672">.</span>stack_widget, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">2</span>, <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">10</span>)
+</span></span><span style="display:flex;"><span>        self<span style="color:#f92672">.</span>gLayout_1<span style="color:#f92672">.</span>setSpacing(<span style="color:#ae81ff">0</span>)
+</span></span><span style="display:flex;"><span>        self<span style="color:#f92672">.</span>gLayout_1<span style="color:#f92672">.</span>setContentsMargins(<span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">0</span>)
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e"># # 去边框</span>
+</span></span><span style="display:flex;"><span>        self<span style="color:#f92672">.</span>setWindowFlag(Qt<span style="color:#f92672">.</span>FramelessWindowHint)
+</span></span><span style="display:flex;"><span>        self<span style="color:#f92672">.</span>setAttribute(Qt<span style="color:#f92672">.</span>WA_TranslucentBackground)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e"># ---移动功能---</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">mousePressEvent</span>(self, event):  <span style="color:#75715e"># 鼠标左键按下时获取鼠标坐标</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> event<span style="color:#f92672">.</span>button() <span style="color:#f92672">==</span> Qt<span style="color:#f92672">.</span>LeftButton:
+</span></span><span style="display:flex;"><span>            self<span style="color:#f92672">.</span>_move_drag <span style="color:#f92672">=</span> <span style="color:#66d9ef">True</span>
+</span></span><span style="display:flex;"><span>            self<span style="color:#f92672">.</span>m_Position <span style="color:#f92672">=</span> event<span style="color:#f92672">.</span>globalPosition()<span style="color:#f92672">.</span>toPoint() <span style="color:#f92672">-</span> self<span style="color:#f92672">.</span>pos()
+</span></span><span style="display:flex;"><span>            event<span style="color:#f92672">.</span>accept()
+</span></span><span style="display:flex;"><span>            self<span style="color:#f92672">.</span>setCursor(QtGui<span style="color:#f92672">.</span>QCursor(QtCore<span style="color:#f92672">.</span>Qt<span style="color:#f92672">.</span>OpenHandCursor))
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">mouseMoveEvent</span>(self, QMouseEvent):  <span style="color:#75715e"># 鼠标在按下左键的情况下移动时,根据坐标移动界面</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> Qt<span style="color:#f92672">.</span>LeftButton <span style="color:#f92672">and</span> self<span style="color:#f92672">.</span>_move_drag:
+</span></span><span style="display:flex;"><span>            self<span style="color:#f92672">.</span>move(QMouseEvent<span style="color:#f92672">.</span>globalPosition()<span style="color:#f92672">.</span>toPoint() <span style="color:#f92672">-</span> self<span style="color:#f92672">.</span>m_Position)
+</span></span><span style="display:flex;"><span>            QMouseEvent<span style="color:#f92672">.</span>accept()
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">mouseReleaseEvent</span>(self, QMouseEvent):  <span style="color:#75715e"># 鼠标按键释放时,取消移动</span>
+</span></span><span style="display:flex;"><span>        self<span style="color:#f92672">.</span>_move_drag <span style="color:#f92672">=</span> <span style="color:#66d9ef">False</span>
+</span></span><span style="display:flex;"><span>        self<span style="color:#f92672">.</span>setCursor(QtGui<span style="color:#f92672">.</span>QCursor(QtCore<span style="color:#f92672">.</span>Qt<span style="color:#f92672">.</span>ArrowCursor))
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">resize_win</span>(self):
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> self<span style="color:#f92672">.</span>isMaximized():
+</span></span><span style="display:flex;"><span>            self<span style="color:#f92672">.</span>showNormal()
+</span></span><span style="display:flex;"><span>            self<span style="color:#f92672">.</span>custom_title_bar<span style="color:#f92672">.</span>btn_maximize_restore<span style="color:#f92672">.</span>setIcon(
+</span></span><span style="display:flex;"><span>                QtGui<span style="color:#f92672">.</span>QIcon(<span style="color:#e6db74">&#39;resource/icons/maxmize.png&#39;</span>))
+</span></span><span style="display:flex;"><span>            self<span style="color:#f92672">.</span>side_bar<span style="color:#f92672">.</span>list_widget<span style="color:#f92672">.</span>setFixedWidth(<span style="color:#ae81ff">150</span>)
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">else</span>:
+</span></span><span style="display:flex;"><span>            self<span style="color:#f92672">.</span>showMaximized()
+</span></span><span style="display:flex;"><span>            self<span style="color:#f92672">.</span>custom_title_bar<span style="color:#f92672">.</span>btn_maximize_restore<span style="color:#f92672">.</span>setIcon(
+</span></span><span style="display:flex;"><span>                QtGui<span style="color:#f92672">.</span>QIcon(<span style="color:#e6db74">&#39;resource/icons/minisize.png&#39;</span>))
+</span></span><span style="display:flex;"><span>            self<span style="color:#f92672">.</span>side_bar<span style="color:#f92672">.</span>list_widget<span style="color:#f92672">.</span>setFixedWidth(<span style="color:#ae81ff">250</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">item_clicked</span>(self):
+</span></span><span style="display:flex;"><span>        item <span style="color:#f92672">=</span> self<span style="color:#f92672">.</span>side_bar<span style="color:#f92672">.</span>list_widget<span style="color:#f92672">.</span>selectedItems()[<span style="color:#ae81ff">0</span>]
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> item<span style="color:#f92672">.</span>text() <span style="color:#f92672">==</span> <span style="color:#e6db74">&#39;视觉提升&#39;</span>:
+</span></span><span style="display:flex;"><span>            self<span style="color:#f92672">.</span>stack_widget<span style="color:#f92672">.</span>setCurrentIndex(<span style="color:#ae81ff">0</span>)
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">elif</span> item<span style="color:#f92672">.</span>text() <span style="color:#f92672">==</span> <span style="color:#e6db74">&#39;红外融合&#39;</span>:
+</span></span><span style="display:flex;"><span>            self<span style="color:#f92672">.</span>stack_widget<span style="color:#f92672">.</span>setCurrentIndex(<span style="color:#ae81ff">1</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">if</span> __name__ <span style="color:#f92672">==</span> <span style="color:#e6db74">&#39;__main__&#39;</span>:
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    app <span style="color:#f92672">=</span> QApplication(sys<span style="color:#f92672">.</span>argv)
+</span></span><span style="display:flex;"><span>    w <span style="color:#f92672">=</span> MainWindow()
+</span></span><span style="display:flex;"><span>    w<span style="color:#f92672">.</span>show()
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e"># 设置主题色为蓝色</span>
+</span></span><span style="display:flex;"><span>    apply_stylesheet(app, theme<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;light_blue_500.xml&#39;</span>)
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e"># 程序进行循环等待状态，用于持久显示</span>
+</span></span><span style="display:flex;"><span>    sys<span style="color:#f92672">.</span>exit(app<span style="color:#f92672">.</span>exec())
+</span></span></code></pre></div><p>至此，我们已经完成了一个基础的程序模板。后续开发可以基于这个模板上进行改造。</p>
+<h3 id="结合模型实现可视化">结合模型实现可视化<a hidden class="anchor" aria-hidden="true" href="#结合模型实现可视化">#</a></h3>
+<p>接下来，我将以<kbd>视觉提升</kbd>板块为例，介绍如何通过界面进行模型推理及结果的输出，包括图片及视频的处理。</p>
+<h4 id="界面设计">界面设计<a hidden class="anchor" aria-hidden="true" href="#界面设计">#</a></h4>
+<p>首先，我们添加以下模块：</p>
+<ul>
+<li>
+<p>上部分：</p>
+<ul>
+<li>选择图片/视频<code>按钮</code>：点击后选择电脑上的某个文件</li>
+<li>选择效果<code>下拉框</code>：对给定的模型，选择要应用的效果，包括去雨、去雾、弱光等</li>
+<li>确定<code>按钮</code>：点击后，用选择的效果对图片进行优化</li>
+</ul>
+</li>
+<li>
+<p>中间部分</p>
+<ul>
+<li>图片<code>标签</code>：显示原图与处理后的图片，进行对比</li>
+</ul>
+</li>
+<li>
+<p>下部分：</p>
+<ul>
+<li>视频<code>控件</code>：3个按钮，对视频的暂停、前进和后退操作</li>
+</ul>
+</li>
+</ul>
+<p>界面如下：</p>
+<img src="image-20230530112124582.png" alt="image-20230530112124582" style="zoom:40%;" />
+<p>其中，上部分<code>frame_up</code>和下部分的<code>frame_down</code>直接添加组件+设置水平布局即可，代码如下：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#75715e"># 添加右侧页面</span>
+</span></span><span style="display:flex;"><span>self<span style="color:#f92672">.</span>stack_widget <span style="color:#f92672">=</span> QtWidgets<span style="color:#f92672">.</span>QStackedWidget(self<span style="color:#f92672">.</span>frame_1)
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 添加窗口部件</span>
+</span></span><span style="display:flex;"><span>self<span style="color:#f92672">.</span>widget_1 <span style="color:#f92672">=</span> QWidget()
+</span></span><span style="display:flex;"><span>self<span style="color:#f92672">.</span>frame_2 <span style="color:#f92672">=</span> QtWidgets<span style="color:#f92672">.</span>QFrame(self<span style="color:#f92672">.</span>widget_1)
+</span></span><span style="display:flex;"><span>self<span style="color:#f92672">.</span>hLayout_1 <span style="color:#f92672">=</span> QtWidgets<span style="color:#f92672">.</span>QHBoxLayout(self<span style="color:#f92672">.</span>widget_1)
+</span></span><span style="display:flex;"><span>self<span style="color:#f92672">.</span>hLayout_1<span style="color:#f92672">.</span>addWidget(self<span style="color:#f92672">.</span>frame_2)
+</span></span><span style="display:flex;"><span>self<span style="color:#f92672">.</span>hLayout_1<span style="color:#f92672">.</span>setContentsMargins(<span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">0</span>)
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 从上至下 3个frame</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 1. frame_up</span>
+</span></span><span style="display:flex;"><span>self<span style="color:#f92672">.</span>frame_up <span style="color:#f92672">=</span> QtWidgets<span style="color:#f92672">.</span>QFrame(self<span style="color:#f92672">.</span>frame_2)
+</span></span><span style="display:flex;"><span>self<span style="color:#f92672">.</span>choose_img_btn <span style="color:#f92672">=</span> QPushButton(<span style="color:#e6db74">&#34;选择图片/视频&#34;</span>, self<span style="color:#f92672">.</span>frame_up)
+</span></span><span style="display:flex;"><span>self<span style="color:#f92672">.</span>choose_img_btn<span style="color:#f92672">.</span>setMinimumSize(<span style="color:#ae81ff">150</span>, <span style="color:#ae81ff">50</span>)
+</span></span><span style="display:flex;"><span>self<span style="color:#f92672">.</span>pre_combobox_text <span style="color:#f92672">=</span> QLabel(<span style="color:#e6db74">&#34;效果：&#34;</span>, self<span style="color:#f92672">.</span>frame_up)
+</span></span><span style="display:flex;"><span>self<span style="color:#f92672">.</span>pre_combobox_text<span style="color:#f92672">.</span>setMinimumHeight(<span style="color:#ae81ff">50</span>)
+</span></span><span style="display:flex;"><span>self<span style="color:#f92672">.</span>combobox <span style="color:#f92672">=</span> QComboBox(self<span style="color:#f92672">.</span>frame_up)
+</span></span><span style="display:flex;"><span>self<span style="color:#f92672">.</span>combobox<span style="color:#f92672">.</span>addItem(<span style="color:#e6db74">&#34;去雨&#34;</span>)
+</span></span><span style="display:flex;"><span>self<span style="color:#f92672">.</span>combobox<span style="color:#f92672">.</span>addItem(<span style="color:#e6db74">&#34;去雾&#34;</span>)
+</span></span><span style="display:flex;"><span>self<span style="color:#f92672">.</span>combobox<span style="color:#f92672">.</span>addItem(<span style="color:#e6db74">&#34;弱光&#34;</span>)
+</span></span><span style="display:flex;"><span>self<span style="color:#f92672">.</span>combobox<span style="color:#f92672">.</span>setMinimumHeight(<span style="color:#ae81ff">50</span>)
+</span></span><span style="display:flex;"><span>self<span style="color:#f92672">.</span>admit_btn <span style="color:#f92672">=</span> QPushButton(<span style="color:#e6db74">&#34;确定&#34;</span>, self<span style="color:#f92672">.</span>frame_up)
+</span></span><span style="display:flex;"><span>self<span style="color:#f92672">.</span>admit_btn<span style="color:#f92672">.</span>setMinimumHeight(<span style="color:#ae81ff">50</span>)
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># frame_up的布局</span>
+</span></span><span style="display:flex;"><span>self<span style="color:#f92672">.</span>up_layout <span style="color:#f92672">=</span> QtWidgets<span style="color:#f92672">.</span>QHBoxLayout(self<span style="color:#f92672">.</span>frame_up)
+</span></span><span style="display:flex;"><span>self<span style="color:#f92672">.</span>up_layout<span style="color:#f92672">.</span>addStretch(<span style="color:#ae81ff">1</span>)
+</span></span><span style="display:flex;"><span>self<span style="color:#f92672">.</span>up_layout<span style="color:#f92672">.</span>addWidget(self<span style="color:#f92672">.</span>choose_img_btn)
+</span></span><span style="display:flex;"><span>self<span style="color:#f92672">.</span>up_layout<span style="color:#f92672">.</span>addStretch(<span style="color:#ae81ff">2</span>)
+</span></span><span style="display:flex;"><span>self<span style="color:#f92672">.</span>up_layout<span style="color:#f92672">.</span>addWidget(self<span style="color:#f92672">.</span>pre_combobox_text)
+</span></span><span style="display:flex;"><span>self<span style="color:#f92672">.</span>up_layout<span style="color:#f92672">.</span>addWidget(self<span style="color:#f92672">.</span>combobox)
+</span></span><span style="display:flex;"><span>self<span style="color:#f92672">.</span>up_layout<span style="color:#f92672">.</span>addStretch(<span style="color:#ae81ff">1</span>)
+</span></span><span style="display:flex;"><span>self<span style="color:#f92672">.</span>up_layout<span style="color:#f92672">.</span>addWidget(self<span style="color:#f92672">.</span>admit_btn)
+</span></span><span style="display:flex;"><span>self<span style="color:#f92672">.</span>up_layout<span style="color:#f92672">.</span>addStretch(<span style="color:#ae81ff">1</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 3. frame down, 视频组件</span>
+</span></span><span style="display:flex;"><span>self<span style="color:#f92672">.</span>frame_down <span style="color:#f92672">=</span> QtWidgets<span style="color:#f92672">.</span>QFrame(self<span style="color:#f92672">.</span>frame_2)
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># play &amp; pause</span>
+</span></span><span style="display:flex;"><span>self<span style="color:#f92672">.</span>playButton <span style="color:#f92672">=</span> QtWidgets<span style="color:#f92672">.</span>QPushButton(self<span style="color:#f92672">.</span>frame_down)
+</span></span><span style="display:flex;"><span>self<span style="color:#f92672">.</span>playButton<span style="color:#f92672">.</span>setIcon(QtGui<span style="color:#f92672">.</span>QIcon(<span style="color:#e6db74">&#39;resource/icons/play.png&#39;</span>))
+</span></span><span style="display:flex;"><span>self<span style="color:#f92672">.</span>playButton<span style="color:#f92672">.</span>setIconSize(QtCore<span style="color:#f92672">.</span>QSize(<span style="color:#ae81ff">12</span>, <span style="color:#ae81ff">12</span>))
+</span></span><span style="display:flex;"><span>self<span style="color:#f92672">.</span>playButton<span style="color:#f92672">.</span>setMaximumSize(QtCore<span style="color:#f92672">.</span>QSize(<span style="color:#ae81ff">80</span>, <span style="color:#ae81ff">30</span>))
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># left &amp; right button</span>
+</span></span><span style="display:flex;"><span>self<span style="color:#f92672">.</span>leftButton <span style="color:#f92672">=</span> QtWidgets<span style="color:#f92672">.</span>QPushButton(self<span style="color:#f92672">.</span>frame_down)
+</span></span><span style="display:flex;"><span>self<span style="color:#f92672">.</span>rightButton <span style="color:#f92672">=</span> QtWidgets<span style="color:#f92672">.</span>QPushButton(self<span style="color:#f92672">.</span>frame_down)
+</span></span><span style="display:flex;"><span>self<span style="color:#f92672">.</span>leftButton<span style="color:#f92672">.</span>setIcon(QtGui<span style="color:#f92672">.</span>QIcon(<span style="color:#e6db74">&#39;resource/icons/左箭头.png&#39;</span>))
+</span></span><span style="display:flex;"><span>self<span style="color:#f92672">.</span>leftButton<span style="color:#f92672">.</span>setIconSize(QtCore<span style="color:#f92672">.</span>QSize(<span style="color:#ae81ff">19</span>, <span style="color:#ae81ff">19</span>))
+</span></span><span style="display:flex;"><span>self<span style="color:#f92672">.</span>rightButton<span style="color:#f92672">.</span>setIcon(QtGui<span style="color:#f92672">.</span>QIcon(<span style="color:#e6db74">&#39;resource/icons/右箭头.png&#39;</span>))
+</span></span><span style="display:flex;"><span>self<span style="color:#f92672">.</span>rightButton<span style="color:#f92672">.</span>setIconSize(QtCore<span style="color:#f92672">.</span>QSize(<span style="color:#ae81ff">19</span>, <span style="color:#ae81ff">19</span>))
+</span></span><span style="display:flex;"><span>self<span style="color:#f92672">.</span>leftButton<span style="color:#f92672">.</span>setMaximumSize(QtCore<span style="color:#f92672">.</span>QSize(<span style="color:#ae81ff">50</span>, <span style="color:#ae81ff">30</span>))
+</span></span><span style="display:flex;"><span>self<span style="color:#f92672">.</span>rightButton<span style="color:#f92672">.</span>setMaximumSize(QtCore<span style="color:#f92672">.</span>QSize(<span style="color:#ae81ff">50</span>, <span style="color:#ae81ff">30</span>))
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># frame_down布局</span>
+</span></span><span style="display:flex;"><span>self<span style="color:#f92672">.</span>layout_down_2 <span style="color:#f92672">=</span> QtWidgets<span style="color:#f92672">.</span>QHBoxLayout(self<span style="color:#f92672">.</span>frame_down)
+</span></span><span style="display:flex;"><span>self<span style="color:#f92672">.</span>layout_down_2<span style="color:#f92672">.</span>addWidget(self<span style="color:#f92672">.</span>leftButton)
+</span></span><span style="display:flex;"><span>self<span style="color:#f92672">.</span>layout_down_2<span style="color:#f92672">.</span>addWidget(self<span style="color:#f92672">.</span>playButton)
+</span></span><span style="display:flex;"><span>self<span style="color:#f92672">.</span>layout_down_2<span style="color:#f92672">.</span>addWidget(self<span style="color:#f92672">.</span>rightButton)
+</span></span><span style="display:flex;"><span>self<span style="color:#f92672">.</span>layout_down_2<span style="color:#f92672">.</span>setContentsMargins(<span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">0</span>)
+</span></span></code></pre></div><p>中间部分<code>frame_mid</code>通过<code>QSplitter</code>实现两张图片的分割布局，拖动分割线时两侧图片等比例缩放，这里有两点需要注意：</p>
+<ul>
+<li>
+<p>默认通过<code>QPixmap</code>设置左右两个<code>QLabel</code>的图片时，图片会拉伸至label的尺寸，导致图片显示不全或变形，因此我们在设置图片之前要先将其尺寸缩放到label的尺寸，具体代码如下</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#75715e"># 设置图片路径</span>
+</span></span><span style="display:flex;"><span>self<span style="color:#f92672">.</span>pre_imgpath <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;resource/images/1.jpg&#39;</span>
+</span></span><span style="display:flex;"><span>self<span style="color:#f92672">.</span>res_imgpath <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;resource/images/2.jpg&#39;</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 根据label大小缩放图片</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> cv2
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">scaleimg</span>(self):
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">showimg</span>(label, img_path):
+</span></span><span style="display:flex;"><span>        img_src <span style="color:#f92672">=</span> cv2<span style="color:#f92672">.</span>imdecode(np<span style="color:#f92672">.</span>fromfile(img_path, dtype<span style="color:#f92672">=</span>np<span style="color:#f92672">.</span>uint8), <span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>)
+</span></span><span style="display:flex;"><span>        ih, iw, _ <span style="color:#f92672">=</span> img_src<span style="color:#f92672">.</span>shape
+</span></span><span style="display:flex;"><span>        w <span style="color:#f92672">=</span> label<span style="color:#f92672">.</span>geometry()<span style="color:#f92672">.</span>width()
+</span></span><span style="display:flex;"><span>        h <span style="color:#f92672">=</span> label<span style="color:#f92672">.</span>geometry()<span style="color:#f92672">.</span>height()
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e"># keep original aspect ratio</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> iw <span style="color:#f92672">/</span> w <span style="color:#f92672">&gt;</span> ih <span style="color:#f92672">/</span> h:
+</span></span><span style="display:flex;"><span>            scal <span style="color:#f92672">=</span> w <span style="color:#f92672">/</span> iw
+</span></span><span style="display:flex;"><span>            nw <span style="color:#f92672">=</span> w
+</span></span><span style="display:flex;"><span>            nh <span style="color:#f92672">=</span> int(scal <span style="color:#f92672">*</span> ih)
+</span></span><span style="display:flex;"><span>            img_src_ <span style="color:#f92672">=</span> cv2<span style="color:#f92672">.</span>resize(img_src, (nw, nh))
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">else</span>:
+</span></span><span style="display:flex;"><span>            scal <span style="color:#f92672">=</span> h <span style="color:#f92672">/</span> ih
+</span></span><span style="display:flex;"><span>            nw <span style="color:#f92672">=</span> int(scal <span style="color:#f92672">*</span> iw)
+</span></span><span style="display:flex;"><span>            nh <span style="color:#f92672">=</span> h
+</span></span><span style="display:flex;"><span>            img_src_ <span style="color:#f92672">=</span> cv2<span style="color:#f92672">.</span>resize(img_src, (nw, nh))
+</span></span><span style="display:flex;"><span>        frame <span style="color:#f92672">=</span> cv2<span style="color:#f92672">.</span>cvtColor(img_src_, cv2<span style="color:#f92672">.</span>COLOR_BGR2RGB)
+</span></span><span style="display:flex;"><span>        img <span style="color:#f92672">=</span> QImage(frame<span style="color:#f92672">.</span>data, frame<span style="color:#f92672">.</span>shape[<span style="color:#ae81ff">1</span>], frame<span style="color:#f92672">.</span>shape[<span style="color:#ae81ff">0</span>], frame<span style="color:#f92672">.</span>shape[<span style="color:#ae81ff">2</span>] <span style="color:#f92672">*</span> frame<span style="color:#f92672">.</span>shape[<span style="color:#ae81ff">1</span>],QImage<span style="color:#f92672">.</span>Format_RGB888)
+</span></span><span style="display:flex;"><span>        label<span style="color:#f92672">.</span>setPixmap(QPixmap<span style="color:#f92672">.</span>fromImage(img))
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e"># label3为左侧框，label4为右侧框</span>
+</span></span><span style="display:flex;"><span>    showimg(self<span style="color:#f92672">.</span>label_3, self<span style="color:#f92672">.</span>pre_imgpath)
+</span></span><span style="display:flex;"><span>    showimg(self<span style="color:#f92672">.</span>label_4, self<span style="color:#f92672">.</span>res_imgpath)
+</span></span></code></pre></div></li>
+<li>
+<p>要实现移动分割线时，图片跟着缩放，要设置splitter的槽函数为<code>scaleimg</code>，这样在每次拖动时，都会重新计算label尺寸，缩放图片，完整代码如下：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#75715e"># 2. frame mid, 两张图片对比， 用QSplitter分割</span>
+</span></span><span style="display:flex;"><span>self<span style="color:#f92672">.</span>frame_mid <span style="color:#f92672">=</span> QSplitter(self<span style="color:#f92672">.</span>frame_2)
+</span></span><span style="display:flex;"><span>self<span style="color:#f92672">.</span>frame_mid<span style="color:#f92672">.</span>setStyleSheet(<span style="color:#e6db74">&#34;QSplitter::handle {image:url(resource/images/splitter.svg);}&#34;</span>)
+</span></span><span style="display:flex;"><span>self<span style="color:#f92672">.</span>frame_mid<span style="color:#f92672">.</span>setHandleWidth(<span style="color:#ae81ff">20</span>)
+</span></span><span style="display:flex;"><span>self<span style="color:#f92672">.</span>frame_mid<span style="color:#f92672">.</span>setOrientation(Qt<span style="color:#f92672">.</span>Horizontal)
+</span></span><span style="display:flex;"><span>self<span style="color:#f92672">.</span>label_3 <span style="color:#f92672">=</span> QLabel(self<span style="color:#f92672">.</span>frame_mid)
+</span></span><span style="display:flex;"><span>self<span style="color:#f92672">.</span>label_3<span style="color:#f92672">.</span>setAlignment(Qt<span style="color:#f92672">.</span>AlignCenter)
+</span></span><span style="display:flex;"><span>self<span style="color:#f92672">.</span>label_3<span style="color:#f92672">.</span>setMinimumSize(QSize(<span style="color:#ae81ff">50</span>, <span style="color:#ae81ff">50</span>))
+</span></span><span style="display:flex;"><span>self<span style="color:#f92672">.</span>frame_mid<span style="color:#f92672">.</span>addWidget(self<span style="color:#f92672">.</span>label_3)
+</span></span><span style="display:flex;"><span>self<span style="color:#f92672">.</span>label_4 <span style="color:#f92672">=</span> QLabel(self<span style="color:#f92672">.</span>frame_mid)
+</span></span><span style="display:flex;"><span>self<span style="color:#f92672">.</span>label_4<span style="color:#f92672">.</span>setAlignment(Qt<span style="color:#f92672">.</span>AlignCenter)
+</span></span><span style="display:flex;"><span>self<span style="color:#f92672">.</span>label_4<span style="color:#f92672">.</span>setMinimumSize(QSize(<span style="color:#ae81ff">50</span>, <span style="color:#ae81ff">50</span>))
+</span></span><span style="display:flex;"><span>self<span style="color:#f92672">.</span>frame_mid<span style="color:#f92672">.</span>addWidget(self<span style="color:#f92672">.</span>label_4)
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 绑定槽函数</span>
+</span></span><span style="display:flex;"><span>self<span style="color:#f92672">.</span>frame_mid<span style="color:#f92672">.</span>splitterMoved<span style="color:#f92672">.</span>connect(self<span style="color:#f92672">.</span>scaleimg)
+</span></span></code></pre></div></li>
+<li>
+<p>实现效果如下，方便更清晰观察生成后的效果图</p>
+  <img src="image-20230530113544873.png" alt="image-20230530113544873" style="zoom:40%;" />
+</li>
+</ul>
+<p>最后，对3个frame进行布局，按照 <code>up:mid:down = 2:10:1</code>的比例</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#75715e"># 3个frame布局（up, mid, down）</span>
+</span></span><span style="display:flex;"><span>self<span style="color:#f92672">.</span>gLayout_2 <span style="color:#f92672">=</span> QtWidgets<span style="color:#f92672">.</span>QGridLayout(self<span style="color:#f92672">.</span>frame_2)
+</span></span><span style="display:flex;"><span>self<span style="color:#f92672">.</span>gLayout_2<span style="color:#f92672">.</span>addWidget(self<span style="color:#f92672">.</span>frame_up, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">2</span>, <span style="color:#ae81ff">1</span>)
+</span></span><span style="display:flex;"><span>self<span style="color:#f92672">.</span>gLayout_2<span style="color:#f92672">.</span>addWidget(self<span style="color:#f92672">.</span>frame_mid, <span style="color:#ae81ff">2</span>, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">10</span>, <span style="color:#ae81ff">1</span>)
+</span></span><span style="display:flex;"><span>self<span style="color:#f92672">.</span>gLayout_2<span style="color:#f92672">.</span>addWidget(self<span style="color:#f92672">.</span>frame_down, <span style="color:#ae81ff">12</span>, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">1</span>)
+</span></span><span style="display:flex;"><span>self<span style="color:#f92672">.</span>gLayout_2<span style="color:#f92672">.</span>setSpacing(<span style="color:#ae81ff">0</span>)
+</span></span></code></pre></div><h4 id="视频播放">视频播放<a hidden class="anchor" aria-hidden="true" href="#视频播放">#</a></h4>
+<p>对视频的处理如下所示：</p>
+<blockquote>
+<p>获取视频文件地址-&gt;对视频进行抽帧-&gt;对抽帧后的图片进行推理-&gt;显示处理后的图片-&gt;利用定时器，实现视频播放</p>
+</blockquote>
+<p>我们==假设==已完成了视频抽帧与处理，且文件结构如下，其中origin显示抽帧后的图片集合，processed显示处理后的图片，具体如何实现将在下节说明。</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-xml" data-lang="xml"><span style="display:flex;"><span>├─results 
+</span></span><span style="display:flex;"><span>│  ├─videos
+</span></span><span style="display:flex;"><span>│  │  └─视频文件名
+</span></span><span style="display:flex;"><span>         └─origin
+</span></span><span style="display:flex;"><span>            └─0000.png
+</span></span><span style="display:flex;"><span>            └─0001.png
+</span></span><span style="display:flex;"><span>            └─0002.png
+</span></span><span style="display:flex;"><span>         └─processed
+</span></span><span style="display:flex;"><span>            └─0000.png
+</span></span><span style="display:flex;"><span>            └─0001.png
+</span></span><span style="display:flex;"><span>            └─0002.png
+</span></span></code></pre></div><p>在此基础上，本节介绍如何对两个文件夹中的图片进行播放，形成对比，实现的效果如下：</p>
+<img src="image-20230530151322080.png" alt="image-20230530151322080" style="zoom:37%;" />
+<p>实现原理就是设置一个多线程的定时器，每隔一段时间（fps）就执行一次<code>next_img</code>函数，<code>next_img</code>函数会把左右label的图片都切换成下一张。定时器的代码如下，用到了<code>QThread</code>类，想要执行的任务在<code>run</code>函数中实现，然后实例化对象后通过<code>object_name.start()</code>即可启动。</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">from</span> PySide6.QtCore <span style="color:#f92672">import</span> QThread, Signal, QMutex, QMutexLocker
+</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> time
+</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> os
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 视频播放计时器</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">VideoTimer</span>(QThread):
+</span></span><span style="display:flex;"><span>    timeSignal <span style="color:#f92672">=</span> Signal(str)
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e"># 每隔1/frequent秒，切换到下一帧</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">def</span> __init__(self, frequent<span style="color:#f92672">=</span><span style="color:#ae81ff">1</span>):
+</span></span><span style="display:flex;"><span>        QThread<span style="color:#f92672">.</span>__init__(self)
+</span></span><span style="display:flex;"><span>        self<span style="color:#f92672">.</span>stopped <span style="color:#f92672">=</span> <span style="color:#66d9ef">False</span>
+</span></span><span style="display:flex;"><span>        self<span style="color:#f92672">.</span>frequent <span style="color:#f92672">=</span> frequent
+</span></span><span style="display:flex;"><span>        self<span style="color:#f92672">.</span>mutex <span style="color:#f92672">=</span> QMutex()
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">run</span>(self):
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">with</span> QMutexLocker(self<span style="color:#f92672">.</span>mutex):
+</span></span><span style="display:flex;"><span>            self<span style="color:#f92672">.</span>stopped <span style="color:#f92672">=</span> <span style="color:#66d9ef">False</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">while</span> <span style="color:#66d9ef">True</span>:
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">if</span> self<span style="color:#f92672">.</span>stopped:
+</span></span><span style="display:flex;"><span>                <span style="color:#66d9ef">return</span>
+</span></span><span style="display:flex;"><span>            self<span style="color:#f92672">.</span>timeSignal<span style="color:#f92672">.</span>emit(<span style="color:#e6db74">&#34;1&#34;</span>)
+</span></span><span style="display:flex;"><span>            time<span style="color:#f92672">.</span>sleep(<span style="color:#ae81ff">1</span> <span style="color:#f92672">/</span> self<span style="color:#f92672">.</span>frequent)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">stop</span>(self):
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">with</span> QMutexLocker(self<span style="color:#f92672">.</span>mutex):
+</span></span><span style="display:flex;"><span>            self<span style="color:#f92672">.</span>stopped <span style="color:#f92672">=</span> <span style="color:#66d9ef">True</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">is_stopped</span>(self):
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">with</span> QMutexLocker(self<span style="color:#f92672">.</span>mutex):
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">return</span> self<span style="color:#f92672">.</span>stopped
+</span></span></code></pre></div><p>在<code>VideoTimer</code>中，我们定义了一个信号<code> timeSignal = Signal(str)</code>，并每隔1/frequent秒发送一次“1”。在主界面类中，定义<code>VideoTimer</code>对象，并在每次接收到该信号时切换到下一帧。</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#75715e"># 定义定时器对象，并绑定信号</span>
+</span></span><span style="display:flex;"><span>self<span style="color:#f92672">.</span>timer <span style="color:#f92672">=</span> VideoTimer(frequent<span style="color:#f92672">=</span><span style="color:#ae81ff">10</span>)
+</span></span><span style="display:flex;"><span>self<span style="color:#f92672">.</span>timer<span style="color:#f92672">.</span>timeSignal<span style="color:#f92672">.</span>connect(self<span style="color:#f92672">.</span>show_video_images) <span style="color:#75715e"># show_video_images函数在下文给出</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 初始化视频播放相关变量</span>
+</span></span><span style="display:flex;"><span>STATUS_INIT <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>
+</span></span><span style="display:flex;"><span>STATUS_PLAYING <span style="color:#f92672">=</span> <span style="color:#ae81ff">1</span>
+</span></span><span style="display:flex;"><span>STATUS_PAUSE <span style="color:#f92672">=</span> <span style="color:#ae81ff">2</span>
+</span></span><span style="display:flex;"><span>self<span style="color:#f92672">.</span>origin_path <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;&#39;</span>
+</span></span><span style="display:flex;"><span>self<span style="color:#f92672">.</span>processed_path <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;&#39;</span>
+</span></span><span style="display:flex;"><span>self<span style="color:#f92672">.</span>index <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span> <span style="color:#75715e">#当前播放的帧序号</span>
+</span></span><span style="display:flex;"><span>self<span style="color:#f92672">.</span>status <span style="color:#f92672">=</span> self<span style="color:#f92672">.</span>STATUS_INIT
+</span></span></code></pre></div><p>接着，定义以下函数：</p>
+<ul>
+<li>视频停止时的重置函数<code>reset</code>：停止计时器，重置播放器状态</li>
+<li>播放状态切换函数<code>switch_video</code>：如果当前状态为播放，改为暂停；如果为暂停，改为播放</li>
+<li>播放按钮图标切换函数<code>icon_change</code>：播放状态切换时，切换&#x23ef;&#xfe0f;图标</li>
+<li>帧上下切换函数<code>pre_img</code>、<code>next_img</code>：切换至上一张/下一张帧</li>
+<li>视频播放函数<code>show_video_images</code>：通过调用<code>next_img</code>，完成视频的播放</li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">reset</span>(self):
+</span></span><span style="display:flex;"><span>    self<span style="color:#f92672">.</span>timer<span style="color:#f92672">.</span>stop()
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">while</span> <span style="color:#f92672">not</span> self<span style="color:#f92672">.</span>timer<span style="color:#f92672">.</span>is_stopped():
+</span></span><span style="display:flex;"><span>        time<span style="color:#f92672">.</span>sleep(<span style="color:#ae81ff">0.5</span>)
+</span></span><span style="display:flex;"><span>    self<span style="color:#f92672">.</span>status <span style="color:#f92672">=</span> self<span style="color:#f92672">.</span>STATUS_INIT
+</span></span><span style="display:flex;"><span>    self<span style="color:#f92672">.</span>index <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>
+</span></span><span style="display:flex;"><span>    self<span style="color:#f92672">.</span>icon_change(<span style="color:#ae81ff">1</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">switch_video</span>(self):
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> self<span style="color:#f92672">.</span>origin_path <span style="color:#f92672">==</span> <span style="color:#e6db74">&#39;&#39;</span> <span style="color:#f92672">or</span> self<span style="color:#f92672">.</span>processed_path <span style="color:#f92672">==</span> <span style="color:#e6db74">&#39;&#39;</span>:
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> self<span style="color:#f92672">.</span>status <span style="color:#f92672">is</span> self<span style="color:#f92672">.</span>STATUS_INIT:
+</span></span><span style="display:flex;"><span>        self<span style="color:#f92672">.</span>timer<span style="color:#f92672">.</span>start()
+</span></span><span style="display:flex;"><span>        self<span style="color:#f92672">.</span>icon_change(<span style="color:#ae81ff">2</span>)
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">elif</span> self<span style="color:#f92672">.</span>status <span style="color:#f92672">is</span> self<span style="color:#f92672">.</span>STATUS_PLAYING:
+</span></span><span style="display:flex;"><span>        self<span style="color:#f92672">.</span>timer<span style="color:#f92672">.</span>stop()
+</span></span><span style="display:flex;"><span>        self<span style="color:#f92672">.</span>icon_change(<span style="color:#ae81ff">1</span>)
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">elif</span> self<span style="color:#f92672">.</span>status <span style="color:#f92672">is</span> self<span style="color:#f92672">.</span>STATUS_PAUSE:
+</span></span><span style="display:flex;"><span>        self<span style="color:#f92672">.</span>timer<span style="color:#f92672">.</span>start()
+</span></span><span style="display:flex;"><span>        self<span style="color:#f92672">.</span>icon_change(<span style="color:#ae81ff">2</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    self<span style="color:#f92672">.</span>status <span style="color:#f92672">=</span> (self<span style="color:#f92672">.</span>STATUS_PLAYING,
+</span></span><span style="display:flex;"><span>                   self<span style="color:#f92672">.</span>STATUS_PAUSE,
+</span></span><span style="display:flex;"><span>                   self<span style="color:#f92672">.</span>STATUS_PLAYING)[self<span style="color:#f92672">.</span>status]
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 展示图片集，切换上下张</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">pre_img</span>(self):
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> self<span style="color:#f92672">.</span>processed_path <span style="color:#f92672">==</span> <span style="color:#e6db74">&#39;&#39;</span> <span style="color:#f92672">or</span> self<span style="color:#f92672">.</span>index <span style="color:#f92672">==</span> <span style="color:#ae81ff">0</span>:
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span>
+</span></span><span style="display:flex;"><span>    self<span style="color:#f92672">.</span>index <span style="color:#f92672">-=</span> <span style="color:#ae81ff">1</span>
+</span></span><span style="display:flex;"><span>    left_img_path <span style="color:#f92672">=</span> self<span style="color:#f92672">.</span>origin_path <span style="color:#f92672">+</span> <span style="color:#e6db74">&#39;</span><span style="color:#e6db74">{:04d}</span><span style="color:#e6db74">.png&#39;</span><span style="color:#f92672">.</span>format(self<span style="color:#f92672">.</span>index)
+</span></span><span style="display:flex;"><span>    right_img_path <span style="color:#f92672">=</span> self<span style="color:#f92672">.</span>processed_path <span style="color:#f92672">+</span> <span style="color:#e6db74">&#39;</span><span style="color:#e6db74">{:04d}</span><span style="color:#e6db74">.png&#39;</span><span style="color:#f92672">.</span>format(self<span style="color:#f92672">.</span>index)
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> <span style="color:#f92672">not</span> os<span style="color:#f92672">.</span>path<span style="color:#f92672">.</span>isfile(left_img_path) <span style="color:#f92672">or</span> <span style="color:#f92672">not</span> os<span style="color:#f92672">.</span>path<span style="color:#f92672">.</span>isfile(right_img_path):
+</span></span><span style="display:flex;"><span>        time<span style="color:#f92672">.</span>sleep(<span style="color:#ae81ff">1</span>)
+</span></span><span style="display:flex;"><span>    print(<span style="color:#e6db74">&#39;pre,&#39;</span>, right_img_path)
+</span></span><span style="display:flex;"><span>    self<span style="color:#f92672">.</span>pre_imgpath <span style="color:#f92672">=</span> left_img_path
+</span></span><span style="display:flex;"><span>    self<span style="color:#f92672">.</span>res_imgpath <span style="color:#f92672">=</span> right_img_path
+</span></span><span style="display:flex;"><span>    self<span style="color:#f92672">.</span>scaleimg()
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">next_img</span>(self):
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> self<span style="color:#f92672">.</span>processed_path <span style="color:#f92672">==</span> <span style="color:#e6db74">&#39;&#39;</span> <span style="color:#f92672">or</span> self<span style="color:#f92672">.</span>index <span style="color:#f92672">==</span> len(os<span style="color:#f92672">.</span>listdir(self<span style="color:#f92672">.</span>processed_path)) <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span>:
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span>
+</span></span><span style="display:flex;"><span>    self<span style="color:#f92672">.</span>index <span style="color:#f92672">+=</span> <span style="color:#ae81ff">1</span>
+</span></span><span style="display:flex;"><span>    left_img_path <span style="color:#f92672">=</span> self<span style="color:#f92672">.</span>origin_path <span style="color:#f92672">+</span> <span style="color:#e6db74">&#39;</span><span style="color:#e6db74">{:04d}</span><span style="color:#e6db74">.png&#39;</span><span style="color:#f92672">.</span>format(self<span style="color:#f92672">.</span>index)
+</span></span><span style="display:flex;"><span>    right_img_path <span style="color:#f92672">=</span> self<span style="color:#f92672">.</span>processed_path <span style="color:#f92672">+</span> <span style="color:#e6db74">&#39;</span><span style="color:#e6db74">{:04d}</span><span style="color:#e6db74">.png&#39;</span><span style="color:#f92672">.</span>format(self<span style="color:#f92672">.</span>index)
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> <span style="color:#f92672">not</span> os<span style="color:#f92672">.</span>path<span style="color:#f92672">.</span>isfile(left_img_path) <span style="color:#f92672">or</span> <span style="color:#f92672">not</span> os<span style="color:#f92672">.</span>path<span style="color:#f92672">.</span>isfile(right_img_path):
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span>
+</span></span><span style="display:flex;"><span>    print(<span style="color:#e6db74">&#39;next,&#39;</span>, right_img_path)
+</span></span><span style="display:flex;"><span>    r_img <span style="color:#f92672">=</span> QImage(right_img_path)
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> r_img<span style="color:#f92672">.</span>size()<span style="color:#f92672">.</span>width() <span style="color:#f92672">==</span> <span style="color:#ae81ff">0</span>:
+</span></span><span style="display:flex;"><span>        self<span style="color:#f92672">.</span>switch_video()
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span>
+</span></span><span style="display:flex;"><span>    self<span style="color:#f92672">.</span>pre_imgpath <span style="color:#f92672">=</span> left_img_path
+</span></span><span style="display:flex;"><span>    self<span style="color:#f92672">.</span>res_imgpath <span style="color:#f92672">=</span> right_img_path
+</span></span><span style="display:flex;"><span>    self<span style="color:#f92672">.</span>scaleimg()
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 同时修改label_3、label_4的图片，完成视频播放</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">show_video_images</span>(self):
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> self<span style="color:#f92672">.</span>processed_path <span style="color:#f92672">==</span> <span style="color:#e6db74">&#39;&#39;</span> <span style="color:#f92672">or</span> self<span style="color:#f92672">.</span>index <span style="color:#f92672">==</span> len(os<span style="color:#f92672">.</span>listdir(self<span style="color:#f92672">.</span>origin_path)) <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span>:
+</span></span><span style="display:flex;"><span>        self<span style="color:#f92672">.</span>reset()
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e"># 播放进度赶上生成进度-&gt;暂停</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">elif</span> self<span style="color:#f92672">.</span>index <span style="color:#f92672">==</span> len(os<span style="color:#f92672">.</span>listdir(self<span style="color:#f92672">.</span>processed_path)) <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span>:
+</span></span><span style="display:flex;"><span>        self<span style="color:#f92672">.</span>switch_video()
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">else</span>:
+</span></span><span style="display:flex;"><span>        self<span style="color:#f92672">.</span>next_img()
+</span></span></code></pre></div><p>最后，我们将按钮和函数绑定，实现点击中间按钮切换播放/暂停，点击左右按钮切换上下帧</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>self<span style="color:#f92672">.</span>playButton<span style="color:#f92672">.</span>clicked<span style="color:#f92672">.</span>connect(self<span style="color:#f92672">.</span>switch_video)
+</span></span><span style="display:flex;"><span>self<span style="color:#f92672">.</span>leftButton<span style="color:#f92672">.</span>clicked<span style="color:#f92672">.</span>connect(self<span style="color:#f92672">.</span>pre_img)
+</span></span><span style="display:flex;"><span>self<span style="color:#f92672">.</span>rightButton<span style="color:#f92672">.</span>clicked<span style="color:#f92672">.</span>connect(self<span style="color:#f92672">.</span>next_img)
+</span></span></code></pre></div><h4 id="模型推理">模型推理<a hidden class="anchor" aria-hidden="true" href="#模型推理">#</a></h4>
+<h5 id="选择文件">选择文件<a hidden class="anchor" aria-hidden="true" href="#选择文件">#</a></h5>
+<ul>
+<li>首先通过<code>QFileDialog</code>选择要进行处理的图像或视频</li>
+<li>判断文件是视频还是图片
+<ul>
+<li>如果是视频，通过多线程对视频进行抽帧，结果保存至<code>/results/videos/文件名/origin</code></li>
+</ul>
+</li>
+<li>展示图像</li>
+</ul>
+<p>其中多线程抽帧代码如下：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">from</span> PySide6.QtCore <span style="color:#f92672">import</span> QThread, Signal, QMutex, QMutexLocker
+</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> os
+</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> cv2
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 视频抽帧线程</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Video2Img</span>(QThread):
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">def</span> __init__(self, url):
+</span></span><span style="display:flex;"><span>        super()<span style="color:#f92672">.</span>__init__()
+</span></span><span style="display:flex;"><span>        self<span style="color:#f92672">.</span>url <span style="color:#f92672">=</span> url
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e"># 创建保存文件夹</span>
+</span></span><span style="display:flex;"><span>        name <span style="color:#f92672">=</span> url<span style="color:#f92672">.</span>split(<span style="color:#e6db74">&#39;/&#39;</span>)[<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>]<span style="color:#f92672">.</span>split(<span style="color:#e6db74">&#39;.&#39;</span>)[<span style="color:#ae81ff">0</span>]
+</span></span><span style="display:flex;"><span>        self<span style="color:#f92672">.</span>save_path <span style="color:#f92672">=</span> <span style="color:#e6db74">f</span><span style="color:#e6db74">&#39;results/videos/</span><span style="color:#e6db74">{</span>name<span style="color:#e6db74">}</span><span style="color:#e6db74">/origin/&#39;</span>
+</span></span><span style="display:flex;"><span>        os<span style="color:#f92672">.</span>makedirs(self<span style="color:#f92672">.</span>save_path, exist_ok<span style="color:#f92672">=</span><span style="color:#66d9ef">True</span>)
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">run</span>(self):
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e"># 打开视频文件，参数为文件路径</span>
+</span></span><span style="display:flex;"><span>        cap <span style="color:#f92672">=</span> cv2<span style="color:#f92672">.</span>VideoCapture(self<span style="color:#f92672">.</span>url)
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e"># 获取视频帧率和总帧数</span>
+</span></span><span style="display:flex;"><span>        total_frames <span style="color:#f92672">=</span> int(cap<span style="color:#f92672">.</span>get(cv2<span style="color:#f92672">.</span>CAP_PROP_FRAME_COUNT))
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e"># 定义抽帧间隔</span>
+</span></span><span style="display:flex;"><span>        interval <span style="color:#f92672">=</span> <span style="color:#ae81ff">5</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e"># 循环读取视频帧</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> range(total_frames):
+</span></span><span style="display:flex;"><span>            ret, frame <span style="color:#f92672">=</span> cap<span style="color:#f92672">.</span>read()
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">if</span> i <span style="color:#f92672">%</span> interval <span style="color:#f92672">==</span> <span style="color:#ae81ff">0</span>:
+</span></span><span style="display:flex;"><span>                <span style="color:#75715e"># 实现对每5帧进行抽取</span>
+</span></span><span style="display:flex;"><span>                save_img_path <span style="color:#f92672">=</span> os<span style="color:#f92672">.</span>path<span style="color:#f92672">.</span>join(self<span style="color:#f92672">.</span>save_path, <span style="color:#e6db74">&#39;</span><span style="color:#e6db74">{:04d}</span><span style="color:#e6db74">.png&#39;</span><span style="color:#f92672">.</span>format(int(i <span style="color:#f92672">/</span> interval)))
+</span></span><span style="display:flex;"><span>                cv2<span style="color:#f92672">.</span>imencode(<span style="color:#e6db74">&#39;.png&#39;</span>, frame)[<span style="color:#ae81ff">1</span>]<span style="color:#f92672">.</span>tofile(save_img_path)
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e"># 释放视频文件</span>
+</span></span><span style="display:flex;"><span>        cap<span style="color:#f92672">.</span>release()
+</span></span></code></pre></div><p>如下所示，对文件名为<code>night_1</code>的视频，生成了对应的文件夹及抽帧结果</p>
+<img src="image-20230530145814296.png" alt="image-20230530145814296" style="zoom:43%;" />
+<p>选择文件部分总代码如下：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">choose_image</span>(self):
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">global</span> path
+</span></span><span style="display:flex;"><span>    path, _ <span style="color:#f92672">=</span> QFileDialog<span style="color:#f92672">.</span>getOpenFileName(self, <span style="color:#e6db74">&#39;选择图片或视频&#39;</span>, <span style="color:#e6db74">&#39;C:</span><span style="color:#ae81ff">\\</span><span style="color:#e6db74">&#39;</span>,
+</span></span><span style="display:flex;"><span>                                          <span style="color:#e6db74">&#39;Image files(*.jpg *.jpeg *.png);;Video Files (*.mp4 *.avi)&#39;</span>)
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e"># 如果没选择文件</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> path <span style="color:#f92672">==</span> <span style="color:#e6db74">&#39;&#39;</span>:
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e"># 如果当前有视频播放，停止</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> self<span style="color:#f92672">.</span>status <span style="color:#f92672">is</span> self<span style="color:#f92672">.</span>STATUS_PLAYING:
+</span></span><span style="display:flex;"><span>        self<span style="color:#f92672">.</span>reset()
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e"># 修改label4为 “请选择效果”</span>
+</span></span><span style="display:flex;"><span>    self<span style="color:#f92672">.</span>res_imgpath <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;resource/images/2.jpg&#39;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e"># 判断是视频 or 图片</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e"># 1.视频</span>
+</span></span><span style="display:flex;"><span>    type <span style="color:#f92672">=</span> path<span style="color:#f92672">.</span>split(<span style="color:#e6db74">&#39;.&#39;</span>)[<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>]
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> type <span style="color:#f92672">==</span> <span style="color:#e6db74">&#39;mp4&#39;</span> <span style="color:#f92672">or</span> type <span style="color:#f92672">==</span> <span style="color:#e6db74">&#39;avi&#39;</span>:
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e"># 如果是视频，展示控件</span>
+</span></span><span style="display:flex;"><span>        self<span style="color:#f92672">.</span>frame_down<span style="color:#f92672">.</span>show()
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e"># 开一个线程，对视频抽帧，结果保存在/results/videos/文件名/origin</span>
+</span></span><span style="display:flex;"><span>        self<span style="color:#f92672">.</span>v2i <span style="color:#f92672">=</span> Video2Img(path)
+</span></span><span style="display:flex;"><span>        self<span style="color:#f92672">.</span>v2i<span style="color:#f92672">.</span>start()
+</span></span><span style="display:flex;"><span>        name <span style="color:#f92672">=</span> path<span style="color:#f92672">.</span>split(<span style="color:#e6db74">&#39;/&#39;</span>)[<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>]<span style="color:#f92672">.</span>split(<span style="color:#e6db74">&#39;.&#39;</span>)[<span style="color:#ae81ff">0</span>]
+</span></span><span style="display:flex;"><span>        self<span style="color:#f92672">.</span>origin_path <span style="color:#f92672">=</span> <span style="color:#e6db74">f</span><span style="color:#e6db74">&#39;results/videos/</span><span style="color:#e6db74">{</span>name<span style="color:#e6db74">}</span><span style="color:#e6db74">/origin/&#39;</span>
+</span></span><span style="display:flex;"><span>        self<span style="color:#f92672">.</span>processed_path <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;&#39;</span>
+</span></span><span style="display:flex;"><span>        img_path <span style="color:#f92672">=</span> self<span style="color:#f92672">.</span>origin_path <span style="color:#f92672">+</span> <span style="color:#e6db74">&#39;0000.png&#39;</span>
+</span></span><span style="display:flex;"><span>        self<span style="color:#f92672">.</span>timer<span style="color:#f92672">.</span>timeSignal<span style="color:#f92672">.</span>connect(self<span style="color:#f92672">.</span>show_video_images)
+</span></span><span style="display:flex;"><span>        self<span style="color:#f92672">.</span>status <span style="color:#f92672">=</span> self<span style="color:#f92672">.</span>STATUS_INIT
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">while</span> <span style="color:#f92672">not</span> os<span style="color:#f92672">.</span>path<span style="color:#f92672">.</span>isfile(img_path):
+</span></span><span style="display:flex;"><span>            time<span style="color:#f92672">.</span>sleep(<span style="color:#ae81ff">0.5</span>)
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e"># 2.图片</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">else</span>:
+</span></span><span style="display:flex;"><span>        self<span style="color:#f92672">.</span>frame_down<span style="color:#f92672">.</span>hide()
+</span></span><span style="display:flex;"><span>        img_path <span style="color:#f92672">=</span> path
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    self<span style="color:#f92672">.</span>pre_imgpath <span style="color:#f92672">=</span> img_path
+</span></span><span style="display:flex;"><span>    self<span style="color:#f92672">.</span>scaleimg()
+</span></span></code></pre></div><p>最后，绑定按钮与槽函数：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>self<span style="color:#f92672">.</span>choose_img_btn<span style="color:#f92672">.</span>clicked<span style="color:#f92672">.</span>connect(self<span style="color:#f92672">.</span>choose_image)
+</span></span></code></pre></div><h5 id="推理得到结果">推理得到结果<a hidden class="anchor" aria-hidden="true" href="#推理得到结果">#</a></h5>
+<p>为避免推理时主界面卡顿，我们同样使用多线程进行模型推理：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">from</span> PySide6.QtCore <span style="color:#f92672">import</span> QThread, Signal, QMutex, QMutexLocker
+</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> time
+</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> os
+</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> cv2
+</span></span><span style="display:flex;"><span><span style="color:#f92672">from</span> lowlight.low_light <span style="color:#f92672">import</span> lowlight_res
+</span></span><span style="display:flex;"><span><span style="color:#f92672">from</span> dehaze.dhaze <span style="color:#f92672">import</span> dehaze_image
+</span></span><span style="display:flex;"><span><span style="color:#f92672">from</span> derain.derain <span style="color:#f92672">import</span> derain_res
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 模型推理线程</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">VisionImproved</span>(QThread):
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">def</span> __init__(self, url, data, is_dir<span style="color:#f92672">=</span><span style="color:#66d9ef">False</span>):
+</span></span><span style="display:flex;"><span>        super()<span style="color:#f92672">.</span>__init__()
+</span></span><span style="display:flex;"><span>        self<span style="color:#f92672">.</span>url <span style="color:#f92672">=</span> url  <span style="color:#75715e"># 图片/文件夹地址</span>
+</span></span><span style="display:flex;"><span>        self<span style="color:#f92672">.</span>data <span style="color:#f92672">=</span> data  <span style="color:#75715e"># 增强类型</span>
+</span></span><span style="display:flex;"><span>        self<span style="color:#f92672">.</span>dir <span style="color:#f92672">=</span> is_dir  <span style="color:#75715e"># 是否为文件夹里的图片（视频）</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">run</span>(self):
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e"># 获取图片</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> self<span style="color:#f92672">.</span>data <span style="color:#f92672">==</span> <span style="color:#e6db74">&#39;弱光&#39;</span>:
+</span></span><span style="display:flex;"><span>            lowlight_res(self<span style="color:#f92672">.</span>url, self<span style="color:#f92672">.</span>dir)
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> self<span style="color:#f92672">.</span>data <span style="color:#f92672">==</span> <span style="color:#e6db74">&#39;去雾&#39;</span>:
+</span></span><span style="display:flex;"><span>            dehaze_image(self<span style="color:#f92672">.</span>url, self<span style="color:#f92672">.</span>dir)
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> self<span style="color:#f92672">.</span>data <span style="color:#f92672">==</span> <span style="color:#e6db74">&#39;去雨&#39;</span>:
+</span></span><span style="display:flex;"><span>            derain_res(self<span style="color:#f92672">.</span>url, self<span style="color:#f92672">.</span>dir)
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e"># 释放视频文件</span>
+</span></span></code></pre></div><p>这里的lowlight、derain和dehaze代码我就不给出了，调用后要求在<code>📂/results/videos/文件名/processed</code>中生成结果</p>
+<p>接着，编写<code>img_improve</code>函数，对<code>VisionImproved</code>线程进行调用</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">img_improve</span>(self):
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e"># 获取下拉框中的值</span>
+</span></span><span style="display:flex;"><span>    data <span style="color:#f92672">=</span> self<span style="color:#f92672">.</span>combobox<span style="color:#f92672">.</span>currentText()
+</span></span><span style="display:flex;"><span>    dic <span style="color:#f92672">=</span> {<span style="color:#e6db74">&#39;弱光&#39;</span>: <span style="color:#e6db74">&#39;lowlight&#39;</span>, <span style="color:#e6db74">&#39;去雾&#39;</span>: <span style="color:#e6db74">&#39;dehaze&#39;</span>, <span style="color:#e6db74">&#39;去雨&#39;</span>: <span style="color:#e6db74">&#39;derain&#39;</span>}
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">global</span> path
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e"># 图片 or 视频</span>
+</span></span><span style="display:flex;"><span>    type <span style="color:#f92672">=</span> path<span style="color:#f92672">.</span>split(<span style="color:#e6db74">&#39;.&#39;</span>)[<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>]
+</span></span><span style="display:flex;"><span>    name <span style="color:#f92672">=</span> path<span style="color:#f92672">.</span>split(<span style="color:#e6db74">&#39;/&#39;</span>)[<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>]<span style="color:#f92672">.</span>split(<span style="color:#e6db74">&#39;.&#39;</span>)[<span style="color:#ae81ff">0</span>]
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> type <span style="color:#f92672">==</span> <span style="color:#e6db74">&#39;mp4&#39;</span> <span style="color:#f92672">or</span> type <span style="color:#f92672">==</span> <span style="color:#e6db74">&#39;avi&#39;</span>:
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e"># 创建保存文件夹</span>
+</span></span><span style="display:flex;"><span>        save_path <span style="color:#f92672">=</span> <span style="color:#e6db74">f</span><span style="color:#e6db74">&#39;results/videos/</span><span style="color:#e6db74">{</span>name<span style="color:#e6db74">}</span><span style="color:#e6db74">/processed/&#39;</span>
+</span></span><span style="display:flex;"><span>        self<span style="color:#f92672">.</span>processed_path <span style="color:#f92672">=</span> save_path
+</span></span><span style="display:flex;"><span>        os<span style="color:#f92672">.</span>makedirs(save_path, exist_ok<span style="color:#f92672">=</span><span style="color:#66d9ef">True</span>)
+</span></span><span style="display:flex;"><span>        img_path <span style="color:#f92672">=</span> save_path <span style="color:#f92672">+</span> <span style="color:#e6db74">&#39;0000.png&#39;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e"># 创建线程，用于模型推理</span>
+</span></span><span style="display:flex;"><span>        self<span style="color:#f92672">.</span>vision_improved <span style="color:#f92672">=</span> VisionImproved(<span style="color:#e6db74">f</span><span style="color:#e6db74">&#39;results/videos/</span><span style="color:#e6db74">{</span>name<span style="color:#e6db74">}</span><span style="color:#e6db74">/&#39;</span>, data, is_dir<span style="color:#f92672">=</span><span style="color:#66d9ef">True</span>)
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">else</span>:
+</span></span><span style="display:flex;"><span>        save_path <span style="color:#f92672">=</span> <span style="color:#e6db74">f</span><span style="color:#e6db74">&#39;results/img/</span><span style="color:#e6db74">{</span>dic[data]<span style="color:#e6db74">}</span><span style="color:#e6db74">/&#39;</span>
+</span></span><span style="display:flex;"><span>        os<span style="color:#f92672">.</span>makedirs(save_path, exist_ok<span style="color:#f92672">=</span><span style="color:#66d9ef">True</span>)
+</span></span><span style="display:flex;"><span>        img_path <span style="color:#f92672">=</span> save_path <span style="color:#f92672">+</span> name <span style="color:#f92672">+</span> <span style="color:#e6db74">&#39;.png&#39;</span>
+</span></span><span style="display:flex;"><span>        self<span style="color:#f92672">.</span>vision_improved <span style="color:#f92672">=</span> VisionImproved(path, data)
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e"># 新开线程，用于模型推理</span>
+</span></span><span style="display:flex;"><span>    self<span style="color:#f92672">.</span>vision_improved<span style="color:#f92672">.</span>start()
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e"># 未生成，暂停1秒</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">while</span> <span style="color:#f92672">not</span> os<span style="color:#f92672">.</span>path<span style="color:#f92672">.</span>isfile(img_path):
+</span></span><span style="display:flex;"><span>        time<span style="color:#f92672">.</span>sleep(<span style="color:#ae81ff">1</span>)
+</span></span><span style="display:flex;"><span>        
+</span></span><span style="display:flex;"><span>    self<span style="color:#f92672">.</span>res_imgpath <span style="color:#f92672">=</span> img_path
+</span></span><span style="display:flex;"><span>    self<span style="color:#f92672">.</span>scaleimg()
+</span></span></code></pre></div><p>最后，绑定槽函数即可：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>self<span style="color:#f92672">.</span>admit_btn<span style="color:#f92672">.</span>clicked<span style="color:#f92672">.</span>connect(self<span style="color:#f92672">.</span>img_improve)
+</span></span></code></pre></div><h4 id="待开发">待开发<a hidden class="anchor" aria-hidden="true" href="#待开发">#</a></h4>
+<p>本程序只完成了初步的视频预测，改进部分如下：</p>
+<ul>
+<li>对图片的预测仍然是单张，后续看能否改为批量</li>
+<li>每次选择效果后都需要重加载模型，浪费了一定时间。考虑把各个效果的模型整合到一个大类中，方便直接调用</li>
+<li>视频播放的策略是：固定帧率，当播放进度超越生成进度时，自动暂停。后续考虑根据生成速度自动调节帧率</li>
+<li>模型转成<code>onnx</code>，加快推理速度</li>
+<li>增加进度条，显示生成进度</li>
+</ul>
+
+
+  </div>
+
+  <footer class="post-footer">
+    <ul class="post-tags">
+    </ul>
+<nav class="paginav">
+  <a class="prev" href="https://iendi.github.io/en/posts/ai/transformer/">
+    <span class="title">« 上一页</span>
+    <br>
+    <span>Transformer基础知识</span>
+  </a>
+  <a class="next" href="https://iendi.github.io/en/posts/tech/java--jvm/stringtable-%E4%B8%80%E4%BA%9B%E7%89%B9%E6%80%A7/">
+    <span class="title">下一页 »</span>
+    <br>
+    <span>StringTable 一些特性</span>
+  </a>
+</nav>
+
+  </footer>
+</article>
+    </main>
+    
+<footer class="footer">
+    <span>
+        Copyright
+        &copy;
+        -2024
+        <a href="https://iendi.github.io/en/" style="color:#939393;">Kend&#39;s Blog</a>
+        All Rights Reserved
+    </span>
+    <a href="https://beian.miit.gov.cn/" target="_blank" style="color:#939393;"></a>&nbsp;
+    <span>
+        <a target="_blank" href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=null"
+           style="display:inline-block;text-decoration:none;height:20px;color:#939393;">
+            <img src="" style="float:left;margin: 0px 5px 0px 0px;"/>
+            
+        </a>
+    </span>
+    <span id="busuanzi_container">
+        <span class="fa fa-user"></span> <span id="busuanzi_value_site_uv"></span>
+        <span class="fa fa-eye"></span> <span id="busuanzi_value_site_pv"></span>
+    </span>
+</footer>
+<a href="#top" aria-label="go to top" title="Go to Top (Alt + G)" class="top-link" id="top-link" accesskey="g">
+    <span class="topInner">
+        <svg class="topSvg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentColor">
+            <path d="M12 6H0l6-6z"/>
+        </svg>
+        <span id="read_progress"></span>
+    </span>
+</a>
+
+<script>
+    document.addEventListener('scroll', function (e) {
+        const readProgress = document.getElementById("read_progress");
+        const scrollHeight = document.documentElement.scrollHeight;
+        const clientHeight = document.documentElement.clientHeight;
+        const scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
+        readProgress.innerText = ((scrollTop / (scrollHeight - clientHeight)).toFixed(2) * 100).toFixed(0);
+    })
+</script>
+
+<script>
+    let menu = document.getElementById('menu')
+    if (menu) {
+        menu.scrollLeft = localStorage.getItem("menu-scroll-position");
+        menu.onscroll = function () {
+            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+        }
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+</script>
+<script>
+    let mybutton = document.getElementById("top-link");
+    window.onscroll = function () {
+        if (document.body.scrollTop > 200 || document.documentElement.scrollTop > 200) {
+            mybutton.style.visibility = "visible";
+            mybutton.style.opacity = "1";
+        } else {
+            mybutton.style.visibility = "hidden";
+            mybutton.style.opacity = "0";
+        }
+    };
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        (function() {
+            document.cookie = "change-themes" + "="+ escape ("false");
+        })()
+
+        if (document.body.className.includes("dark")) {
+            document.body.classList.remove('dark');
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            document.body.classList.add('dark');
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    });
+</script>
+
+<script>
+    document.body.addEventListener('copy', function (e) {
+        if (window.getSelection().toString() && window.getSelection().toString().length > 50) {
+            let clipboardData = e.clipboardData || window.clipboardData;
+            if (clipboardData) {
+                e.preventDefault();
+                let htmlData = window.getSelection().toString() +
+                    '\r\n\n————————————————\r\n' +
+                    '版权声明：本文为「'+"Kend's Blog"+'」的原创文章，遵循CC 4.0 BY-SA版权协议，转载请附上原文出处链接及本声明。' +
+                '\r\n原文链接：' + location.href;
+                let textData = window.getSelection().toString() +
+                    '\r\n\n————————————————\r\n' +
+                    '版权声明：本文为「'+"Kend's Blog"+'」的原创文章，遵循CC 4.0 BY-SA版权协议，转载请附上原文出处链接及本声明。' +
+                '\r\n原文链接：' + location.href;
+                clipboardData.setData('text/html', htmlData);
+                clipboardData.setData('text/plain', textData);
+            }
+        }
+    });
+</script>
+<script>
+    document.querySelectorAll('pre > code').forEach((codeblock) => {
+        const container = codeblock.parentNode.parentNode;
+        const copybutton = document.createElement('button');
+        copybutton.classList.add('copy-code');
+        copybutton.innerText = '📄复制';
+
+        function copyingDone() {
+            copybutton.innerText = '👌🏻已复制!';
+            setTimeout(() => {
+                copybutton.innerText = '📄复制';
+            }, 2000);
+        }
+
+        copybutton.addEventListener('click', (cb) => {
+            if ('clipboard' in navigator) {
+                let text = codeblock.textContent +
+                    '\r\n————————————————\r\n' +
+                    '版权声明：本文为「'+"Kend's Blog"+'」的原创文章，遵循CC 4.0 BY-SA版权协议，转载请附上原文出处链接及本声明。' +
+                '\r\n原文链接：' + location.href;
+                navigator.clipboard.writeText(text);
+                copyingDone();
+                return;
+            }
+
+            const range = document.createRange();
+            range.selectNodeContents(codeblock);
+            const selection = window.getSelection();
+            selection.removeAllRanges();
+            selection.addRange(range);
+            try {
+                document.execCommand('copy');
+                copyingDone();
+            } catch (e) {}
+            selection.removeRange(range);
+        });
+
+        let language = codeblock.className.replaceAll("language-", "")
+        let macTool = document.createElement("div")
+        let macTool1 = document.createElement("div")
+        let macTool2 = document.createElement("div")
+        let macTool3 = document.createElement("div")
+        let languageType = document.createElement("div")
+        languageType.innerText = language
+        macTool.setAttribute('class', 'mac-tool')
+        macTool1.setAttribute('class', 'mac bb1')
+        macTool2.setAttribute('class', 'mac bb2')
+        macTool3.setAttribute('class', 'mac bb3')
+        languageType.setAttribute('class', 'language-type')
+        macTool.appendChild(macTool1)
+        macTool.appendChild(macTool2)
+        macTool.appendChild(macTool3)
+        macTool.appendChild(languageType)
+
+        if (container.classList.contains("highlight")) {
+            container.appendChild(copybutton);
+            container.appendChild(macTool)
+        } else if (container.parentNode.firstChild == container) {
+            
+        } else if (codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.nodeName == "TABLE") {
+            
+            codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.appendChild(copybutton);
+            container.appendChild(macTool)
+        } else {
+            
+            codeblock.parentNode.appendChild(copybutton);
+            container.appendChild(macTool)
+        }
+    });
+</script>
+</body>
+
+</html>

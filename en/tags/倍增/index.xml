@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
+  <channel>
+    <title>倍增 on Kend&#39;s Blog</title>
+    <link>https://iendi.github.io/en/tags/%E5%80%8D%E5%A2%9E/</link>
+    <description>Recent content in 倍增 on Kend&#39;s Blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en</language>
+    <lastBuildDate>Sun, 07 Apr 2024 16:23:11 +0800</lastBuildDate>
+    <atom:link href="https://iendi.github.io/en/tags/%E5%80%8D%E5%A2%9E/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>位运算&amp;倍增</title>
+      <link>https://iendi.github.io/en/posts/lc/%E5%85%B6%E4%BB%96/1/</link>
+      <pubDate>Sun, 07 Apr 2024 16:23:11 +0800</pubDate>
+      <guid>https://iendi.github.io/en/posts/lc/%E5%85%B6%E4%BB%96/1/</guid>
+      <description>1483. 树节点的第 K 个祖先 - 力扣（LeetCode） 给定n=7， 每个元素的祖先[-1,0,0,1,1,2,2] 对应树为： 要求给定元素n，求出其第k</description>
+    </item>
+  </channel>
+</rss>

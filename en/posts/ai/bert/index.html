@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html lang="en" dir="auto">
+
+<head><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="index, follow">
+<title>Bert | Kend&#39;s Blog</title>
+<meta name="keywords" content="">
+<meta name="description" content="BERT的全称为Bidirectional Encoder Representation from Transformers，主要针对Transformer的Encoder部分进行预训练，包括">
+<meta name="author" content="Kend">
+<link rel="canonical" href="https://iendi.github.io/en/posts/ai/bert/">
+
+
+<link crossorigin="anonymous" href="/assets/css/stylesheet.2b3a9b630d724ad2b56cb3217ca569e88f4344d61fa91c496bfd01d1128c4950.css" integrity="" rel="preload stylesheet" as="style">
+<script defer crossorigin="anonymous" src="/assets/js/highlight.f413e19d0714851f6474e7ee9632408e58ac146fbdbe62747134bea2fa3415e0.js" integrity="sha256-9BPhnQcUhR9kdOfuljJAjlisFG&#43;9vmJ0cTS&#43;ovo0FeA="
+        onload="hljs.initHighlightingOnLoad();"></script>
+<link rel="icon" href="https://iendi.github.io/img/1.png">
+<link rel="icon" type="image/png" sizes="16x16" href="https://iendi.github.io/img/1.png">
+<link rel="icon" type="image/png" sizes="32x32" href="https://iendi.github.io/img/1.png">
+<link rel="apple-touch-icon" href="https://iendi.github.io/1.png">
+<link rel="mask-icon" href="https://iendi.github.io/1.png">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<link rel="alternate" hreflang="en" href="https://iendi.github.io/en/posts/ai/bert/">
+<noscript>
+    <style>
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+</noscript>
+<script>
+    MathJax = {
+      tex: {
+        inlineMath: [["$", "$"]],
+      },
+      displayMath: [
+        ["$$", "$$"]
+      ],
+      svg: {
+        fontCache: "global",
+      },
+    };
+  </script>
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script
+    id="MathJax-script"
+    async
+    src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"
+  ></script>
+
+
+  
+
+<meta property="og:title" content="Bert" />
+<meta property="og:description" content="BERT的全称为Bidirectional Encoder Representation from Transformers，主要针对Transformer的Encoder部分进行预训练，包括" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://iendi.github.io/en/posts/ai/bert/" /><meta property="article:section" content="posts" />
+<meta property="article:published_time" content="2023-07-05T22:20:58+08:00" />
+<meta property="article:modified_time" content="2023-07-05T22:20:58+08:00" />
+
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Bert"/>
+<meta name="twitter:description" content="BERT的全称为Bidirectional Encoder Representation from Transformers，主要针对Transformer的Encoder部分进行预训练，包括"/>
+
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position":  1 ,
+      "name": "📚文章",
+      "item": "https://iendi.github.io/en/posts/"
+    }, 
+    {
+      "@type": "ListItem",
+      "position":  2 ,
+      "name": "💻AI",
+      "item": "https://iendi.github.io/en/posts/ai/"
+    }, 
+    {
+      "@type": "ListItem",
+      "position":  3 ,
+      "name": "Bert",
+      "item": "https://iendi.github.io/en/posts/ai/bert/"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "Bert",
+  "name": "Bert",
+  "description": "BERT的全称为Bidirectional Encoder Representation from Transformers，主要针对Transformer的Encoder部分进行预训练，包括",
+  "keywords": [
+    
+  ],
+  "articleBody": "BERT的全称为Bidirectional Encoder Representation from Transformers，主要针对Transformer的Encoder部分进行预训练，包括以下两个部分：\nMasked Language Model：类似完形填空，预测被遮挡的单词 Next Sentence Prediction：预测下一个句子 首先对输入的句子进行token化，具体操作如下图所示\nMasked Language Model BERT会以15%的概率随机地选中某个token位置，替换为[MASK]。假设输入为the cat sat on the mat，将cat进行mask。\n经过Encoder层后得到特征向量$u_M$，根据attention的特性，$u_M$包括上下文信息，知道整句话的意思，因此将其输入至SoftMax分类器，得到概率分布p\n最后，把预测的值和ground truth进行交叉熵计算loss，然后梯度下降更新模型参数\n==注==：这里更新参数，包括Encoder层和Embedding层。因此，最后训练得到的Embedding层可以有效表示不同词向量之间的关联性\n预训练的目标会令产生的语言表征对[MASK]敏感，但是却对其他token不敏感，因此BERT在替换时，采用以下策略\n80%是[MASK]。my dog is hairy——\u003emy dog is [MASK] 10%是随机的其他token。my dog is hairy——\u003emy dog is apple 10%的是原来的token。my dog is hairy——\u003emy dog is hairy 这种策略令BERT不再只对[MASK]敏感，而是对所有的token都敏感，以至能抽取出任何token的表征信息\nNext Sentence Prediction MLM任务倾向于抽取token层次的表征，因此不能直接获取句子层次的表征。因此BERT中加入NSP任务，预测两个句子是否连在一起\n将两个句子通过[SEP]连接起来，如果是上下句，target为true\n得到的特征向量c包括所有输入的信息，将其输入至二分类器中，与真实值对比，并进行参数更新\n在训练时，常将MLM和NSP结合起来，如下所示。也可以加多个MASK或句子，对应的加多个loss\n经过预训练后，BERT在每个位置上生成对应于输入标记的表示向量，可以理解为提取出了语义信息。这些表示向量可以被用于各种下游任务，如文本分类、命名实体识别等\n",
+  "wordCount" : "896",
+  "inLanguage": "en",
+  "datePublished": "2023-07-05T22:20:58+08:00",
+  "dateModified": "2023-07-05T22:20:58+08:00",
+  "author":{
+    "@type": "Person",
+    "name": "Kend"
+  },
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://iendi.github.io/en/posts/ai/bert/"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "Kend's Blog",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://iendi.github.io/img/1.png"
+    }
+  }
+}
+</script>
+</head>
+
+<body class="" id="top">
+<script>
+    if (localStorage.getItem("pref-theme") === "dark") {
+        document.body.classList.add('dark');
+    }
+
+</script>
+
+<header class="header">
+    <nav class="nav">
+        <div class="logo">
+            <a href="https://iendi.github.io/en/" accesskey="h" title="Kend&#39;s Blog (Alt + H)">
+                <img src="https://iendi.github.io/img/1.png" alt="" aria-label="logo"
+                    height="35">Kend&#39;s Blog</a>
+            <div class="logo-switches">
+                <button id="theme-toggle" accesskey="t" title="(Alt + T)">
+                    <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <ul id="menu">
+            <li>
+                <a href="https://iendi.github.io/en/search" title="🔍搜索 (Alt &#43; /)" accesskey=/>
+                    <span>🔍搜索</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://iendi.github.io/en/" title="🏠主页">
+                    <span>🏠主页</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://iendi.github.io/en/posts" title="📚文章">
+                    <span>📚文章</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://iendi.github.io/en/archives/" title="⏱时间轴">
+                    <span>⏱时间轴</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://iendi.github.io/en/tags" title="🔖标签">
+                    <span>🔖标签</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://iendi.github.io/en/about" title="🙋🏻‍♂️关于">
+                    <span>🙋🏻‍♂️关于</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</header>
+<main class="main">
+
+<article class="post-single">
+  <header class="post-header">
+    <div class="breadcrumbs"><a href="https://iendi.github.io/en/">主页</a>&nbsp;»&nbsp;<a href="https://iendi.github.io/en/posts/">📚文章</a>&nbsp;»&nbsp;<a href="https://iendi.github.io/en/posts/ai/">💻AI</a></div>
+    <h1 class="post-title entry-hint-parent">
+      Bert
+    </h1>
+    <div class="post-meta"><span title='2023-07-05 22:20:58 +0800 CST'>2023-07-05</span>&nbsp;·&nbsp;2 min&nbsp;·&nbsp;Kend
+
+
+
+
+&nbsp;|&nbsp;标签: &nbsp;
+    </div>
+  </header> <aside id="toc-container" class="toc-container wide">
+    <div class="toc">
+        <details  open>
+            <summary accesskey="c" title="(Alt + C)">
+                <span class="details">文章目录</span>
+            </summary>
+
+            <div class="inner"><ul>
+                    <li>
+                        <a href="#masked-language-model" aria-label="Masked Language Model">Masked Language Model</a></li>
+                    <li>
+                        <a href="#next-sentence-prediction" aria-label="Next Sentence Prediction">Next Sentence Prediction</a>
+                    </li>
+                </ul>
+            </div>
+        </details>
+    </div>
+</aside>
+<script>
+    let activeElement;
+    let elements;
+    window.addEventListener('DOMContentLoaded', function (event) {
+        checkTocPosition();
+
+        elements = document.querySelectorAll('h1[id],h2[id],h3[id],h4[id],h5[id],h6[id]');
+         
+         activeElement = elements[0];
+         const id = encodeURI(activeElement.getAttribute('id')).toLowerCase();
+         document.querySelector(`.inner ul li a[href="#${id}"]`).classList.add('active');
+     }, false);
+
+    window.addEventListener('resize', function(event) {
+        checkTocPosition();
+    }, false);
+
+    window.addEventListener('scroll', () => {
+        
+        activeElement = Array.from(elements).find((element) => {
+            if ((getOffsetTop(element) - window.pageYOffset) > 0 && 
+                (getOffsetTop(element) - window.pageYOffset) < window.innerHeight/2) {
+                return element;
+            }
+        }) || activeElement
+
+        elements.forEach(element => {
+             const id = encodeURI(element.getAttribute('id')).toLowerCase();
+             if (element === activeElement){
+                 document.querySelector(`.inner ul li a[href="#${id}"]`).classList.add('active');
+             } else {
+                 document.querySelector(`.inner ul li a[href="#${id}"]`).classList.remove('active');
+             }
+         })
+     }, false);
+
+    const main = parseInt(getComputedStyle(document.body).getPropertyValue('--article-width'), 10);
+    const toc = parseInt(getComputedStyle(document.body).getPropertyValue('--toc-width'), 10);
+    const gap = parseInt(getComputedStyle(document.body).getPropertyValue('--gap'), 10);
+
+    function checkTocPosition() {
+        const width = document.body.scrollWidth;
+
+        if (width - main - (toc * 2) - (gap * 4) > 0) {
+            document.getElementById("toc-container").classList.add("wide");
+        } else {
+            document.getElementById("toc-container").classList.remove("wide");
+        }
+    }
+
+    function getOffsetTop(element) {
+        if (!element.getClientRects().length) {
+            return 0;
+        }
+        let rect = element.getBoundingClientRect();
+        let win = element.ownerDocument.defaultView;
+        return rect.top + win.pageYOffset;   
+    }
+</script>
+  <div class="post-content"><p>BERT的全称为Bidirectional Encoder Representation from Transformers，主要针对Transformer的<code>Encoder</code>部分进行预训练，包括以下两个部分：</p>
+<ul>
+<li>Masked Language Model：类似完形填空，预测被遮挡的单词</li>
+<li>Next Sentence Prediction：预测下一个句子</li>
+</ul>
+<p>首先对输入的句子进行token化，具体操作如下图所示</p>
+<p><img loading="lazy" src="v2-ee823df66560850baa34128af76a6334_1440w.webp" alt="token_img"  />
+</p>
+<h3 id="masked-language-model">Masked Language Model<a hidden class="anchor" aria-hidden="true" href="#masked-language-model">#</a></h3>
+<p>BERT会以15%的概率随机地选中某个token位置，替换为[MASK]。假设输入为<em>the cat sat on the mat</em>，将cat进行mask。</p>
+<p>经过Encoder层后得到特征向量$u_M$，根据attention的特性，$u_M$包括<strong>上下文信息</strong>，知道整句话的意思，因此将其输入至SoftMax分类器，得到概率分布p</p>
+<p>最后，把预测的值和ground truth进行交叉熵计算loss，然后梯度下降更新模型参数</p>
+<p>==注==：这里更新参数，包括Encoder层和Embedding层。因此，最后训练得到的Embedding层可以有效表示不同词向量之间的<strong>关联性</strong></p>
+<img src="image-20230705105046584.png" alt="image-20230705105046584" style="zoom:80%;" />
+<p>预训练的目标会令产生的语言表征对[MASK]<strong>敏感</strong>，但是却对其他token不敏感，因此BERT在替换时，采用以下策略</p>
+<ul>
+<li>80%是[MASK]。my dog is <strong>hairy</strong>——&gt;my dog is <strong>[MASK]</strong></li>
+<li>10%是随机的其他token。my dog is <strong>hairy</strong>——&gt;my dog is <strong>apple</strong></li>
+<li>10%的是原来的token。my dog is <strong>hairy</strong>——&gt;my dog is <strong>hairy</strong></li>
+</ul>
+<p>这种策略令BERT不再只对[MASK]敏感，而是对所有的token都敏感，以至能抽取出任何token的表征信息</p>
+<h3 id="next-sentence-prediction">Next Sentence Prediction<a hidden class="anchor" aria-hidden="true" href="#next-sentence-prediction">#</a></h3>
+<p>MLM任务倾向于抽取<strong>token层次</strong>的表征，因此不能直接获取<strong>句子层次</strong>的表征。因此BERT中加入NSP任务，预测两个句子是否连在一起</p>
+<p>将两个句子通过[SEP]连接起来，如果是上下句，target为true</p>
+<p>得到的特征向量<code>c</code>包括<strong>所有</strong>输入的信息，将其输入至二分类器中，与真实值对比，并进行参数更新</p>
+<img src="image-20230705112517358.png" alt="image-20230705112517358" style="zoom:80%;" />
+<p>在训练时，常将MLM和NSP结合起来，如下所示。也可以加多个MASK或句子，对应的加多个loss</p>
+<img src="image-20230705115459369.png" alt="image-20230705115459369" style="zoom:80%;" />
+<p>经过预训练后，BERT在每个位置上生成对应于输入标记的<strong>表示向量</strong>，可以理解为提取出了语义信息。这些<strong>表示向量</strong>可以被用于各种下游任务，如文本分类、命名实体识别等</p>
+
+
+  </div>
+
+  <footer class="post-footer">
+    <ul class="post-tags">
+    </ul>
+<nav class="paginav">
+  <a class="prev" href="https://iendi.github.io/en/posts/ai/vit/">
+    <span class="title">« 上一页</span>
+    <br>
+    <span>ViT</span>
+  </a>
+  <a class="next" href="https://iendi.github.io/en/posts/ai/transformer/">
+    <span class="title">下一页 »</span>
+    <br>
+    <span>Transformer基础知识</span>
+  </a>
+</nav>
+
+  </footer>
+</article>
+    </main>
+    
+<footer class="footer">
+    <span>
+        Copyright
+        &copy;
+        -2024
+        <a href="https://iendi.github.io/en/" style="color:#939393;">Kend&#39;s Blog</a>
+        All Rights Reserved
+    </span>
+    <a href="https://beian.miit.gov.cn/" target="_blank" style="color:#939393;"></a>&nbsp;
+    <span>
+        <a target="_blank" href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=null"
+           style="display:inline-block;text-decoration:none;height:20px;color:#939393;">
+            <img src="" style="float:left;margin: 0px 5px 0px 0px;"/>
+            
+        </a>
+    </span>
+    <span id="busuanzi_container">
+        <span class="fa fa-user"></span> <span id="busuanzi_value_site_uv"></span>
+        <span class="fa fa-eye"></span> <span id="busuanzi_value_site_pv"></span>
+    </span>
+</footer>
+<a href="#top" aria-label="go to top" title="Go to Top (Alt + G)" class="top-link" id="top-link" accesskey="g">
+    <span class="topInner">
+        <svg class="topSvg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentColor">
+            <path d="M12 6H0l6-6z"/>
+        </svg>
+        <span id="read_progress"></span>
+    </span>
+</a>
+
+<script>
+    document.addEventListener('scroll', function (e) {
+        const readProgress = document.getElementById("read_progress");
+        const scrollHeight = document.documentElement.scrollHeight;
+        const clientHeight = document.documentElement.clientHeight;
+        const scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
+        readProgress.innerText = ((scrollTop / (scrollHeight - clientHeight)).toFixed(2) * 100).toFixed(0);
+    })
+</script>
+
+<script>
+    let menu = document.getElementById('menu')
+    if (menu) {
+        menu.scrollLeft = localStorage.getItem("menu-scroll-position");
+        menu.onscroll = function () {
+            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+        }
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+</script>
+<script>
+    let mybutton = document.getElementById("top-link");
+    window.onscroll = function () {
+        if (document.body.scrollTop > 200 || document.documentElement.scrollTop > 200) {
+            mybutton.style.visibility = "visible";
+            mybutton.style.opacity = "1";
+        } else {
+            mybutton.style.visibility = "hidden";
+            mybutton.style.opacity = "0";
+        }
+    };
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        (function() {
+            document.cookie = "change-themes" + "="+ escape ("false");
+        })()
+
+        if (document.body.className.includes("dark")) {
+            document.body.classList.remove('dark');
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            document.body.classList.add('dark');
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    });
+</script>
+
+<script>
+    document.body.addEventListener('copy', function (e) {
+        if (window.getSelection().toString() && window.getSelection().toString().length > 50) {
+            let clipboardData = e.clipboardData || window.clipboardData;
+            if (clipboardData) {
+                e.preventDefault();
+                let htmlData = window.getSelection().toString() +
+                    '\r\n\n————————————————\r\n' +
+                    '版权声明：本文为「'+"Kend's Blog"+'」的原创文章，遵循CC 4.0 BY-SA版权协议，转载请附上原文出处链接及本声明。' +
+                '\r\n原文链接：' + location.href;
+                let textData = window.getSelection().toString() +
+                    '\r\n\n————————————————\r\n' +
+                    '版权声明：本文为「'+"Kend's Blog"+'」的原创文章，遵循CC 4.0 BY-SA版权协议，转载请附上原文出处链接及本声明。' +
+                '\r\n原文链接：' + location.href;
+                clipboardData.setData('text/html', htmlData);
+                clipboardData.setData('text/plain', textData);
+            }
+        }
+    });
+</script>
+<script>
+    document.querySelectorAll('pre > code').forEach((codeblock) => {
+        const container = codeblock.parentNode.parentNode;
+        const copybutton = document.createElement('button');
+        copybutton.classList.add('copy-code');
+        copybutton.innerText = '📄复制';
+
+        function copyingDone() {
+            copybutton.innerText = '👌🏻已复制!';
+            setTimeout(() => {
+                copybutton.innerText = '📄复制';
+            }, 2000);
+        }
+
+        copybutton.addEventListener('click', (cb) => {
+            if ('clipboard' in navigator) {
+                let text = codeblock.textContent +
+                    '\r\n————————————————\r\n' +
+                    '版权声明：本文为「'+"Kend's Blog"+'」的原创文章，遵循CC 4.0 BY-SA版权协议，转载请附上原文出处链接及本声明。' +
+                '\r\n原文链接：' + location.href;
+                navigator.clipboard.writeText(text);
+                copyingDone();
+                return;
+            }
+
+            const range = document.createRange();
+            range.selectNodeContents(codeblock);
+            const selection = window.getSelection();
+            selection.removeAllRanges();
+            selection.addRange(range);
+            try {
+                document.execCommand('copy');
+                copyingDone();
+            } catch (e) {}
+            selection.removeRange(range);
+        });
+
+        let language = codeblock.className.replaceAll("language-", "")
+        let macTool = document.createElement("div")
+        let macTool1 = document.createElement("div")
+        let macTool2 = document.createElement("div")
+        let macTool3 = document.createElement("div")
+        let languageType = document.createElement("div")
+        languageType.innerText = language
+        macTool.setAttribute('class', 'mac-tool')
+        macTool1.setAttribute('class', 'mac bb1')
+        macTool2.setAttribute('class', 'mac bb2')
+        macTool3.setAttribute('class', 'mac bb3')
+        languageType.setAttribute('class', 'language-type')
+        macTool.appendChild(macTool1)
+        macTool.appendChild(macTool2)
+        macTool.appendChild(macTool3)
+        macTool.appendChild(languageType)
+
+        if (container.classList.contains("highlight")) {
+            container.appendChild(copybutton);
+            container.appendChild(macTool)
+        } else if (container.parentNode.firstChild == container) {
+            
+        } else if (codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.nodeName == "TABLE") {
+            
+            codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.appendChild(copybutton);
+            container.appendChild(macTool)
+        } else {
+            
+            codeblock.parentNode.appendChild(copybutton);
+            container.appendChild(macTool)
+        }
+    });
+</script>
+</body>
+
+</html>

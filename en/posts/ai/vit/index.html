@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html lang="en" dir="auto">
+
+<head><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="index, follow">
+<title>ViT | Kend&#39;s Blog</title>
+<meta name="keywords" content="">
+<meta name="description" content="整体结构 分为三个部分，Linear Projection of Flattened Patches(Embedding层)、Encoder和MLP Head分类头 下图是不同版本ViT的参">
+<meta name="author" content="Kend">
+<link rel="canonical" href="https://iendi.github.io/en/posts/ai/vit/">
+
+
+<link crossorigin="anonymous" href="/assets/css/stylesheet.2b3a9b630d724ad2b56cb3217ca569e88f4344d61fa91c496bfd01d1128c4950.css" integrity="" rel="preload stylesheet" as="style">
+<script defer crossorigin="anonymous" src="/assets/js/highlight.f413e19d0714851f6474e7ee9632408e58ac146fbdbe62747134bea2fa3415e0.js" integrity="sha256-9BPhnQcUhR9kdOfuljJAjlisFG&#43;9vmJ0cTS&#43;ovo0FeA="
+        onload="hljs.initHighlightingOnLoad();"></script>
+<link rel="icon" href="https://iendi.github.io/img/1.png">
+<link rel="icon" type="image/png" sizes="16x16" href="https://iendi.github.io/img/1.png">
+<link rel="icon" type="image/png" sizes="32x32" href="https://iendi.github.io/img/1.png">
+<link rel="apple-touch-icon" href="https://iendi.github.io/1.png">
+<link rel="mask-icon" href="https://iendi.github.io/1.png">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<link rel="alternate" hreflang="en" href="https://iendi.github.io/en/posts/ai/vit/">
+<noscript>
+    <style>
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+</noscript>
+<script>
+    MathJax = {
+      tex: {
+        inlineMath: [["$", "$"]],
+      },
+      displayMath: [
+        ["$$", "$$"]
+      ],
+      svg: {
+        fontCache: "global",
+      },
+    };
+  </script>
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script
+    id="MathJax-script"
+    async
+    src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"
+  ></script>
+
+
+  
+
+<meta property="og:title" content="ViT" />
+<meta property="og:description" content="整体结构 分为三个部分，Linear Projection of Flattened Patches(Embedding层)、Encoder和MLP Head分类头 下图是不同版本ViT的参" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://iendi.github.io/en/posts/ai/vit/" /><meta property="article:section" content="posts" />
+<meta property="article:published_time" content="2023-07-06T22:20:58+08:00" />
+<meta property="article:modified_time" content="2023-07-06T22:20:58+08:00" />
+
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="ViT"/>
+<meta name="twitter:description" content="整体结构 分为三个部分，Linear Projection of Flattened Patches(Embedding层)、Encoder和MLP Head分类头 下图是不同版本ViT的参"/>
+
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position":  1 ,
+      "name": "📚文章",
+      "item": "https://iendi.github.io/en/posts/"
+    }, 
+    {
+      "@type": "ListItem",
+      "position":  2 ,
+      "name": "💻AI",
+      "item": "https://iendi.github.io/en/posts/ai/"
+    }, 
+    {
+      "@type": "ListItem",
+      "position":  3 ,
+      "name": "ViT",
+      "item": "https://iendi.github.io/en/posts/ai/vit/"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "ViT",
+  "name": "ViT",
+  "description": "整体结构 分为三个部分，Linear Projection of Flattened Patches(Embedding层)、Encoder和MLP Head分类头 下图是不同版本ViT的参",
+  "keywords": [
+    
+  ],
+  "articleBody": "整体结构 分为三个部分，Linear Projection of Flattened Patches(Embedding层)、Encoder和MLP Head分类头\n下图是不同版本ViT的参数设置。\nLayers：Transformer Encoder中重复堆叠Encoder Block的次数 Hidden Size：通过Embedding层后每个token的dim MLP size：Transformer Encoder中MLP Block第一个全连接的节点个数（是Hidden Size的四倍） Heads：Transformer中Multi-Head Attention的heads数 Embedding层 首先将图片分为不同的patch，这里有两个参数\npatch size：一个patch的大小 stride：步长，如果和patch size一样，则不重叠（可以重叠） 接着，将每个patch拉伸至一维，并通过线性层，得到Embedding层的输出\n实际代码中，上述过程直接通过卷积进行。假设使用ViT-B16,参数设置如下\nkernel size kernel num stride 16×16 768 16 原图尺寸[224,224,3]，卷积后➡[14,14,768]，将h和w进行展平➡[196,768] 加入[CLS]标签的token➡[197,768] 加入Position Embedding➡[197,768] 至此，得到Embedding层的输出\nEncoder层 Encoder层结构如下，DropPath可以理解为随机丢弃一些残差连接。一个Transformer Encoder是由多个Encoder Block组成的\nMLP Head 一般是直接Linear+Softmax。有些数据集比较大，会改成Linear+tanh+Linear+Softmax\nHybrid模型 改不同的backbone，先用backbone进行特征提取，然后将其输入至ViT中\n参考资料:\n11.1 Vision Transformer(vit)网络详解\nViT用于图片分类\n",
+  "wordCount" : "776",
+  "inLanguage": "en",
+  "datePublished": "2023-07-06T22:20:58+08:00",
+  "dateModified": "2023-07-06T22:20:58+08:00",
+  "author":{
+    "@type": "Person",
+    "name": "Kend"
+  },
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://iendi.github.io/en/posts/ai/vit/"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "Kend's Blog",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://iendi.github.io/img/1.png"
+    }
+  }
+}
+</script>
+</head>
+
+<body class="" id="top">
+<script>
+    if (localStorage.getItem("pref-theme") === "dark") {
+        document.body.classList.add('dark');
+    }
+
+</script>
+
+<header class="header">
+    <nav class="nav">
+        <div class="logo">
+            <a href="https://iendi.github.io/en/" accesskey="h" title="Kend&#39;s Blog (Alt + H)">
+                <img src="https://iendi.github.io/img/1.png" alt="" aria-label="logo"
+                    height="35">Kend&#39;s Blog</a>
+            <div class="logo-switches">
+                <button id="theme-toggle" accesskey="t" title="(Alt + T)">
+                    <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <ul id="menu">
+            <li>
+                <a href="https://iendi.github.io/en/search" title="🔍搜索 (Alt &#43; /)" accesskey=/>
+                    <span>🔍搜索</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://iendi.github.io/en/" title="🏠主页">
+                    <span>🏠主页</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://iendi.github.io/en/posts" title="📚文章">
+                    <span>📚文章</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://iendi.github.io/en/archives/" title="⏱时间轴">
+                    <span>⏱时间轴</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://iendi.github.io/en/tags" title="🔖标签">
+                    <span>🔖标签</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://iendi.github.io/en/about" title="🙋🏻‍♂️关于">
+                    <span>🙋🏻‍♂️关于</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</header>
+<main class="main">
+
+<article class="post-single">
+  <header class="post-header">
+    <div class="breadcrumbs"><a href="https://iendi.github.io/en/">主页</a>&nbsp;»&nbsp;<a href="https://iendi.github.io/en/posts/">📚文章</a>&nbsp;»&nbsp;<a href="https://iendi.github.io/en/posts/ai/">💻AI</a></div>
+    <h1 class="post-title entry-hint-parent">
+      ViT
+    </h1>
+    <div class="post-meta"><span title='2023-07-06 22:20:58 +0800 CST'>2023-07-06</span>&nbsp;·&nbsp;2 min&nbsp;·&nbsp;Kend
+
+
+
+
+&nbsp;|&nbsp;标签: &nbsp;
+    </div>
+  </header> <aside id="toc-container" class="toc-container wide">
+    <div class="toc">
+        <details  open>
+            <summary accesskey="c" title="(Alt + C)">
+                <span class="details">文章目录</span>
+            </summary>
+
+            <div class="inner"><ul>
+                    <li>
+                        <a href="#%e6%95%b4%e4%bd%93%e7%bb%93%e6%9e%84" aria-label="整体结构">整体结构</a></li>
+                    <li>
+                        <a href="#embedding%e5%b1%82" aria-label="Embedding层">Embedding层</a></li>
+                    <li>
+                        <a href="#encoder%e5%b1%82" aria-label="Encoder层">Encoder层</a></li>
+                    <li>
+                        <a href="#mlp-head" aria-label="MLP Head">MLP Head</a></li>
+                    <li>
+                        <a href="#hybrid%e6%a8%a1%e5%9e%8b" aria-label="Hybrid模型">Hybrid模型</a>
+                    </li>
+                </ul>
+            </div>
+        </details>
+    </div>
+</aside>
+<script>
+    let activeElement;
+    let elements;
+    window.addEventListener('DOMContentLoaded', function (event) {
+        checkTocPosition();
+
+        elements = document.querySelectorAll('h1[id],h2[id],h3[id],h4[id],h5[id],h6[id]');
+         
+         activeElement = elements[0];
+         const id = encodeURI(activeElement.getAttribute('id')).toLowerCase();
+         document.querySelector(`.inner ul li a[href="#${id}"]`).classList.add('active');
+     }, false);
+
+    window.addEventListener('resize', function(event) {
+        checkTocPosition();
+    }, false);
+
+    window.addEventListener('scroll', () => {
+        
+        activeElement = Array.from(elements).find((element) => {
+            if ((getOffsetTop(element) - window.pageYOffset) > 0 && 
+                (getOffsetTop(element) - window.pageYOffset) < window.innerHeight/2) {
+                return element;
+            }
+        }) || activeElement
+
+        elements.forEach(element => {
+             const id = encodeURI(element.getAttribute('id')).toLowerCase();
+             if (element === activeElement){
+                 document.querySelector(`.inner ul li a[href="#${id}"]`).classList.add('active');
+             } else {
+                 document.querySelector(`.inner ul li a[href="#${id}"]`).classList.remove('active');
+             }
+         })
+     }, false);
+
+    const main = parseInt(getComputedStyle(document.body).getPropertyValue('--article-width'), 10);
+    const toc = parseInt(getComputedStyle(document.body).getPropertyValue('--toc-width'), 10);
+    const gap = parseInt(getComputedStyle(document.body).getPropertyValue('--gap'), 10);
+
+    function checkTocPosition() {
+        const width = document.body.scrollWidth;
+
+        if (width - main - (toc * 2) - (gap * 4) > 0) {
+            document.getElementById("toc-container").classList.add("wide");
+        } else {
+            document.getElementById("toc-container").classList.remove("wide");
+        }
+    }
+
+    function getOffsetTop(element) {
+        if (!element.getClientRects().length) {
+            return 0;
+        }
+        let rect = element.getBoundingClientRect();
+        let win = element.ownerDocument.defaultView;
+        return rect.top + win.pageYOffset;   
+    }
+</script>
+  <div class="post-content"><h3 id="整体结构">整体结构<a hidden class="anchor" aria-hidden="true" href="#整体结构">#</a></h3>
+<p>分为三个部分，Linear Projection of Flattened Patches(Embedding层)、Encoder和MLP Head分类头</p>
+<img src="20210626105321101.png" alt="vit" style="zoom:80%;" />
+<p>下图是不同版本ViT的参数设置。</p>
+<ul>
+<li><em>Layers</em>：Transformer Encoder中重复堆叠Encoder Block的次数</li>
+<li><em>Hidden Size</em>：通过Embedding层后每个token的dim</li>
+<li><em>MLP size</em>：Transformer Encoder中MLP Block第一个全连接的节点个数（是Hidden Size的四倍）</li>
+<li><em>Heads</em>：Transformer中Multi-Head Attention的heads数</li>
+</ul>
+<img src="image-20230705160728661.png" alt="image-20230705160728661" style="zoom:80%;" />
+<h3 id="embedding层">Embedding层<a hidden class="anchor" aria-hidden="true" href="#embedding层">#</a></h3>
+<p>首先将图片分为不同的patch，这里有两个参数</p>
+<ul>
+<li><em>patch size</em>：一个patch的大小</li>
+<li><em>stride</em>：步长，如果和patch size一样，则不重叠（可以重叠）</li>
+</ul>
+<img src="image-20230705160551497.png" alt="image-20230705160551497" style="zoom:80%;" />
+<p>接着，将每个patch拉伸至一维，并通过线性层，得到Embedding层的输出</p>
+<img src="image-20230705165506456.png" alt="image-20230705165506456" style="zoom:80%;" />
+<p>实际代码中，上述过程直接通过卷积进行。假设使用ViT-B16,参数设置如下</p>
+<table>
+<thead>
+<tr>
+<th>kernel size</th>
+<th>kernel num</th>
+<th>stride</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>16×16</td>
+<td>768</td>
+<td>16</td>
+</tr>
+</tbody>
+</table>
+<ol>
+<li>原图尺寸[224,224,3]，<strong>卷积后</strong>➡[14,14,768]，<strong>将h和w进行展平</strong>➡[196,768]</li>
+<li>加入[CLS]标签的token➡[197,768]</li>
+<li>加入Position Embedding➡[197,768]</li>
+</ol>
+<p>至此，得到Embedding层的输出</p>
+<h3 id="encoder层">Encoder层<a hidden class="anchor" aria-hidden="true" href="#encoder层">#</a></h3>
+<p>Encoder层结构如下，DropPath可以理解为随机丢弃一些残差连接。一个Transformer Encoder是由多个Encoder Block组成的</p>
+<img src="image-20230705173120640.png" alt="image-20230705173120640" style="zoom:80%;" />
+<h3 id="mlp-head">MLP Head<a hidden class="anchor" aria-hidden="true" href="#mlp-head">#</a></h3>
+<p>一般是直接<code>Linear</code>+Softmax。有些数据集比较大，会改成<code>Linear+tanh+Linear</code>+Softmax</p>
+<h3 id="hybrid模型">Hybrid模型<a hidden class="anchor" aria-hidden="true" href="#hybrid模型">#</a></h3>
+<p>改不同的backbone，先用backbone进行特征提取，然后将其输入至ViT中</p>
+<img src="image-20230705175147964.png" alt="image-20230705175147964" style="zoom:80%;" />
+<blockquote>
+<p>参考资料:</p>
+<p><a href="https://www.bilibili.com/video/BV1Jh411Y7WQ/?spm_id_from=333.788&vd_source=a9906a59047f96daed0a464dfa0c358e">11.1 Vision Transformer(vit)网络详解</a></p>
+<p><a href="https://github.com/wangshusen/DeepLearning.git">ViT用于图片分类</a></p>
+</blockquote>
+
+
+  </div>
+
+  <footer class="post-footer">
+    <ul class="post-tags">
+    </ul>
+<nav class="paginav">
+  <a class="prev" href="https://iendi.github.io/en/posts/ai/diffusion/">
+    <span class="title">« 上一页</span>
+    <br>
+    <span>DDPM</span>
+  </a>
+  <a class="next" href="https://iendi.github.io/en/posts/ai/bert/">
+    <span class="title">下一页 »</span>
+    <br>
+    <span>Bert</span>
+  </a>
+</nav>
+
+  </footer>
+</article>
+    </main>
+    
+<footer class="footer">
+    <span>
+        Copyright
+        &copy;
+        -2024
+        <a href="https://iendi.github.io/en/" style="color:#939393;">Kend&#39;s Blog</a>
+        All Rights Reserved
+    </span>
+    <a href="https://beian.miit.gov.cn/" target="_blank" style="color:#939393;"></a>&nbsp;
+    <span>
+        <a target="_blank" href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=null"
+           style="display:inline-block;text-decoration:none;height:20px;color:#939393;">
+            <img src="" style="float:left;margin: 0px 5px 0px 0px;"/>
+            
+        </a>
+    </span>
+    <span id="busuanzi_container">
+        <span class="fa fa-user"></span> <span id="busuanzi_value_site_uv"></span>
+        <span class="fa fa-eye"></span> <span id="busuanzi_value_site_pv"></span>
+    </span>
+</footer>
+<a href="#top" aria-label="go to top" title="Go to Top (Alt + G)" class="top-link" id="top-link" accesskey="g">
+    <span class="topInner">
+        <svg class="topSvg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentColor">
+            <path d="M12 6H0l6-6z"/>
+        </svg>
+        <span id="read_progress"></span>
+    </span>
+</a>
+
+<script>
+    document.addEventListener('scroll', function (e) {
+        const readProgress = document.getElementById("read_progress");
+        const scrollHeight = document.documentElement.scrollHeight;
+        const clientHeight = document.documentElement.clientHeight;
+        const scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
+        readProgress.innerText = ((scrollTop / (scrollHeight - clientHeight)).toFixed(2) * 100).toFixed(0);
+    })
+</script>
+
+<script>
+    let menu = document.getElementById('menu')
+    if (menu) {
+        menu.scrollLeft = localStorage.getItem("menu-scroll-position");
+        menu.onscroll = function () {
+            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+        }
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+</script>
+<script>
+    let mybutton = document.getElementById("top-link");
+    window.onscroll = function () {
+        if (document.body.scrollTop > 200 || document.documentElement.scrollTop > 200) {
+            mybutton.style.visibility = "visible";
+            mybutton.style.opacity = "1";
+        } else {
+            mybutton.style.visibility = "hidden";
+            mybutton.style.opacity = "0";
+        }
+    };
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        (function() {
+            document.cookie = "change-themes" + "="+ escape ("false");
+        })()
+
+        if (document.body.className.includes("dark")) {
+            document.body.classList.remove('dark');
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            document.body.classList.add('dark');
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    });
+</script>
+
+<script>
+    document.body.addEventListener('copy', function (e) {
+        if (window.getSelection().toString() && window.getSelection().toString().length > 50) {
+            let clipboardData = e.clipboardData || window.clipboardData;
+            if (clipboardData) {
+                e.preventDefault();
+                let htmlData = window.getSelection().toString() +
+                    '\r\n\n————————————————\r\n' +
+                    '版权声明：本文为「'+"Kend's Blog"+'」的原创文章，遵循CC 4.0 BY-SA版权协议，转载请附上原文出处链接及本声明。' +
+                '\r\n原文链接：' + location.href;
+                let textData = window.getSelection().toString() +
+                    '\r\n\n————————————————\r\n' +
+                    '版权声明：本文为「'+"Kend's Blog"+'」的原创文章，遵循CC 4.0 BY-SA版权协议，转载请附上原文出处链接及本声明。' +
+                '\r\n原文链接：' + location.href;
+                clipboardData.setData('text/html', htmlData);
+                clipboardData.setData('text/plain', textData);
+            }
+        }
+    });
+</script>
+<script>
+    document.querySelectorAll('pre > code').forEach((codeblock) => {
+        const container = codeblock.parentNode.parentNode;
+        const copybutton = document.createElement('button');
+        copybutton.classList.add('copy-code');
+        copybutton.innerText = '📄复制';
+
+        function copyingDone() {
+            copybutton.innerText = '👌🏻已复制!';
+            setTimeout(() => {
+                copybutton.innerText = '📄复制';
+            }, 2000);
+        }
+
+        copybutton.addEventListener('click', (cb) => {
+            if ('clipboard' in navigator) {
+                let text = codeblock.textContent +
+                    '\r\n————————————————\r\n' +
+                    '版权声明：本文为「'+"Kend's Blog"+'」的原创文章，遵循CC 4.0 BY-SA版权协议，转载请附上原文出处链接及本声明。' +
+                '\r\n原文链接：' + location.href;
+                navigator.clipboard.writeText(text);
+                copyingDone();
+                return;
+            }
+
+            const range = document.createRange();
+            range.selectNodeContents(codeblock);
+            const selection = window.getSelection();
+            selection.removeAllRanges();
+            selection.addRange(range);
+            try {
+                document.execCommand('copy');
+                copyingDone();
+            } catch (e) {}
+            selection.removeRange(range);
+        });
+
+        let language = codeblock.className.replaceAll("language-", "")
+        let macTool = document.createElement("div")
+        let macTool1 = document.createElement("div")
+        let macTool2 = document.createElement("div")
+        let macTool3 = document.createElement("div")
+        let languageType = document.createElement("div")
+        languageType.innerText = language
+        macTool.setAttribute('class', 'mac-tool')
+        macTool1.setAttribute('class', 'mac bb1')
+        macTool2.setAttribute('class', 'mac bb2')
+        macTool3.setAttribute('class', 'mac bb3')
+        languageType.setAttribute('class', 'language-type')
+        macTool.appendChild(macTool1)
+        macTool.appendChild(macTool2)
+        macTool.appendChild(macTool3)
+        macTool.appendChild(languageType)
+
+        if (container.classList.contains("highlight")) {
+            container.appendChild(copybutton);
+            container.appendChild(macTool)
+        } else if (container.parentNode.firstChild == container) {
+            
+        } else if (codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.nodeName == "TABLE") {
+            
+            codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.appendChild(copybutton);
+            container.appendChild(macTool)
+        } else {
+            
+            codeblock.parentNode.appendChild(copybutton);
+            container.appendChild(macTool)
+        }
+    });
+</script>
+</body>
+
+</html>

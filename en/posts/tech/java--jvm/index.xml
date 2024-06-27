@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
+  <channel>
+    <title>Java &amp; JVM on Kend&#39;s Blog</title>
+    <link>https://iendi.github.io/en/posts/tech/java--jvm/</link>
+    <description>Recent content in Java &amp; JVM on Kend&#39;s Blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en</language>
+    <lastBuildDate>Wed, 10 Apr 2024 17:45:05 +0800</lastBuildDate>
+    <atom:link href="https://iendi.github.io/en/posts/tech/java--jvm/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Java基础知识复习</title>
+      <link>https://iendi.github.io/en/posts/tech/java--jvm/java_review/</link>
+      <pubDate>Wed, 10 Apr 2024 17:45:05 +0800</pubDate>
+      <guid>https://iendi.github.io/en/posts/tech/java--jvm/java_review/</guid>
+      <description>复习一下忘记的知识点。 引用传值 Java中都是传值的，但由于传递的是一份对象引用的拷贝进行传递的，但是原引用和拷贝的引用依旧指向的是堆中的同一</description>
+    </item>
+    <item>
+      <title>StringTable 一些特性</title>
+      <link>https://iendi.github.io/en/posts/tech/java--jvm/stringtable-%E4%B8%80%E4%BA%9B%E7%89%B9%E6%80%A7/</link>
+      <pubDate>Fri, 01 Jul 2022 22:20:58 +0800</pubDate>
+      <guid>https://iendi.github.io/en/posts/tech/java--jvm/stringtable-%E4%B8%80%E4%BA%9B%E7%89%B9%E6%80%A7/</guid>
+      <description>StringTable为字符串常量池，是运行时常量池的一部分，一般放String字符串对象 + 运算符 两个 &amp;quot; &amp;quot; 相加 String s3=&amp;#34;ab&amp;#34;; //[&amp;#34;a&amp;#34;,&amp;#34;b&amp;#34;,&amp;#34;ab&amp;#34;] String s4=&amp;#34;a&amp;#34;+&amp;#34;b&amp;#34;; System.out.println(s3==s4);//true s4=&amp;quot;</description>
+    </item>
+    <item>
+      <title>字节码</title>
+      <link>https://iendi.github.io/en/posts/tech/java--jvm/%E5%AD%97%E8%8A%82%E7%A0%81/</link>
+      <pubDate>Fri, 01 Jul 2022 22:20:58 +0800</pubDate>
+      <guid>https://iendi.github.io/en/posts/tech/java--jvm/%E5%AD%97%E8%8A%82%E7%A0%81/</guid>
+      <description>便于理解字节码，程序如下： public class TextClass { String name; Integer age; public TextClass(String name, Integer age) { this.name = name; this.age = age; } public void show(){ System.out.println(&amp;#34;Hello MotherFucker&amp;#34;); } } 编译后，用javap -verbose TextClass.class反编译</description>
+    </item>
+  </channel>
+</rss>

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
+  <channel>
+    <title>排序 on Kend&#39;s Blog</title>
+    <link>https://iendi.github.io/en/posts/lc/%E6%8E%92%E5%BA%8F/</link>
+    <description>Recent content in 排序 on Kend&#39;s Blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en</language>
+    <atom:link href="https://iendi.github.io/en/posts/lc/%E6%8E%92%E5%BA%8F/index.xml" rel="self" type="application/rss+xml" />
+  </channel>
+</rss>

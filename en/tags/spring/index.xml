@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
+  <channel>
+    <title>Spring on Kend&#39;s Blog</title>
+    <link>https://iendi.github.io/en/tags/spring/</link>
+    <description>Recent content in Spring on Kend&#39;s Blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en</language>
+    <lastBuildDate>Fri, 09 Jul 2021 22:20:58 +0800</lastBuildDate>
+    <atom:link href="https://iendi.github.io/en/tags/spring/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>AOP</title>
+      <link>https://iendi.github.io/en/posts/tech/spring/aop/</link>
+      <pubDate>Fri, 09 Jul 2021 22:20:58 +0800</pubDate>
+      <guid>https://iendi.github.io/en/posts/tech/spring/aop/</guid>
+      <description>切面 Spring 中的 Aop 的通知类型有 5 种： 前置通知 后置通知 异常通知 返回通知 环绕通知 首先，在项目中，引入 Spring 依赖（引入 Aop 相关的依赖）： &amp;lt;dependencies&amp;gt; &amp;lt;dependency&amp;gt; &amp;lt;groupId&amp;gt;org.springframework&amp;lt;/groupId&amp;gt; &amp;lt;artifactId&amp;gt;spring-context&amp;lt;/artifactId&amp;gt; &amp;lt;version&amp;gt;5.1.9.RELEASE&amp;lt;/version&amp;gt; &amp;lt;/dependency&amp;gt; &amp;lt;dependency&amp;gt; &amp;lt;groupId&amp;gt;org.aspectj&amp;lt;/groupId&amp;gt; &amp;lt;artifactId&amp;gt;aspectjweaver&amp;lt;/artifactId&amp;gt; &amp;lt;version&amp;gt;1.9.5&amp;lt;/version&amp;gt; &amp;lt;/dependency&amp;gt;</description>
+    </item>
+    <item>
+      <title>代理模式</title>
+      <link>https://iendi.github.io/en/posts/tech/spring/%E4%BB%A3%E7%90%86%E6%A8%A1%E5%BC%8F/</link>
+      <pubDate>Fri, 09 Jul 2021 22:20:58 +0800</pubDate>
+      <guid>https://iendi.github.io/en/posts/tech/spring/%E4%BB%A3%E7%90%86%E6%A8%A1%E5%BC%8F/</guid>
+      <description>静态代理 代理类+被代理类+公共接口 公共接口 public interface Person { //上交班费 void giveMoney(); } 被代理类 //实现公共接口，并重写方法 public class Student implements Person { private String name; public Student(String name) { this.name = name; } @Override</description>
+    </item>
+    <item>
+      <title>Bean 的生命周期</title>
+      <link>https://iendi.github.io/en/posts/tech/spring/bean-%E7%9A%84%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F/</link>
+      <pubDate>Wed, 07 Jul 2021 22:20:58 +0800</pubDate>
+      <guid>https://iendi.github.io/en/posts/tech/spring/bean-%E7%9A%84%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F/</guid>
+      <description>Bean的生命周期主要可分为4个部分： Bean的定义：通过配置查找Bean，并将Bean定义发布到IoC容器中，此时只有定义==没有实例==</description>
+    </item>
+    <item>
+      <title>IOC</title>
+      <link>https://iendi.github.io/en/posts/tech/spring/ioc/</link>
+      <pubDate>Wed, 07 Jul 2021 22:20:58 +0800</pubDate>
+      <guid>https://iendi.github.io/en/posts/tech/spring/ioc/</guid>
+      <description>将对象的创建、初始化、销毁等操作交给 Spring 容器来管理 本文以Student 类为例，定义如下： public class Student { public String name; public Integer number; public boolean sex; //..constructor,getter and setter } 一. 创建一个简单的I</description>
+    </item>
+  </channel>
+</rss>

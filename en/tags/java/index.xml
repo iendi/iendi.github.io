@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
+  <channel>
+    <title>Java on Kend&#39;s Blog</title>
+    <link>https://iendi.github.io/en/tags/java/</link>
+    <description>Recent content in Java on Kend&#39;s Blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en</language>
+    <lastBuildDate>Wed, 10 Apr 2024 17:45:05 +0800</lastBuildDate>
+    <atom:link href="https://iendi.github.io/en/tags/java/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Java基础知识复习</title>
+      <link>https://iendi.github.io/en/posts/tech/java--jvm/java_review/</link>
+      <pubDate>Wed, 10 Apr 2024 17:45:05 +0800</pubDate>
+      <guid>https://iendi.github.io/en/posts/tech/java--jvm/java_review/</guid>
+      <description>复习一下忘记的知识点。 引用传值 Java中都是传值的，但由于传递的是一份对象引用的拷贝进行传递的，但是原引用和拷贝的引用依旧指向的是堆中的同一</description>
+    </item>
+  </channel>
+</rss>
